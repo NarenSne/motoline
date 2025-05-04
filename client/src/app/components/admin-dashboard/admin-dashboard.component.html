@@ -1,0 +1,32 @@
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <div
+    class="bg-black text-red-500 w-64 flex-none p-4 fixed top-0 left-0 h-full"
+  >
+    <h2 class="text-xl font-bold mb-4 text-center">Panel de administración</h2>
+    <ul class="space-y-2">
+      <li class="bg-slate-400 p-3 text-black text-xl font-bold rounded-lg">
+        <a routerLink="/admin-dashboard/overview">Descripción general</a>
+      </li>
+      <li class="bg-slate-400 p-3 text-black text-xl font-bold rounded-lg">
+        <a routerLink="/admin-dashboard/accounts-overview">Resumen de cuentas</a>
+      </li>
+      <li class="bg-slate-400 p-3 text-black text-xl font-bold rounded-lg">
+        <a routerLink="/admin-dashboard/orders-overview">Resumen de pedidos</a>
+      </li>
+      <li class="bg-slate-400 p-3 text-black text-xl font-bold rounded-lg">
+        <a routerLink="/admin-dashboard/products-overview">Descripción general de productos</a>
+      </li>
+      <li class="bg-red-500 p-3 text-white text-xl text-center font-bold rounded-lg">
+        <a (click)="logout()">Cerrar sesión</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-grow p-4 ml-64 overflow-auto">
+    <router-outlet></router-outlet>
+    <div class="mt-4"></div>
+    <div class="mt-4"></div>
+  </div>
+</div>

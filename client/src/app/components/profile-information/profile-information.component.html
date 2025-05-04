@@ -1,0 +1,81 @@
+@if (isLoading) {
+<app-loading-spinner></app-loading-spinner>
+}
+
+<section
+  class="container flex-grow mx-auto max-w-[1200px] border-b py-5 lg:flex lg:flex-row lg:py-10"
+>
+  <app-sidebar [userInfo]="userInfo"></app-sidebar>
+
+  <section class="grid w-full max-w-[1200px] grid-cols-1 gap-3 px-5 pb-10">
+    <div class="py-5">
+      <form class="flex w-full flex-col gap-3" action="">
+        <div class="flex w-full flex-col">
+          <label class="flex" for="name">
+            Full Name
+            <span
+              class="block text-sm font-medium text-slate-700 after:ml-0.5 after:text-red-500 after:content-['\*']"
+            ></span>
+          </label>
+          <input
+            class="w-full border px-4 py-2 lg:w-1/2"
+            type="text"
+            value="{{ userInfo.fullName }}"
+            readonly
+          />
+        </div>
+        <div class="flex w-full flex-col">
+          <label class="flex" for="name">
+            Email
+            <span
+              class="block text-sm font-medium text-slate-700 after:ml-0.5 after:text-red-500 after:content-['\*']"
+            ></span>
+          </label>
+          <input
+            class="w-full border px-4 py-2 lg:w-1/2"
+            type="text"
+            value="{{ userInfo.email }}"
+            readonly
+          />
+        </div>
+        <div class="flex w-full flex-col">
+          <label class="flex" for="name">
+            Username
+            <span
+              class="block text-sm font-medium text-slate-700 after:ml-0.5 after:text-red-500 after:content-['\*']"
+            ></span>
+          </label>
+          <input
+            class="w-full border px-4 py-2 lg:w-1/2"
+            type="text"
+            value="{{ userInfo.username }}"
+            readonly
+          />
+        </div>
+        <div class="flex w-full flex-col">
+          <label class="flex" for="name">
+            Phone
+            <span
+              class="block text-sm font-medium text-slate-700 after:ml-0.5 after:text-red-500 after:content-['\*']"
+            ></span>
+          </label>
+          <input
+            class="w-full border px-4 py-2 lg:w-1/2"
+            type="text"
+            value="{{ userInfo.phone }}"
+            readonly
+          />
+        </div>
+        <button
+          type="submit"
+          class="mt-4 w-40 bg-violet-900 px-4 py-2 text-white"
+          routerLink="/edit-profile"
+        >
+          Edit info
+        </button>
+      </form>
+    </div>
+  </section>
+</section>
+>
+<!-- /form -->

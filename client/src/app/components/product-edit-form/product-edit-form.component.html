@@ -1,0 +1,216 @@
+@if (isLoading) {
+<div class="container mx-auto p-6 min-h-[70vh] min-w-[50vw] max-w-[90vw] max-h-[90vh]">
+
+  <app-loading-spinner></app-loading-spinner>
+</div>
+} @else {
+
+<div class="container mx-auto p-6 min-h-[70vh] min-w-[50vw] max-w-[90vw] max-h-[90vh]">
+  <h1 class="text-2xl font-bold mb-4">Product</h1>
+  <form [formGroup]="productForm" class="bg-white p-6 rounded-lg shadow-md">
+    <!-- Name -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="name">Name</label>
+      <input formControlName="name" value="{{product.name}}"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="name" type="text" placeholder="Enter product name" required>
+    </div>
+    <!-- Price -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="price">Price</label>
+      <input formControlName="price"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="price" type="number" min="0" placeholder="Enter product price" required>
+    </div>
+    <!-- Description -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="desc">Description</label>
+      <textarea formControlName="desc"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="desc" rows="3" placeholder="Enter product description">desc</textarea>
+    </div>
+    <!-- Stock -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="stock">Stock</label>
+      <input formControlName="stock"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="stock" type="number" min="0" placeholder="Enter product stock" required>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="images">Images</label>
+      <div class="flex flex-wrap">
+        <div class="mr-2 mb-2" *ngFor="let image of imagesUrl; let i = index">
+          <img src="data:image/png;base64,{{image}}" alt="Image" class="w-24 h-24" />
+          <button type="button" (click)="removeImage(image)">Remove</button>
+        </div>
+      </div>
+      <input
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="images" type="file" multiple (change)="onFileChange($event)">
+    </div>
+
+    <!-- Brand -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="brand">Brand</label>
+      <select formControlName="brand"
+        class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="brand" required>
+        <option value="Revo">Revo</option>
+        <option value="Cassarella">Cassarella</option>
+        <option value="Imbra">Imbra</option>
+        <option value="Vitrix">Vitrix</option>
+        <option value="Kanuni">Kanuni</option>
+        <option value="Gpp">Gpp</option>
+        <option value="EBC">EBC</option>
+        <option value="MOBIL">MOBIL</option>
+        <option value="CRC">CRC</option>
+        <option value="DARROW">DARROW</option>
+        <option value="GXPARTS">GX PARTS</option>
+        <option value="VARROC">VARROC</option>
+        <option value="CASTROL">CASTROL</option>
+        <option value="ENDURANCE">ENDURANCE</option>
+        <option value="MOTUL">MOTUL</option>
+        <option value="REPSOL">REPSOL</option>
+        <option value="ECSTAR">ECSTAR</option>
+        <option value="CASTROL">CASTROL</option>
+        <option value="Cassarella">Cassarella</option>
+        <option value="CHAMPION">CHAMPION</option>
+        <option value="CHOHO">CHOHO</option>
+        <option value="CRC">CRC</option>
+        <option value="DARROW">DARROW</option>
+        <option value="DID">D.I.D</option>
+        <option value="DTS">DTS-I OIL</option>
+        <option value="EBC">EBC</option>
+        <option value="ECSTAR">ECSTAR</option>
+        <option value="ELPO">ELPO</option>
+        <option value="ENDURANCE">ENDURANCE</option>
+        <option value="EVERESTT">EVERESTT</option>
+        <option value="FERODO">FERODO</option>
+        <option value="GENUNE">GENUNE PARTS</option>
+        <option value="GPP">Gpp</option>
+        <option value="GXPARTS">GX PARTS</option>
+        <option value="IMBRA">Imbra</option>
+        <option value="JDL">JDL</option>
+        <option value="KANUNI">Kanuni</option>
+        <option value="KOK RIDERS">KOK RIDERS</option>
+        <option value="KONTROL">KONTROL</option>
+        <option value="KOYO">KOYO</option>
+        <option value="KROSS">KROSS</option>
+        <option value="MAD">MAD</option>
+        <option value="MAPACHE">MAPACHE</option>
+        <option value="MOBIL">MOBIL</option>
+        <option value="MOTUL">MOTUL</option>
+        <option value="NACHI">NACHI</option>
+        <option value="NARVA">NARVA</option>
+        <option value="NTN">NTN</option>
+        <option value="OSRAM">OSRAM</option>
+        <option value="PHILIPS">PHILIPS</option>
+        <option value="REPSOL">REPSOL</option>
+        <option value="Revo">Revo</option>
+        <option value="RIZOMA">RIZOMA</option>
+        <option value="SHELL">SHELL ADVANCE</option>
+        <option value="SPARTAN">SPARTAN</option>
+        <option value="SPEED">SPEED HARD</option>
+        <option value="SUPRAPARTS">SUPRAPARTS</option>
+        <option value="TERPEL">TERPEL</option>
+        <option value="ULTRA">ULTRA</option>
+        <option value="UNO MINDA">UNO MINDA</option>
+        <option value="VARROC">VARROC</option>
+        <option value="Vitrix">Vitrix</option>
+        <option value="YAHOSUKA">YAHOSUKA</option>
+        <option value="YAMALUBE">YAMALUBE</option>
+      </select>
+    </div>
+    <!-- Category -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="category">Category</label>
+      <select formControlName="category" value="category"
+        class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="category" required>
+        <option value="Pastillas y bandas">Pastillas y bandas</option>
+        <option value="Kit de arrastre">Kit de arrastre</option>
+        <option value="Carenajes farolas y guardabarros">Carenajes farolas y guardabarros</option>
+        <option value="Tornillería especia">Tornillería especial</option>
+        <option value="Aceites y lubricantes">Aceites y lubricantes</option>
+        <option value="Partes eléctricas">Partes eléctricas</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="category">Marce Vehicular</label>
+      <select formControlName="Marcavehicular" value="Marca Vehicular"
+        class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="Vehiclebrand" required>
+        <option value="KTM">KTM</option>
+        <option value="HONDA">HONDA</option>
+        <option value="AUTECO">AUTECO</option>
+        <option value="YAMAHA">YAMAHA</option>
+        <option value="AKT">AKT</option>
+        <option value="KYMCO">KYMCO</option>
+        <option value="TVS">TVS</option>
+        <option value="HERO">HERO</option>
+        <option value="SUSUKI">SUSUKI</option>
+        <option value="BENELLI">BENELLI</option>
+      </select>
+    </div>
+    <!-- Vehicle brand -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="category">Referencia Vehiculo</label>
+      <select formControlName="ReferenciaVehiculo" value="Referencia Vehiculo"
+        class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="Vehiclereference" required multiple>
+        <option value="PULSAR NS 200">PULSAR NS 200</option>
+        <option value="PULSAR NS 160">PULSAR NS 160</option>
+        <option value="PULSAR NS 400">PULSAR NS 400</option>
+        <option value="PULSAR NS 135">PULSAR NS 135</option>
+        <option value="PULSAR NS 160">PULSAR NS 160</option>
+        <option value="PULSAR 180">PULSAR 180</option>
+        <option value="PULSAR 135">PULSAR 135</option>
+        <option value="PULSAR N 250">PULSAR N 250</option>
+        <option value="DOMINAR 250">DOMINAR 250</option>
+        <option value="DOMINAR 400">DOMINAR 400</option>
+        <option value="DUKE 390">DUKE 390</option>
+        <option value="DUKE 250">DUKE 250</option>
+        <option value="DUKE 200">DUKE 200</option>
+        <option value="BOXER">BOXER</option>
+        <option value="PLATINO">PLATINO</option>
+        <option value="DISCOVER">DISCOVER</option>
+        <option value="HUNK 160">HUNK 160</option>
+        <option value="NKD 125">NKD 125</option>
+        <option value="CR4">CR4</option>
+        <option value="CR5">CR5</option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+        <option value=""></option>
+      </select>
+    </div>
+    <!-- Submit Button -->
+    <div class="flex items-center justify-end">
+      <button (click)="uploadFiles()"
+        class="hover:bg-blue-700 bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        type="submit">
+        Guardar producto
+      </button>
+    </div>
+  </form>
+</div>
+}

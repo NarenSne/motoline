@@ -1,0 +1,75 @@
+<!-- orders-overview.component.html -->
+<div>
+  <h2 class="mb-4 text-xl font-bold">Resumen de pedidos</h2>
+  <table class="min-w-full overflow-hidden bg-gray-200 rounded-lg">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2">ID de pedido</th>
+        <th class="px-4 py-2">Ciudad</th>
+        <th class="px-4 py-2">Estado</th>
+        <th class="px-4 py-2">Fecha</th>
+        <th class="px-4 py-2">Productos</th>
+        <th class="px-4 py-2">Precio total</th>
+        <th class="px-4 py-2">Acciónes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of pageOrders">
+        <td class="px-4 py-2 text-center">
+          {{
+            order._id.length > 10
+              ? (order._id | slice : 0 : 10) + "..."
+              : order._id
+          }}
+        </td>
+        <td class="px-4 py-2 text-center">{{ order.address.city }}</td>
+        <td class="px-4 py-2 text-center">{{ order.status }}</td>
+        <td class="px-4 py-2 text-center">{{ order.date }}</td>
+        <td class="px-4 py-2 text-center">
+          <ul *ngFor="let product of order.uniqueProducts">
+            <li>
+              {{ getProductName(product) }}
+            </li>
+          </ul>
+        </td>
+        <td class="px-4 py-2 text-center">{{ order.totalPrice }}</td>
+        <td class="px-4 py-2 text-center">
+          <button
+            class="px-2 py-1 mx-3 text-white bg-blue-500 rounded"
+            (click)="acceptOrder(order)"
+            [disabled]="
+              order.status === 'rejected' || order.status === 'accepted'
+            "
+            [ngClass]="
+              order.status === 'rejected' || order.status === 'accepted'
+                ? 'opacity-50'
+                : ''
+            "
+          >
+            Aceptar
+          </button>
+          <button
+            class="px-2 py-1 mx-3 text-white bg-red-500 rounded"
+            (click)="rejectOrder(order)"
+            [disabled]="
+              order.status === 'rejected' || order.status === 'accepted'
+            "
+            [ngClass]="
+              order.status === 'rejected' || order.status === 'accepted'
+                ? 'opacity-50'
+                : ''
+            "
+          >
+            Rechazar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <mat-paginator
+    [length]="numberOfOrders"
+    pageSize="10"
+    (page)="onPageChange($event)"
+  >
+  </mat-paginator>
+</div>

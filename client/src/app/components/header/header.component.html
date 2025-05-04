@@ -1,0 +1,131 @@
+<!-- Header -->
+<header class="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-5">
+  <a routerLink="/">
+    <img class="cursor-pointer sm:h-auto sm:w-44" src="../assets/images/company-logo.svg" alt="company logo" />
+  </a>
+  <div class="md:hidden">
+    <!-- Toggle Button For Menu in Small Screens   -->
+    <button (click)="toggleMenu()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="h-8 w-8">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </button>
+  </div>
+  <!-- Toggle Button For Menu in Small Screens   -->
+  <!-- Parent container -->
+  <div class="relative h-9 w-2/5 items-center lg:block hidden">
+    <!-- Search form -->
+    <form [formGroup]="searchForm" class="hidden h-9 w-full items-center border md:flex" (ngSubmit)="search()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="mx-3 h-4 w-4">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+      </svg>
+      <input (input)="search()" formControlName="search" class="hidden w-11/12 outline-none md:block" type="search"
+        placeholder="" />
+      <button class="ml-auto h-full bg-black text-white px-4 hover:bg-yellow-300">
+        Buscar
+      </button>
+    </form>
+    <!-- Unordered list as dropdown -->
+    <ul *ngIf="filterProducts.length > 0" class="absolute z-30 left-0 mt-2 w-11/12 bg-white shadow-md">
+      <!-- Use *ngFor to iterate over search results -->
+      <li (click)="emptySearch()" *ngFor="let proudct of proudctFilter"
+        class="px-4 py-2 border-b border-gray-200 hover:bg-gray-100">
+        <!-- Use RouterLink directive to specify the route -->
+        <a [routerLink]="['/product-overview', proudct._id]" class="block">
+          {{ proudct.name }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="hidden gap-3 md:!flex">
+    <a  href="https://wa.me/573125457887" class="flex cursor-pointer flex-col items-center justify-center">
+      <img src="../assets/images/whatsapp.gif" alt="" class="w-6">
+      <p class="text-xs">WhatsApp</p>
+    </a>
+    <a routerLink="/cart" class="relative flex cursor-pointer flex-col items-center justify-center">
+      <img src="../assets/images/carrito-de-compras.gif" alt="" class="w-6">
+      <p class="text-xs">Carrito</p>
+      @if(isAuthenticated()){
+      <div
+        class="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500  rounded-full -top-2 -end-2">
+        {{ data }}
+      </div>
+      }
+    </a>
+    <a routerLink="/profile" class="relative flex cursor-pointer flex-col items-center justify-center">
+      <img src="../assets/images/usuario.gif" alt="" class="w-6">
+      
+      <p class="text-xs">Cuenta</p>
+    </a>
+  </div>
+</header>
+<!-- /Header -->
+
+@if (toggleBurgerMenu) {
+<!-- Burger menu  -->
+<section class="absolute left-0 right-0 z-50 h-screen w-full bg-white">
+  <div class="mx-auto">
+    <div class="mx-auto flex w-full justify-center gap-3 py-4">
+      <a  href="https://wa.me/573125457887" class="flex cursor-pointer flex-col items-center justify-center">
+        <img src="../assets/images/whatsapp.gif" alt="" class="w-6">
+        <p class="text-xs">WhatsApp</p>
+      </a>
+      <a routerLink="/cart" class="flex cursor-pointer flex-col items-center justify-center">
+        <img src="../assets/images/carrito-de-compras.gif" alt="" class="w-6">
+        <p class="text-xs">Carrito</p>
+      </a>
+      <a routerLink="/profile" class="relative flex cursor-pointer flex-col items-center justify-center">
+        <img src="../assets/images/usuario.gif" alt="" class="w-6">
+        <p class="text-xs">Cuenta</p>
+      </a>
+    </div>
+
+    <div class="relative my-4 mx-5 flex h-9 items-center">
+      <!-- Search form -->
+      <form [formGroup]="searchForm" class="my-4 mx-5 flex w-full items-center border" (ngSubmit)="search()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="mx-3 h-4 w-4">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+        </svg>
+
+        <input (input)="search()" formControlName="search" class="w-11/12 outline-none md:block" type="search"
+           />
+
+        <button type="submit" class="ml-auto h-full bg-amber-400 px-4 hover:bg-yellow-300">
+          Buscar
+        </button>
+      </form>
+
+      <!-- Unordered list as dropdown -->
+      <ul *ngIf="filterProducts.length > 0" class="absolute z-30 w-11/12 bg-white shadow-md"
+        style="top: 35px; left: 20px">
+        <!-- Use *ngFor to iterate over search results -->
+        <li (click)="emptySearch()" *ngFor="let proudct of proudctFilter"
+          class="px-4 py-2 border-b border-gray-200 hover:bg-gray-100">
+          <!-- Use RouterLink directive to specify the route -->
+          <a [routerLink]="['/product-overview', proudct._id]" class="block">
+            {{ proudct.name }}
+          </a>
+        </li>
+      </ul>
+    </div>
+    <ul class="text-center font-medium">
+      <li class="py-2"><a (click)="closeMenu()" routerLink="/">Inicio</a></li>
+      <li class="py-2">
+        <a (click)="closeMenu()" routerLink="/catalog">Catalogo</a>
+      </li>
+      <li class="py-2">
+        <a (click)="closeMenu()" routerLink="/about-us">Nosotros</a>
+      </li>
+      <li class="py-2">
+        <a (click)="closeMenu()" routerLink="/contact-us">Contactanos</a>
+      </li>
+    </ul>
+  </div>
+</section>
+<!-- /Burger menu  -->
+}
