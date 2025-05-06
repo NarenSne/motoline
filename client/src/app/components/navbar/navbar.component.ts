@@ -10,7 +10,39 @@ import { RouterModule } from '@angular/router';
 })
 export class NavbarComponent {
   toggleBurgerMenu = false;
+  selectedCategory: string = 'Pastillas y bandas';
 
+  categories = [
+    {
+      name: 'Pastillas y bandas',
+      subcategories: ['KROSS', 'RUNNING PARTS', 'AUTECO', 'GPP', 'EBC', 'CASARELLA', 'REVO'],
+    },
+    {
+      name: 'Kit de arrastre',
+      subcategories: ['CHOHO', 'DID', 'ENDURANCE', 'Revo'],
+    },
+    {
+      name: 'Carenajes farolas y guardabarros',
+      subcategories: ['GENÉRICO', 'AUTECO', 'GPP'],
+    },
+    {
+      name: 'Tornilleria especial',
+      subcategories: ['GPP', 'REVO'],
+    },
+    {
+      name: 'Aceites y lubricantes',
+      subcategories: ['MOTUL', 'CASTROL', 'SHELL'],
+    },
+    {
+      name: 'Partes eléctricas',
+      subcategories: ['NGK', 'GPP', 'GENÉRICO'],
+    },
+  ];
+
+  get selectedSubcategories() {
+    const found = this.categories.find(c => c.name === this.selectedCategory);
+    return found ? found.subcategories : [];
+  }
   toggleMenu() {
     this.toggleBurgerMenu = !this.toggleBurgerMenu;
   }

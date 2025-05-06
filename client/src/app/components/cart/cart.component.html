@@ -20,7 +20,7 @@
         <span class="mx-2 text-gray-500">&gt;</span>
       </li>
 
-      <li class="text-gray-500">Cart</li>
+      <li class="text-gray-500">Carrito</li>
     </ul>
   </nav>
 </div>
@@ -40,8 +40,6 @@
               d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
           </svg>
         </div>
-        <p class="text-sm text-gray-400">Size: XL</p>
-        <p class="py-3 text-xl font-bold text-violet-900">$320</p>
         <div class="mt-2 flex w-full items-center justify-between">
           <div class="flex items-center justify-center">
             <button
@@ -75,8 +73,8 @@
       <thead class="h-16 bg-neutral-100">
         <tr>
           <th>ITEM</th>
-          <th>PRICE</th>
-          <th>QUANTITY</th>
+          <th>PRECIO</th>
+          <th>CANTIDAD</th>
           <th>TOTAL</th>
           <th></th>
         </tr>
@@ -85,10 +83,9 @@
         <tr class="h-[120px] border-b" *ngFor="let item of fakeItems">
           <td class="align-middle">
             <div class="flex">
-              <img class="w-[90px]" [src]="item.image" alt="bedroom image" />
+              <img class="w-[90px]" [src]="'data:image/jpeg;base64,'+item.image" alt="bedroom image" />
               <div class="ml-3 flex flex-col justify-center">
                 <p class="text-xl font-bold">{{ item.name }}</p>
-                <p class="text-sm text-gray-400">Size: XL</p>
               </div>
             </div>
           </td>
@@ -130,7 +127,7 @@
   <section class="mx-auto w-full px-4 md:max-w-[400px]">
     <div class="">
       <div class="border py-5 px-4 shadow-md">
-        <p class="font-bold">ORDER SUMMARY</p>
+        <p class="font-bold">RESUMEN DEL PEDIDO</p>
 
         <div class="flex justify-between border-b py-5">
           <p>Subtotal</p>
@@ -138,8 +135,14 @@
         </div>
 
         <div class="flex justify-between border-b py-5">
-          <p>Shipping</p>
-          <p>Free</p>
+          <p>Envio</p>
+          @if(totalPrice>100000){
+            <p>Envío gratis</p>
+          }
+          @else {
+            <p>{{8000|currency}}</p>
+          }
+          
         </div>
 
         <div class="flex justify-between py-5">
@@ -149,7 +152,7 @@
 
         <a [routerLink]="['/check-out']">
           <button class="w-full bg-violet-900 px-5 py-2 text-white">
-            Proceed to checkout
+            PAGAR
           </button>
         </a>
       </div>

@@ -23,7 +23,8 @@ interface Item {
 })
 export class CartComponent implements OnInit {
   totalPrice: number = 0;
-  fakeItems: Item[] = [];
+  envio=8000;
+  fakeItems: any[] = [];
   isLoading = true;
 
   constructor(
@@ -62,6 +63,12 @@ export class CartComponent implements OnInit {
     this.totalPrice = this.fakeItems.reduce((sum, item) => {
       return sum + item.count * item.price;
     }, 0);
+    if(this.totalPrice>100000){
+      this.envio = 0;
+    }
+    else{
+      this.envio = 8000;
+    }
   }
 
   increaseQuantity(item: any) {

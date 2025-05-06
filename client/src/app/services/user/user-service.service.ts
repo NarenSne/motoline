@@ -49,20 +49,26 @@ export class UserServiceService {
       .pipe(catchError(this.handleError));
   }
   getCartSize(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/cart/size`).pipe(
+    return this.http.get(`${this.apiUrl}/cart/size`, {
+      withCredentials: true // 👈 necesario para enviar la cookie de sesión
+    }).pipe(
       catchError(this.handleError)
     );
   }
   addCart(data: any): Observable<any> {
     console.log('id ' + data);
     const product = { productId: data };
-    return this.http.post(`${this.apiUrl}/cart`, product).pipe(
+    return this.http.post(`${this.apiUrl}/cart`, product, {
+      withCredentials: true // 👈 necesario para enviar la cookie de sesión
+    }).pipe(
       // Handle any errors
       catchError(this.handleError)
     );
   }
   getCart(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/cart`).pipe(
+    return this.http.get(`${this.apiUrl}/cart`, {
+      withCredentials: true // 👈 necesario para enviar la cookie de sesión
+    }).pipe(
       // Handle any errors
       catchError(this.handleError)
     );
@@ -70,7 +76,9 @@ export class UserServiceService {
   deleteCart(data: any): Observable<any> {
     console.log('id ' + data);
     const product = { productId: data.productId, type: data.type };
-    return this.http.post(`${this.apiUrl}/cart/delete`, product).pipe(
+    return this.http.post(`${this.apiUrl}/cart/delete`, product, {
+      withCredentials: true // 👈 necesario para enviar la cookie de sesión
+    }).pipe(
       // Handle any errors
       catchError(this.handleError)
     );

@@ -20,7 +20,7 @@
         <span class="mx-2 text-gray-500">&gt;</span>
       </li>
 
-      <li class="text-gray-500">My Wishlist</li>
+      <li class="text-gray-500">Favoritos</li>
     </ul>
   </nav>
   <!-- /breadcrumbs  -->
@@ -34,7 +34,7 @@
     @for (prod of products; track prod._id) {
     <div class="flex flex-col">
       <div class="relative flex">
-        <img class="" src="{{prod.images[0]}}" alt="sofa image" />
+        <img class="" [src]="'data:image/jpeg;base64,'+prod.images[0]" alt="sofa image" />
         <div
           class="absolute flex h-full w-full items-center justify-center gap-3 opacity-0 duration-150 hover:opacity-100">
           <span class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-amber-400">
@@ -56,16 +56,16 @@
       <div>
         <p class="mt-2">{{prod.name}}</p>
         <p class="font-medium text-violet-900">${{prod.price}}</p>
-        <p>Availability: @if (prod.stock){
-          <span class="font-medium text-green-600">In Stock</span>
+        <p>Disponibilidad: @if (prod.stock){
+          <span class="font-medium text-green-600">En stock</span>
           } @else {
-          <span class="font-medium text-red-600">Out of Stock</span>
+          <span class="font-medium text-red-600">Agotado</span>
           }
         </p>
 
         <div class="flex items-center gap-3">
           <button (click)="addToCart(prod)" class="my-5 h-10 w-full bg-violet-900 text-white">
-            Add to cart
+            Añadir al carrito
           </button>
           <i (click)="removeProduct(prod._id)" class="cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
@@ -87,16 +87,16 @@
     @for (prod of products; track prod._id) {
     <div class="flex w-full flex-row h-44 items-center justify-between border py-5 px-4">
       <div class="flex w-full items-center gap-4">
-        <img width="100px" class="object-cover" src="{{prod.images[0]}}" alt="Kitchen image" />
+        <img width="100px" class="object-cover" [src]="'data:image/jpeg;base64,'+prod.images[0]" alt="Kitchen image" />
 
         <div class="flex w-2/5 flex-col justify-center">
           <p class="text-xl font-bold">{{prod.name}}</p>
           <p class="text-gray-500">
-            Availability:
+            Disponibilidad:
             @if (prod.stock){
-            <span class="font-medium text-green-600">In Stock</span>
+            <span class="font-medium text-green-600">En stock</span>
             } @else {
-            <span class="font-medium text-red-600">Out of Stock</span>
+            <span class="font-medium text-red-600">Agotado</span>
             }
           </p>
         </div>
@@ -107,7 +107,7 @@
 
         <div class="mt-2 flex items-center">
           <button (click)="addToCart(prod)" class="w-full px-2 bg-amber-400 py-2 lg:px-5">
-            Add to cart
+            Añadir al carrito
           </button>
 
           <i (click)="removeProduct(prod._id)" class="ml-5 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg"

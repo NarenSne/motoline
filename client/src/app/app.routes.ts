@@ -29,6 +29,7 @@ import { OrdersOverviewComponent } from './components/orders-overview/orders-ove
 import { ProductsOverviewComponent } from './components/products-overview/products-overview.component';
 import { HomeComponent } from './layouts/home/home.component';
 import { OverviewComponent } from './components/overview/overview.component';
+import { TerminosComponent } from './layouts/terminos/terminos.component';
 export const routes: Routes = [
   {
     path: 'admin-dashboard',
@@ -49,6 +50,7 @@ export const routes: Routes = [
     path: 'about-us',
     component: AboutUsComponent,
   },
+  { path: `terminos`, component: TerminosComponent},
   {
     path: 'catalog',
     component: CatalogComponent

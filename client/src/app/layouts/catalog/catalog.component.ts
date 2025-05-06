@@ -24,7 +24,7 @@ export class CatalogComponent {
 
   products: Product[] = [];
   checksCategory: string[] = [];
-  checksBrand: string[] = [];
+  checksBrand: string = '';
   checksMarca = new Set<string>;
   filteredProducts: Product[] = [];
   minPrice = 0;
@@ -44,6 +44,9 @@ export class CatalogComponent {
         this.isLoading = false;
         if(this.param){
           this.checksBrand= this.param
+          console.log(this.checksBrand)
+          this.filter()
+          console.log(this.filteredProducts)
         }
       },
       error: (error) => {
@@ -64,10 +67,11 @@ export class CatalogComponent {
 
   getBrandsFilters(inputValue: any) {
     const inputVal = inputValue.target.value;
+    console.log(inputVal)
     if(inputVal!=''){
-      this.checksBrand=[inputVal]
+      this.checksBrand=inputVal
     }else{
-      this.checksBrand=[]
+      this.checksBrand=''
     }
     this.filter();
   }
@@ -134,7 +138,7 @@ export class CatalogComponent {
       this.filteredProducts = this.products.filter(prod => {
         return (
           (!this.checksCategory.length || this.checksCategory.includes(prod.category)) &&
-          (!this.checksBrand.length || this.checksBrand.includes(prod.brand)) &&
+          (!this.checksBrand || this.checksBrand == prod.brand) &&
           (!this.minPrice || prod.price >= this.minPrice) &&
           (!this.maxPrice || prod.price <= this.maxPrice) &&
           (!this.checksMarca.size  || this.checksMarca.has(prod.Marcavehicular)) &&
