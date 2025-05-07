@@ -30,6 +30,8 @@ import { ProductsOverviewComponent } from './components/products-overview/produc
 import { HomeComponent } from './layouts/home/home.component';
 import { OverviewComponent } from './components/overview/overview.component';
 import { TerminosComponent } from './layouts/terminos/terminos.component';
+import { Component } from '@angular/core';
+import { GarantiaComponent } from './layouts/garantia/garantia.component';
 export const routes: Routes = [
   {
     path: 'admin-dashboard',
@@ -134,5 +136,8 @@ export const routes: Routes = [
   {
     path: 'cart',
     component: CartComponent
+  },
+  { path: `garantia`,
+    component: GarantiaComponent
   },
 ];

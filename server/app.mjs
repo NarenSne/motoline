@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import session from "express-session";
 
 import appError from "./utils/appError.mjs";
 import authRouter from "./routes/authRouter.mjs";
@@ -20,11 +21,21 @@ process.on("uncaughtException", (err) => {
 dotenv.config({ path: "./.env" });
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:4200", // O el dominio de tu frontend
+  credentials: true, // 👈 necesario para cookies/sesión
+}));
 
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;
-
+app.use(
+  session({
+    secret: "tu_secreto_aqui", // pon uno seguro en producción
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // usa true si estás en HTTPS
+  })
+);
 mongoose
   .connect(DATABASE_URL)
   .then(() => {
