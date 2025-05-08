@@ -6,74 +6,79 @@ import User from "../models/User.mjs";
  */
 export async function addCart(req, res, next) {
   try {
-    if (!req.user) {
-      return res.status(401).json({
-        error: "Unauthorized: User not found",
-      });
-    }
-    let userId = req.user._id;
-    let currentUser = await User.findOne(userId);
     const productId = req.body.productId;
     if (!productId) {
-      return res.status(400).json({
-        error: "product ID is required.",
-      });
+      return res.status(400).json({ error: "Product ID is required." });
     }
+
+    if (!req.user) {
+      // Usuario no autenticado: carrito anónimo
+      if (!req.session.cart) {
+        req.session.cart = [];
+      }
+      req.session.cart.push(productId);
+      return res.status(200).json({ message: "Product added to anonymous cart." });
+    }
+
+    // Usuario autenticado
+    const userId = req.user._id;
+    const currentUser = await User.findById(userId);
     currentUser.carts.push(productId);
     await currentUser.save();
-    res.status(200).json({
-      message: "add product to cart for current user ",
-    });
+    res.status(200).json({ message: "Product added to user cart." });
   } catch (err) {
-    res.status(400).json({
-      message: err.message,
-    });
+    res.status(400).json({ message: err.message });
   }
 }
+
 
 /**
  * this function is get cart for the current user
  *
  */
+import Product from "../models/Product.mjs"; // Necesario para buscar productos
+
 export async function getCart(req, res, next) {
   try {
+    let products = [];
     if (!req.user) {
-      return res.status(401).json({
-        error: "Unauthorized: User not found",
-      });
+      // Carrito anónimo
+      const sessionCart = req.session.cart || [];
+      const productDocs = await Product.find({ _id: { $in: sessionCart } });
+      products = productDocs;
+    } else {
+      const userId = req.user._id;
+      const currentUser = await User.findById(userId).populate("carts");
+      products = currentUser.carts;
     }
-    let userId = req.user._id;
-    let currentUser = await User.findOne({ _id: userId }).populate("carts");
-    let products = currentUser.carts;
-    let productCountMap = countProductOccurrences(products);
+
+    const productCountMap = countProductOccurrences(products);
     const productsArray = [];
+
     for (const [productId, count] of productCountMap.entries()) {
-      if (count >= 1) {
-        const product = products.find((p) => p._id.toString() === productId);
-        if (product) {
-          const clonedProduct = {
-            _id: product._id,
-            name: product.name,
-            price: product.price,
-            desc: product.desc,
-            stock: product.stock,
-            image: product.images[0],
-            count: count,
-          };
-          productsArray.push(clonedProduct);
-        }
+      const product = products.find((p) => p._id.toString() === productId);
+      if (product) {
+        productsArray.push({
+          _id: product._id,
+          name: product.name,
+          price: product.price,
+          desc: product.desc,
+          stock: product.stock,
+          image: product.images[0],
+          count,
+        });
       }
     }
+    
     res.status(200).json({
-      message: "Retrieved product occurrences in the cart for the current user",
+      message: "Cart retrieved successfully.",
       data: productsArray,
     });
   } catch (e) {
-    res.status(400).json({
-      message: e.message,
-    });
+    res.status(400).json({ message: e.message });
   }
 }
+
 
 /**
  * this function is delete product from cart for the current user
@@ -81,70 +86,73 @@ export async function getCart(req, res, next) {
  */
 export async function deleteCart(req, res, next) {
   try {
-    if (!req.user) {
-      return res.status(401).json({
-        error: "Unauthorized: User not found",
-      });
-    }
-    let userId = req.user._id;
-    let currentUser = await User.findById(userId);
     const productId = req.body.productId;
-
     if (!productId) {
-      return res.status(400).json({
-        error: "Product ID is required.",
-      });
-    }
-    const productIndex = currentUser.carts.indexOf(productId);
-    if (productIndex === -1) {
-      return res.status(404).json({
-        error: "Product not found in cart.",
-      });
+      return res.status(400).json({ error: "Product ID is required." });
     }
 
-    if (req.body.type == "removeAll") {
-      let productIndex = currentUser.carts.indexOf(productId);
-      while (productIndex !== -1) {
-        currentUser.carts.splice(productIndex, 1);
-        productIndex = currentUser.carts.indexOf(productId);
+    // Anónimo
+    if (!req.user) {
+      let sessionCart = req.session.cart || [];
+      if (!sessionCart.includes(productId)) {
+        return res.status(404).json({ error: "Product not found in cart." });
       }
-    } else {
-      currentUser.carts.splice(productIndex, 1);
+
+      if (req.body.type === "removeAll") {
+        req.session.cart = sessionCart.filter((id) => id !== productId);
+      } else {
+        const index = sessionCart.indexOf(productId);
+        if (index !== -1) sessionCart.splice(index, 1);
+        req.session.cart = sessionCart;
+      }
+
+      return res.status(200).json({ message: "Product removed from anonymous cart." });
     }
+
+    // Autenticado
+    const userId = req.user._id;
+    const currentUser = await User.findById(userId);
+    let userCart = currentUser.carts;
+
+    if (req.body.type === "removeAll") {
+      currentUser.carts = userCart.filter((id) => id.toString() !== productId);
+    } else {
+      const index = userCart.findIndex((id) => id.toString() === productId);
+      if (index !== -1) currentUser.carts.splice(index, 1);
+    }
+
     await currentUser.save();
-    res.status(200).json({
-      message: "Product removed from cart for the current user.",
-    });
+    res.status(200).json({ message: "Product removed from user cart." });
   } catch (err) {
-    res.status(400).json({
-      message: err.message,
-    });
+    res.status(400).json({ message: err.message });
   }
 }
+
 /**
  * this function is get size of cart for the current user
  *
  */
 export async function getCartSize(req, res, next) {
   try {
+    let cart = [];
     if (!req.user) {
-      return res.status(401).json({
-        error: "Unauthorized: User not found",
-      });
+      cart = req.session.cart || [];
+    } else {
+      const userId = req.user._id;
+      const currentUser = await User.findById(userId);
+      cart = currentUser.carts;
     }
-    let userId = req.user._id;
-    let currentUser = await User.findById(userId);
-    let products = countProductOccurrences(currentUser.carts);
+
+    const products = countProductOccurrences(cart);
     res.status(200).json({
-      message: "Retrieved cart size for the current user",
+      message: "Cart size retrieved",
       data: products.size,
     });
   } catch (e) {
-    res.status(400).json({
-      message: e.message,
-    });
+    res.status(400).json({ message: e.message });
   }
 }
+
 
 export async function uploadImage(req, res, next) {
   if (!req.user) {
@@ -181,12 +189,11 @@ export async function uploadImage(req, res, next) {
 export function countProductOccurrences(cart) {
   const productCountMap = new Map();
   cart.forEach((product) => {
-    const productId = product._id.toString();
-    if (productCountMap.has(productId)) {
-      productCountMap.set(productId, productCountMap.get(productId) + 1);
-    } else {
-      productCountMap.set(productId, 1);
-    }
+    const productId = (typeof product === "object" && product._id)
+      ? product._id.toString()
+      : product.toString();
+    productCountMap.set(productId, (productCountMap.get(productId) || 0) + 1);
   });
   return productCountMap;
 }
+

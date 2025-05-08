@@ -49,8 +49,8 @@ router.patch(
 router.delete("/admin/delete", protect, adminDeleteUser);
 router.get('/charts', protect, getUsersCharts);
 
-router.get("/cart", protect, getCart);
-router.post("/cart", protect, addCart);
-router.post("/cart/delete", protect, deleteCart);
-router.get("/cart/size", protect, getCartSize);
+router.get("/cart", getCart);
+router.post("/cart",  addCart);
+router.post("/cart/delete",  deleteCart);
+router.get("/cart/size",  getCartSize);
 export default router;
