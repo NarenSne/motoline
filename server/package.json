@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon app.mjs",
     "test": "mocha tests",
-    "start":"node app.mjs"
+    "start": "node app.mjs"
   },
   "license": "ISC",
   "dependencies": {
