@@ -41,7 +41,7 @@
       <label class="block text-gray-700 font-bold mb-2" for="images">Images</label>
       <div class="flex flex-wrap">
         <div class="mr-2 mb-2" *ngFor="let image of imagesUrl; let i = index">
-          <img src="data:image/png;base64,{{image}}" alt="Image" class="w-24 h-24" />
+          <img src="{{image}}" alt="Image" class="w-24 h-24" />
           <button type="button" (click)="removeImage(image)">Remove</button>
         </div>
       </div>

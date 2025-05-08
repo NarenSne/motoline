@@ -29,12 +29,6 @@ export class ProfileInformationComponent {
     });
     this.profileService.getProfile().subscribe({
       next: (data: any) => {
-        if (data.image) {
-          data.image = 'data:image/png;base64,' + data.image;
-        } else {
-          data.image =
-            'https://cdn-icons-png.freepik.com/256/12225/12225773.png?semt=ais_hybrid';
-        }
         console.log(data);
         this.userInfo = data;
         this.isLoading = false;

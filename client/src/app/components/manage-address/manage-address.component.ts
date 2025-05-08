@@ -66,12 +66,6 @@ export class ManageAddressComponent implements OnInit {
             state: address.state,
           });
         }
-        if (
-          !data.image.includes(
-            'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-grey-male-icon.png'
-          )
-        )
-          data.image = 'data:image/png;base64,' + data.image;
 
         this.userInfo = data;
         this.isLoading = false;

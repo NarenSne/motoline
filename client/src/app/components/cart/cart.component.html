@@ -83,7 +83,7 @@
         <tr class="h-[120px] border-b" *ngFor="let item of fakeItems">
           <td class="align-middle">
             <div class="flex">
-              <img class="w-[90px]" [src]="'data:image/jpeg;base64,'+item.image" alt="bedroom image" />
+              <img class="w-[90px]" [src]="item.image" alt="bedroom image" />
               <div class="ml-3 flex flex-col justify-center">
                 <p class="text-xl font-bold">{{ item.name }}</p>
               </div>

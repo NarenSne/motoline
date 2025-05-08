@@ -76,7 +76,7 @@ export class ProductEditFormComponent {
     this.isLoading = true;
     const formData = new FormData();
     this.imagesUrl.forEach((image: any, index: any) => {
-      let file = this.dataURLtoFile("data:image/png;base64,"+image, index);
+      let file = this.dataURLtoFile(image, index);
       formData.append('images', file);
     })
     // Append each selected file to the FormData object
