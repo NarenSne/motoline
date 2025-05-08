@@ -6,7 +6,8 @@ import { Product } from '../../interfaces/product';
   providedIn: 'root',
 })
 export class ProductService {
-  private API_URL = 'http://localhost:3000/api/products';
+  //private API_URL = 'http://localhost:3000/api/products';
+  private API_URL = 'http://162.240.174.55/api/products';
 
   constructor(private http: HttpClient) { }
 
