@@ -2,6 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
 import appError from "./utils/appError.mjs";
 import authRouter from "./routes/authRouter.mjs";
 import userRouter from "./routes/userRouter.mjs";
@@ -10,6 +14,9 @@ import productRouter from "./routes/productRouter.mjs";
 import featuredProductsRouter from "./routes/featuredProductsRouter.mjs";
 import { protect } from "./controllers/authController.mjs";
 import cors from "cors";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 process.on("uncaughtException", (err) => {
   console.log("uncaught exception ... shutting down");
@@ -46,8 +53,13 @@ app.use("/api/profile", userRouter);
 app.use("/api/orders", protect, orderRouter);
 app.use("/api/products", productRouter);
 app.use("/api/featuredproducts", featuredProductsRouter);
+// Servir Angular
+app.use(express.static(path.join(__dirname, './../client/dist/client/browser')));
 
-app.listen(PORT, '0.0.0.0',() => {
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './../client/dist/client/browser/index.html'));
+});
+app.listen(PORT,() => {
   console.log(`Listening on http://127.0.0.1:${PORT}`);
 });
 

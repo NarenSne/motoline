@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon app.mjs",
-    "test": "mocha tests"
+    "test": "mocha tests",
+    "start":"node app.mjs"
   },
   "license": "ISC",
   "dependencies": {
