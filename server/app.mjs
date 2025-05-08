@@ -53,6 +53,8 @@ app.use("/api/profile", userRouter);
 app.use("/api/orders", protect, orderRouter);
 app.use("/api/products", productRouter);
 app.use("/api/featuredproducts", featuredProductsRouter);
+app.use('/uploads', express.static('uploads'));
+
 // Servir Angular
 app.use(express.static(path.join(__dirname, './../client/dist/client/browser')));
 

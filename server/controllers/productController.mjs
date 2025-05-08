@@ -1,3 +1,6 @@
+
+import path from 'path';
+import fs from 'fs';
 import Product from "../models/Product.mjs";
 
 /**
@@ -176,31 +179,46 @@ export const getProductCountByBrand = async (req, res) => {
     }
 };
 
-
 export async function uploadProductImage(req, res, next) {
-
     const images = req.files.images;
-    let productId = req.body.productId;
-
-    console.log(req.files);
+    const productId = req.body.productId;
 
     try {
-
         if (!productId) {
-            return res.status(404).json({
-                error: "Product not found",
-            });
+            return res.status(404).json({ error: "Product not found" });
         }
 
         const product = await Product.findOne({ _id: productId });
+        if (!product) {
+            return res.status(404).json({ error: "Product not found" });
+        }
+
+        // Asegura que haya un array de imágenes en el producto
+        if (!Array.isArray(product.images)) {
+            product.images = [];
+        }
 
         for (let i = 0; i < images.length; i++) {
-            const base64String = images[i].buffer.toString("base64");
-            product.images[i] = base64String;
+            const file = images[i];
+            const fileName = `${Date.now()}-${file.originalname}`;
+            const uploadPath = path.join('uploads', fileName);
+            const fullPath = path.resolve(uploadPath);
+
+            // Guarda la imagen en el disco
+            fs.writeFileSync(fullPath, file.buffer);
+
+            // Genera la URL pública (ajusta la base según tu dominio o IP)
+            const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${fileName}`;
+
+            // Guarda la URL en el array del producto
+            product.images.push(imageUrl);
         }
+
         await product.save();
-        return res.status(200).json({ message: "image uploaded successfully" });
+        return res.status(200).json({ message: "Images uploaded successfully", images: product.images });
+
     } catch (error) {
-        return res.status(500).json({ error: "failed to upload" });
+        console.error(error);
+        return res.status(500).json({ error: "Failed to upload images" });
     }
 }
