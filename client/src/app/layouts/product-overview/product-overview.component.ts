@@ -77,7 +77,9 @@ export class ProductOverviewComponent {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'There is no enough quantity in the stock!',
+        text: '¡Lo sentimos este producto no tiene stock disponible!',
+        confirmButtonColor: '#FACC15',
+        color: '#000000',
       });
       return;
     }
@@ -87,8 +89,10 @@ export class ProductOverviewComponent {
     });
     Swal.fire({
       icon: 'success',
-      title: 'Great!',
-      text: 'Product Added To Your Cart Successfully'
+      title: '¡Excelente!',
+      text: 'Producto añadido a su carrito correctamente',
+      confirmButtonColor: '#FACC15',
+      color: '#000000',
     })
   }
 

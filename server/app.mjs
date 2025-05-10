@@ -29,7 +29,7 @@ dotenv.config({ path: "./.env" });
 
 const app = express();
 app.use(cors({
-	origin: ["http://motolineparts.com","https://motolineparts.com"], // O el dominio de tu frontend
+	origin: ["http://motolineparts.com","https://motolineparts.com","http://localhost:4200"], // O el dominio de tu frontend
   credentials: true, // 👈 necesario para cookies/sesión
 }));
 
