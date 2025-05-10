@@ -29,7 +29,7 @@ dotenv.config({ path: "./.env" });
 
 const app = express();
 app.use(cors({
-  origin: "http://localhost:4200", // O el dominio de tu frontend
+	origin: ["http://motolineparts.com","https://motolineparts.com"], // O el dominio de tu frontend
   credentials: true, // 👈 necesario para cookies/sesión
 }));
 
@@ -44,7 +44,10 @@ app.use(
   })
 );
 mongoose
-  .connect(DATABASE_URL)
+  .connect(DATABASE_URL,{
+	useNewUrlParser: true,
+ 	useUnifiedTopology: true
+  })
   .then(() => {
     console.log("Connected to MongoDB");
   })
