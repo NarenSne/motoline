@@ -41,7 +41,7 @@
         <div class="flex justify-center gap-2 mx-auto lg:mx-0">
           <a (click)="prevStep()" class="px-4 py-2 text-white bg-purple-900"
             [ngClass]="{ hidden: currentStep === 1 }">Previous step</a>
-          <a (click)="nextStep()" class="px-4 py-2 text-white bg-amber-400">
+          <a (click)="nextStep()" class="px-4 py-2 text-white bg-slate-400">
             {{ currentStep === 4 ? "Place Order" : "Next Step" }}
           </a>
         </div>

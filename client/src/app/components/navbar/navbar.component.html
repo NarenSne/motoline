@@ -4,7 +4,7 @@
   <div class="mx-auto hidden h-12 w-full max-w-[1200px] items-center md:flex">
     <!-- @click="desktopMenuOpen = ! desktopMenuOpen" -->
     <button (click)="toggleMenu()"
-      class="ml-5 flex h-full w-40 cursor-pointer items-center justify-center bg-amber-400">
+      class="ml-5 flex h-full w-40 cursor-pointer items-center justify-center bg-slate-400">
       <div class="flex justify-around" href="#">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="mx-1 h-6 w-6">
@@ -57,7 +57,7 @@
       <ul class="px-0 md:px-5 space-y-2">
         @for (category of categories; track $index) {
         <li class="flex items-center gap-2 py-2 px-3 rounded cursor-pointer transition-colors duration-200" [class]="{
-            'bg-amber-400': selectedCategory === category.name,
+            'bg-slate-400': selectedCategory === category.name,
             'hover:bg-neutral-100': selectedCategory !== category.name
           }" (click)="selectedCategory = category.name">
           {{ category.name }}
