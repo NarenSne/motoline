@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class ProfileService {
   //private readonly API_URL: string = 'http://localhost:3000/api/profile';
-  private readonly API_URL: string = 'http://162.240.174.55/api/profile';
+  private readonly API_URL: string = 'https://motolineparts.com/api/profile';
   constructor(private http: HttpClient) {}
 
   getAllProfile() {

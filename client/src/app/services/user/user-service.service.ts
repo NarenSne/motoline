@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class UserServiceService {
   //private apiUrl = 'http://localhost:3000/api/users';
-  private apiUrl = 'http://162.240.174.55/api/users';
+  private apiUrl = 'https://motolineparts.com/api/users';
 
   constructor(private http: HttpClient) {}
 
