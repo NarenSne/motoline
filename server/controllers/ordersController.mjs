@@ -181,7 +181,7 @@ export const addOrder = async (req, res) => {
     req.user.orders.push(createdOrder._id);
     await req.user.save();
 
-    res.json({ message: "Order created successfully" });
+    res.json({ message: createdOrder.id });
   } catch (error) {
     console.error("Error while creating the order:", error);
     res.status(500).json({ error: "Error while creating the order" });

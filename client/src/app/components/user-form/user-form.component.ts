@@ -50,13 +50,12 @@ export class UserFormComponent {
       email: ['', [Validators.required, Validators.email]],
       username: ['', Validators.required],
       phone: ['', Validators.required],
-      // country: ['', Validators.required],
-      // city: ['', Validators.required],
-      // zip: ['', Validators.required],
-      // street1: ['', Validators.required],
-      // street2: [''],
-      // state: ['', Validators.required],
-      // image: [''],
+      country: ['', Validators.required],
+      city: ['', Validators.required],
+      zip: ['', Validators.required],
+      street1: ['', Validators.required],
+      street2: [''],
+      state: ['', Validators.required]
     });
     this.user = data.user;
     this.userForm.setValue({
@@ -64,23 +63,13 @@ export class UserFormComponent {
       email: this.user.email,
       username: this.user.username,
       phone: this.user.phone,
-  //     country: this.user.address[0].country,
-  //     city: this.user.address[0].city,
-  //     zip: this.user.address[0].zip,
-  //     street1: this.user.address[0].street1,
-  //     street2: this.user.address[0].street2,
-  //     state: this.user.address[0].state,
-  //     image: '',
-  });
-  //   if (
-  //     this.user.image.includes(
-  //       'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-grey-male-icon.png'
-  //     )
-  //   ) {
-  //     this.image = this.user.image;
-  //   } else {
-  //     this.image = 'data:image/png;base64,' + this.user.image;
-  //   }
+      country: this.user.address[0].country,
+      city: this.user.address[0].city,
+      zip: this.user.address[0].zip,
+      street1: this.user.address[0].street1,
+      street2: this.user.address[0].street2,
+      state: this.user.address[0].state,
+    });
   }
 
   onSubmit() {
@@ -117,22 +106,6 @@ export class UserFormComponent {
     }
   }
 
-  // onFileChange(event: any) {
-  //   if (event.target.files && event.target.files.length) {
-  //     this.fileToUpload = event.target.files[0];
-  //     // // this.image = URL.createObjectURL(this.fileToUpload as File);
-  //     this.profileService
-  //       .adminUpdateImage(this.fileToUpload, this.user.username)
-  //       .subscribe({
-  //         next: (response) => {
-  //           console.log('Image updated successfully:', response);
-  //         },
-  //         error: (error) => {
-  //           console.error('Error updating image:', error);
-  //         },
-  //       });
-  //   } else {
-  //     this.fileToUpload = null;
-  //  }
-  
+
+
 }

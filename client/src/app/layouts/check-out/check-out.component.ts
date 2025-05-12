@@ -1,5 +1,5 @@
 import { OrderService } from './../../services/order/order.service';
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit } from '@angular/core';
 import { AddressComponent } from '../../components/address/address.component';
 import { DeliveryComponent } from '../../components/delivery/delivery.component';
 import { PaymentComponent } from '../../components/payment/payment.component';
@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CountService } from '../../services/count/count.service';
+declare var ePayco: any;
 
 @Component({
   selector: 'app-check-out',
@@ -19,7 +20,6 @@ import { CountService } from '../../services/count/count.service';
     CommonModule,
     AddressComponent,
     DeliveryComponent,
-    PaymentComponent,
     ReviewComponent,
     FormsModule,
   ],
@@ -27,7 +27,7 @@ import { CountService } from '../../services/count/count.service';
   styleUrl: './check-out.component.css',
   providers: [UserServiceService],
 })
-export class CheckOutComponent {
+export class CheckOutComponent implements OnInit {
   currentStep = 1;
   cart: any[] = [];
   order: {
@@ -51,7 +51,8 @@ export class CheckOutComponent {
     private userService: UserServiceService,
     private router: Router,
     private orderService: OrderService,
-    private countService: CountService
+    private countService: CountService,
+    private elementRef: ElementRef
   ) {
     this.order = {
       products: {},
@@ -63,6 +64,8 @@ export class CheckOutComponent {
   }
 
   ngOnInit() {
+
+    this.loadEpaycoScript();
     this.userService.getCart().subscribe({
       next: (products) => {
         console.log(products);
@@ -90,7 +93,7 @@ export class CheckOutComponent {
   }
 
   nextStep() {
-    if (this.currentStep <= 4) {
+    if (this.currentStep <= 3) {
       if (
         this.currentStep === 1 &&
         (this.street === '' || this.city === '' || this.zip === '')
@@ -102,44 +105,20 @@ export class CheckOutComponent {
         return;
       }
 
-      if (
-        this.currentStep === 3 &&
-        (this.cardNumber === '' ||
-          this.cardHolder === '' ||
-          this.expirationDate === '' ||
-          this.cvv === '')
-      ) {
-        console.log(
-          this.cardNumber,
-          this.cardHolder,
-          this.expirationDate,
-          this.cvv
-        );
-
-        return;
-      }
-
       this.currentStep++;
     }
 
-    if (this.currentStep === 5) {
+    if (this.currentStep === 4) {
       this.order.address = {
         street: this.street,
         city: this.city,
         zip: this.zip,
       };
-
+      
       this.orderService.createOrder(this.order).subscribe({
-        next: () => {
-          console.log('Order created successfully');
-          Swal.fire({
-            icon: 'success',
-            title: 'Great!',
-            text: 'Order Placed Successfully!'
-          });
-          this.router.navigate(['/order-history']);
-          this.countService.setProduct();
-
+        next: (data:any) => {
+          this.pagarConEpayco(data.message);
+          
         },
         error: (error) => {
           console.error(error);
@@ -188,4 +167,37 @@ export class CheckOutComponent {
   setIsCheck(isCheck: boolean) {
     this.isCheck = isCheck;
   }
+
+  loadEpaycoScript() {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.epayco.co/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+  }
+  pagarConEpayco(orderId:any) {
+    const handler = ePayco.checkout.configure({
+      key: '83f65a1de38c66faad76373792c4ba64',
+      test: true,
+    });
+
+    const data = {
+      name: 'Motoline Parts',
+      description: 'Pedido',
+      invoice: orderId,
+      currency: 'cop',
+      amount: this.order.totalPrice,
+      tax_base: '0',
+      tax: '0',
+      country: 'co',
+      lang: 'es',
+      external: 'false',
+      response: 'http://localhost:4200/order-history',
+      confirmation: 'https://www.motolineparts.com/api/orders/updateOrderStatus',
+      method: 'POST'
+    };
+
+          this.countService.setProduct();
+    handler.open(data);
+  }
+
 }

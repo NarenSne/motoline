@@ -6,16 +6,13 @@
         <thead class="h-16 bg-neutral-100">
           <tr>
             <th [ngClass]="{ 'bg-purple-900 text-white': currentStep === 1 }">
-              ADDRESS
+              DIRECCION
             </th>
             <th [ngClass]="{ 'bg-purple-900 text-white': currentStep === 2 }">
-              DELIVERY METHOD
+              METODO DE ENVIO
             </th>
             <th [ngClass]="{ 'bg-purple-900 text-white': currentStep === 3 }">
-              PAYMENT METHOD
-            </th>
-            <th [ngClass]="{ 'bg-purple-900 text-white': currentStep === 4 }">
-              ORDER REVIEW
+              METODO DE PAGO
             </th>
           </tr>
         </thead>
@@ -29,20 +26,16 @@
         <app-delivery (isChecked)="setIsCheck($event)"></app-delivery>
       </ng-container>
       <ng-container *ngIf="currentStep === 3">
-        <app-payment (cardHolder)="setCardHolder($event)" (cardNumber)="setCardNumber($event)"
-          (expirationDate)="setExpirationDate($event)" (cvv)="setCvv($event)"></app-payment>
-      </ng-container>
-      <ng-container *ngIf="currentStep === 4">
         <app-review [products]="cart"></app-review>
       </ng-container>
 
       <div class="flex items-center justify-between w-full">
-        <a routerLink="/cart" class="hidden text-sm lg:block text-violet-900">← Back to the shop</a>
+        <a routerLink="/cart" class="hidden text-sm lg:block text-violet-900">← Regresar a la tienda</a>
         <div class="flex justify-center gap-2 mx-auto lg:mx-0">
           <a (click)="prevStep()" class="px-4 py-2 text-white bg-purple-900"
-            [ngClass]="{ hidden: currentStep === 1 }">Previous step</a>
+            [ngClass]="{ hidden: currentStep === 1 }">Paso anterior</a>
           <a (click)="nextStep()" class="px-4 py-2 text-white bg-slate-400">
-            {{ currentStep === 4 ? "Place Order" : "Next Step" }}
+            {{ currentStep === 3 ? "Pagar" : "Siguiente Paso" }}
           </a>
         </div>
       </div>
@@ -52,21 +45,26 @@
     <section class="mx-auto w-full px-4 md:max-w-[400px]">
       <div class="">
         <div class="px-4 py-5 border shadow-md">
-          <p class="font-bold">ORDER SUMMARY</p>
+          <p class="font-bold">Resumen del pedido</p>
 
           <div class="flex justify-between py-5 border-b">
             <p>Subtotal</p>
-            <p>${{ order.totalPrice }}</p>
+            <p>{{ order.totalPrice|currency}}</p>
           </div>
 
           <div class="flex justify-between py-5 border-b">
-            <p>Shipping</p>
-            <p>Free</p>
+            <p>Envio</p>
+            @if(order.totalPrice>100000){
+            <p>Envío gratis</p>
+            }
+            @else {
+            <p>{{8000|currency}}</p>
+            }
           </div>
 
           <div class="flex justify-between py-5">
             <p>Total</p>
-            <p>${{ order.totalPrice }}</p>
+            <p>{{ order.totalPrice>100000?order.totalPrice:order.totalPrice+8000| currency }}</p>
           </div>
         </div>
       </div>
