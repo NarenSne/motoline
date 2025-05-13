@@ -80,7 +80,7 @@
         <div class="flex w-full justify-between">
           <div class="flex justify-center items-center">
 
-            <select formControlName="brand" (change)="getBrandsFilters($event)" 
+            <select formControlName="brand" (change)="getBrandsFilters($event)"
               class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="brand" required>
               <option value="">Seleccione una opcion</option>
@@ -159,24 +159,13 @@
         <p class="mb-3 font-medium">MARCA VEHICULO</p>
 
         <div class="flex w-full justify-between">
-          <div class="flex justify-center items-center">
-
-            <select formControlName="Marcavehicular" value="Marca Vehicular" (change)="getMarcaFilters($event)"
-              class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="Vehiclebrand" required>
-              <option value="">Seleccione una opcion</option>
-              <option value="KTM">KTM</option>
-              <option value="HONDA">HONDA</option>
-              <option value="AUTECO">AUTECO</option>
-              <option value="YAMAHA">YAMAHA</option>
-              <option value="AKT">AKT</option>
-              <option value="KYMCO">KYMCO</option>
-              <option value="TVS">TVS</option>
-              <option value="HERO">HERO</option>
-              <option value="SUSUKI">SUSUKI</option>
-              <option value="BENELLI">BENELLI</option>
-            </select>
-          </div>
+          <mat-select formControlName="Marcavehicular" (selectionChange)="getMarcaFilters($event)"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="Vehiclebrand">
+              @for (food of list; track food) {
+              <mat-option [value]="food.name">{{food.name}}</mat-option>
+              }
+            </mat-select>
         </div>
 
       </div>

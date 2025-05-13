@@ -139,7 +139,7 @@
 
     <div class="mb-4">
       <label class="block text-gray-700 font-bold mb-2" for="category">Marce Vehicular</label>
-      <select formControlName="Marcavehicular" value="Marca Vehicular"
+      <!-- <select formControlName="Marcavehicular" value="Marca Vehicular"
         class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="Vehiclebrand" required>
         <option value="KTM">KTM</option>
@@ -152,12 +152,27 @@
         <option value="HERO">HERO</option>
         <option value="SUSUKI">SUSUKI</option>
         <option value="BENELLI">BENELLI</option>
-      </select>
+
+      </select> -->
+      <mat-select formControlName="Marcavehicular"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="Vehiclebrand">
+        @for (food of list; track food) {
+        <mat-option [value]="food.name">{{food.name}}</mat-option>
+        }
+      </mat-select>
     </div>
     <!-- Vehicle brand -->
     <div class="mb-4">
       <label class="block text-gray-700 font-bold mb-2" for="category">Referencia Vehiculo</label>
-      <select formControlName="ReferenciaVehiculo" value="Referencia Vehiculo"
+      <mat-select formControlName="ReferenciaVehiculo"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="Vehiclereference" multiple>
+        @for (food of listReferencia; track food) {
+        <mat-option [value]="food.name">{{food.name}}</mat-option>
+        }
+      </mat-select>
+      <!-- <select formControlName="ReferenciaVehiculo" value="Referencia Vehiculo"
         class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="Vehiclereference" required multiple>
         <option value="PULSAR NS 200">PULSAR NS 200</option>
@@ -201,7 +216,7 @@
         <option value=""></option>
         <option value=""></option>
         <option value=""></option>
-      </select>
+      </select> -->
     </div>
     <!-- Submit Button -->
     <div class="flex items-center justify-end">

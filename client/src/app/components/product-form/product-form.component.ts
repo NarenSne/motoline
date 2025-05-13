@@ -4,11 +4,12 @@ import { ProductService } from '../../services/product/product.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule, LoadingSpinnerComponent],
+  imports: [ReactiveFormsModule, RouterModule, LoadingSpinnerComponent, MatSelectModule],
   templateUrl: './product-form.component.html',
   styles: ``
 })
@@ -17,11 +18,22 @@ export class ProductFormComponent {
   selectedFiles: File[] = [];
   formData: any;
   isLoading = false;
+  list: any;
+  listReferencia: any;
 
   constructor(private productService: ProductService, public dialog: MatDialog) {
 
     this.formData = new FormData();
-
+    this.productService.getAllMarcaVehicular().subscribe({
+      next: (data: any) => {
+        this.list = data.marcaVehicular
+      }
+    })
+    this.productService.getAllReferenciaVehicular().subscribe({
+      next: (data: any) => {
+        this.listReferencia = data.referenciaVehicular
+      }
+    })
   }
 
   productForm = new FormGroup({
@@ -56,7 +68,7 @@ export class ProductFormComponent {
 
   onSubmit() {
     this.isLoading = true;
-    let product:any = { ...this.productForm.value };
+    let product: any = { ...this.productForm.value };
     let productId = '';
     product.ReferenciaVehiculo = product.ReferenciaVehiculo?.join(",")
     this.productService.createProduct(product).subscribe({

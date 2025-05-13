@@ -6,11 +6,12 @@ import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { SimpleChanges } from '@angular/core';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-product-edit-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, LoadingSpinnerComponent],
+  imports: [ReactiveFormsModule, CommonModule, LoadingSpinnerComponent,MatSelectModule],
   templateUrl: './product-edit-form.component.html',
   styles: ``
 })
@@ -20,9 +21,20 @@ export class ProductEditFormComponent {
   imagesUrl: any;
   selectedFiles: File[] = [];
   isLoading = false;
+  list: any;
+  listReferencia: any;
 
   constructor(private productService: ProductService, @Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog) {
-
+    this.productService.getAllMarcaVehicular().subscribe({
+      next: (data: any) => {
+        this.list = data.marcaVehicular
+      }
+    })
+    this.productService.getAllReferenciaVehicular().subscribe({
+      next: (data: any) => {
+        this.listReferencia = data.referenciaVehicular
+      }
+    })
   }
 
   ngOnInit(): void {

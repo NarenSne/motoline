@@ -32,6 +32,7 @@ import { OverviewComponent } from './components/overview/overview.component';
 import { TerminosComponent } from './layouts/terminos/terminos.component';
 import { Component } from '@angular/core';
 import { GarantiaComponent } from './layouts/garantia/garantia.component';
+import { MarcasReferenciasComponent } from './components/marcas-referencias/marcas-referencias.component';
 export const routes: Routes = [
   {
     path: 'admin-dashboard',
@@ -41,6 +42,7 @@ export const routes: Routes = [
       { path: 'accounts-overview', component: AccountsOverviewComponent },
       { path: 'orders-overview', component: OrdersOverviewComponent },
       { path: 'products-overview', component: ProductsOverviewComponent },
+      { path: 'marcas-referencias', component: MarcasReferenciasComponent },
       // { path: '', redirectTo: 'accounts', pathMatch: 'full' },
     ],
     canActivate: [IsLoggedService, IsAdminService],

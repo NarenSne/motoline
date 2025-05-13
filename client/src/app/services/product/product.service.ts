@@ -6,8 +6,8 @@ import { Product } from '../../interfaces/product';
   providedIn: 'root',
 })
 export class ProductService {
-  //private API_URL = 'http://localhost:3000/api/products';
-  private API_URL = 'https://motolineparts.com/api/products';
+  private API_URL = 'http://localhost:3000/api/products';
+  //private API_URL = 'https://motolineparts.com/api/products';
 
   constructor(private http: HttpClient) { }
 
@@ -45,4 +45,33 @@ export class ProductService {
   getChartsProducts() {
     return this.http.get(`${this.API_URL}/product-counts-by-brand`);
   }
+
+  getAllMarcaVehicular(page: number | undefined = undefined, limit: number | undefined = undefined) {
+    return this.http.get<Product[]>(
+      `${this.API_URL}/marcaVehicular?page=${page}&limit=${limit}`
+    );
+  }
+
+  createMarcaVehicular(product: any) {
+    return this.http.post(this.API_URL+"/marcaVehicular", product);
+  }
+
+  updateMarcaVehicular(id: string, product: any) {
+    return this.http.put(`${this.API_URL}/marcaVehicular/${id}`, product);
+  }
+
+  getAllReferenciaVehicular(page: number | undefined = undefined, limit: number | undefined = undefined) {
+    return this.http.get<Product[]>(
+      `${this.API_URL}/referenciaVehicular?page=${page}&limit=${limit}`
+    );
+  }
+
+  createReferenciaVehicular(product: any) {
+    return this.http.post(this.API_URL+"/referenciaVehicular", product);
+  }
+  
+  updateReferenciaVehicular(id: string, product: any) {
+    return this.http.put(`${this.API_URL}/referenciaVehicular/${id}`, product);
+  }
+
 }

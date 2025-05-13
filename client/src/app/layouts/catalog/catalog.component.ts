@@ -5,20 +5,27 @@ import { Product } from '../../interfaces/product';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
 import { ActivatedRoute } from '@angular/router';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [ProductCardComponent, CommonModule, LoadingSpinnerComponent],
+  imports: [ProductCardComponent, CommonModule, LoadingSpinnerComponent, MatSelectModule],
   templateUrl: './catalog.component.html',
   providers: [ProductService],
   styles: ``
 })
 export class CatalogComponent {
   param:any;
+  list: any;
   constructor(private productService: ProductService, private router: ActivatedRoute) {
     router.queryParams.subscribe((data:any)=>{
       this.param = data.brand
+    })
+    this.productService.getAllMarcaVehicular().subscribe({
+      next: (data: any) => {
+        this.list = data.marcaVehicular
+      }
     })
    }
 

@@ -2,6 +2,8 @@
 import path from 'path';
 import fs from 'fs';
 import Product from "../models/Product.mjs";
+import MarcaVehicular from '../models/MarcaVehicular.mjs';
+import ReferenciaVehicular from '../models/ReferenciaVehicular.mjs';
 
 /**
  * Get all products in the database paginated.
@@ -58,6 +60,7 @@ export const createProduct = async (req, res) => {
  */
 export const getProductById = async (req, res) => {
     const productId = req.params.id;
+    console.log(productId)
     try {
         const product = await Product.findOne({ _id: productId });
         res.json(product);
@@ -221,4 +224,131 @@ export async function uploadProductImage(req, res, next) {
         console.error(error);
         return res.status(500).json({ error: "Failed to upload images" });
     }
+}
+
+
+/**
+ * Get all products in the database paginated.
+ */
+export const getAllMarcaVehicular = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page);// Get page number, default to 1
+        const limit = parseInt(req.query.limit); // Get limit per page, default to 10
+
+        let marcaVehicular;
+
+        if (page && limit) {
+            const skip = (page - 1) * limit; // Calculate documents to skip
+
+            marcaVehicular = await MarcaVehicular.find({})
+                .skip(skip)
+                .limit(limit);
+        } else {
+            marcaVehicular = await MarcaVehicular.find({});
+        }
+
+        const totalProducts = await MarcaVehicular.countDocuments(); // Get total count of products
+
+        res.json({
+            marcaVehicular,
+            currentPage: page,
+            totalPages: Math.ceil(totalProducts / limit),
+            totalProducts
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error retrieving products' });
+    }
+}
+
+export const createMarcaVehicular = async (req, res) => {
+    const { name } = req.body;
+
+    try {
+        const newProduct = new MarcaVehicular({ name });
+        const result = await newProduct.save();
+        res.status(201).json({ message: 'Marca vehicular añadida satisfactoriamente', product: result });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error creando marca vehicular' });
+    }
+}
+
+export const updateMarcaVehicular = async (req, res) => {
+
+    const productId = req.params.id;
+    const updates = req.body;
+
+    try {
+        const result = await MarcaVehicular.updateOne({ _id: productId }, { $set: updates });
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.json({ message: 'Product updated', result: result });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating product' });
+    }
+
+}
+/**
+ * Get all products in the database paginated.
+ */
+export const getAllreferenciaVehicular = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page);// Get page number, default to 1
+        const limit = parseInt(req.query.limit); // Get limit per page, default to 10
+
+        let referenciaVehicular;
+
+        if (page && limit) {
+            const skip = (page - 1) * limit; // Calculate documents to skip
+
+            referenciaVehicular = await ReferenciaVehicular.find({})
+                .skip(skip)
+                .limit(limit);
+        } else {
+            referenciaVehicular = await ReferenciaVehicular.find({});
+        }
+
+        const totalProducts = await ReferenciaVehicular.countDocuments(); // Get total count of products
+
+        res.json({
+            referenciaVehicular,
+            currentPage: page,
+            totalPages: Math.ceil(totalProducts / limit),
+            totalProducts
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error retrieving products' });
+    }
+}
+
+export const createreferenciaVehicular = async (req, res) => {
+    const { marca , name } = req.body;
+
+    try {
+        const newProduct = new ReferenciaVehicular({ marca, name });
+        const result = await newProduct.save();
+        res.status(201).json({ message: 'Referencia vehicular añadida satisfactoriamente', product: result });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error creando referencia vehicular' });
+    }
+}
+export const updatereferenciaVehicular = async (req, res) => {
+
+    const productId = req.params.id;
+    const updates = req.body;
+
+    try {
+        const result = await ReferenciaVehicular.updateOne({ _id: productId }, { $set: updates });
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.json({ message: 'Product updated', result: result });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating product' });
+    }
+
 }

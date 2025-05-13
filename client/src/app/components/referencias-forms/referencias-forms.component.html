@@ -1,0 +1,33 @@
+<div class="container mx-auto p-6 min-h-[70vh] min-w-[50vw] max-w-[90vw] max-h-[90vh]">
+    <h1 class="text-2xl font-bold mb-4 text-center">Marca</h1>
+    <form [formGroup]="marcaForm" (ngSubmit)="onSubmit()" class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="mb-4">
+            <label class="block text-gray-700 font-bold mb-2" for="marca">Marca</label>
+            
+            <mat-select  formControlName="marca"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="marca">
+                @for (food of list; track food) {
+                <mat-option [value]="food.name">{{food.name}}</mat-option>
+                }
+            </mat-select>
+        </div>
+
+        <!-- Full Name -->
+        <div class="mb-4">
+            <label class="block text-gray-700 font-bold mb-2" for="name">Nombre</label>
+            <input formControlName="name"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="name" type="text" required />
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex items-center justify-end">
+            <button type="submit"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Guardar cambios
+            </button>
+        </div>
+    </form>
+</div>
