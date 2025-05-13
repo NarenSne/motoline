@@ -33,7 +33,7 @@ export class MarcasReferenciasComponent {
   }
 
   loadMarcas(): void {
-    this.productService.getAllMarcaVehicular(1,10).subscribe({
+    this.productService.getAllMarcaVehicular().subscribe({
       next: (response: any) => {
         this.pageOrders = response.marcaVehicular;
       },
@@ -44,7 +44,7 @@ export class MarcasReferenciasComponent {
   }
 
   loadReferencias(): void {
-    this.productService.getAllReferenciaVehicular(1,10).subscribe({
+    this.productService.getAllReferenciaVehicular().subscribe({
       next: (response: any) => {
         this.pageReferencia = response.referenciaVehicular;
       },
