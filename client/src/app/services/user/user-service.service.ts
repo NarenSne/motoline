@@ -13,10 +13,7 @@ export class UserServiceService {
 
   // Define the login method
   login(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, data).pipe(
-      // Handle any errors
-      catchError(this.handleError)
-    );
+    return this.http.post(`${this.apiUrl}/login`, data)
   }
   // Define the register method
   signup(data: any): Observable<any> {
