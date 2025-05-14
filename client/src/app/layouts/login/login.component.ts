@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { UserServiceService } from '../../services/user/user-service.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -42,6 +43,7 @@ export class LoginComponent {
           } else this.router.navigate(['/home']);
         },
         error: (error) => {
+          Swal.fire("Error",error.error.response,'error');
           console.log('Login failed:', error);
         },
       });

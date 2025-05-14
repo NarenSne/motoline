@@ -6,7 +6,7 @@ class appError extends Error {
 
     this.isOperational = true;
     //provide more detailed information about where and how the error occurred.
-    Error.captureStackTrace(this, this.constructor);
+    //Error.captureStackTrace(this, this.constructor);
   }
 }
 

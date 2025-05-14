@@ -55,10 +55,10 @@ export class ProductOverviewComponent {
       type: "loop",
       focus: 0,
       gap: "1rem",
-      perPage: 1
+      perPage: 1,
     });
-
-    splide.mount();
+    setTimeout(()=>{splide.mount()},1000)
+    
   }
 
   activeImage(image: string) {
