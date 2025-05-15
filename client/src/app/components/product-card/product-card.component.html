@@ -1,8 +1,35 @@
-  <div class="relative">
+<div class="relative">
   <!-- Imagen con overlay y enlace -->
   <a [routerLink]="'/product-overview/' + product._id" class="block">
     <div class="relative flex">
-      <img class="h-48 w-48 object-cover w-auto mx-auto" src="{{ product.images[0] }}" alt="Imagen producto" />
+      <style>
+        .image-container {
+          width: 100%;
+          height: 200px;
+          background-color: lightgray;
+          /* fondo gris por defecto */
+          position: relative;
+          overflow: hidden;
+        }
+
+        .image-container img {
+          display: none;
+          /* por defecto oculta */
+        }
+
+        .image-container img.loaded {
+          display: block;
+          /* visible solo cuando haya cargado */
+        }
+        .image-container.loaded {
+          background-color: transparent;
+          /* visible solo cuando haya cargado */
+        }
+      </style>
+      <div class="image-container" #img>
+        <img class="h-48 w-48 object-cover w-auto mx-auto" src="{{ product.images[0] }}" alt="Imagen producto"
+          onload="event.target.parentElement.classList.add('loaded');event.target.classList.add('loaded')" />
+      </div>
       <div
         class="absolute flex h-full w-full items-center justify-center gap-3 opacity-0 duration-150 hover:opacity-100">
         <!-- Icono de lupa -->

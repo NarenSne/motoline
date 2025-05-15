@@ -11,7 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 @Component({
   selector: 'app-product-edit-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, LoadingSpinnerComponent,MatSelectModule],
+  imports: [ReactiveFormsModule, CommonModule, LoadingSpinnerComponent, MatSelectModule],
   templateUrl: './product-edit-form.component.html',
   styles: ``
 })
@@ -41,8 +41,16 @@ export class ProductEditFormComponent {
     let { name, price, images, desc, stock, brand, category, Marcavehicular, ReferenciaVehiculo } = this.data.product;
     this.product = this.data.product;
     ReferenciaVehiculo = ReferenciaVehiculo.split(",");
-    this.productForm.setValue({ name, price, desc, stock, images, brand, category, Marcavehicular, ReferenciaVehiculo })
     this.imagesUrl = images;
+    this.productForm.get("name")?.setValue(name)
+    this.productForm.get("price")?.setValue(price)
+    this.productForm.get("desc")?.setValue(desc)
+    this.productForm.get("stock")?.setValue(stock)
+    this.productForm.get("images")?.setValue(images)
+    this.productForm.get("brand")?.setValue(brand)
+    this.productForm.get("category")?.setValue(category)
+    this.productForm.get("Marcavehicular")?.setValue(Marcavehicular)
+    this.productForm.get("ReferenciaVehiculo")?.setValue(ReferenciaVehiculo)
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -109,7 +117,7 @@ export class ProductEditFormComponent {
 
     })
   }
-  dataURLtoFile(dataurl:any, filename:any) {
+  dataURLtoFile(dataurl: any, filename: any) {
     var arr = dataurl.split(','),
       mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[arr.length - 1]),
