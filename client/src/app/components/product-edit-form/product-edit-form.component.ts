@@ -40,6 +40,7 @@ export class ProductEditFormComponent {
   ngOnInit(): void {
     let { name, price, images, desc, stock, brand, category, Marcavehicular, ReferenciaVehiculo } = this.data.product;
     this.product = this.data.product;
+    ReferenciaVehiculo = ReferenciaVehiculo.split(",");
     this.productForm.setValue({ name, price, desc, stock, images, brand, category, Marcavehicular, ReferenciaVehiculo })
     this.imagesUrl = images;
   }
@@ -79,6 +80,7 @@ export class ProductEditFormComponent {
   uploadFiles() {
     let product: any = this.productForm.getRawValue();
     product.images = [];
+    product.ReferenciaVehiculo = product.ReferenciaVehiculo?.join(",")
     this.productService.updateProduct(this.product._id, product).subscribe({
       next: res => {
 

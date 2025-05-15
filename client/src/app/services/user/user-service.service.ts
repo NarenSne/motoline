@@ -53,9 +53,9 @@ export class UserServiceService {
       catchError(this.handleError)
     );
   }
-  addCart(data: any): Observable<any> {
+  addCart(data: any,quantity:number): Observable<any> {
     console.log('id ' + data);
-    const product = { productId: data };
+    const product = { productId: data,quantity:quantity };
     return this.http.post(`${this.apiUrl}/cart`, product, {
       withCredentials: true // 👈 necesario para enviar la cookie de sesión
     }).pipe(

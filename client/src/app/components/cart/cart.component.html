@@ -31,7 +31,6 @@
     <!-- 1 -->
 
     <div class="flex w-full border px-4 py-4" *ngFor="let item of fakeItems">
-      <img class="self-start object-contain" width="90px" src="./assets/images/bedroom.png" alt="bedroom image" />
       <div class="ml-3 flex w-full flex-col justify-center">
         <div class="flex items-center justify-between">
           <p class="text-xl font-bold">{{ item.name }}</p>
@@ -83,7 +82,6 @@
         <tr class="h-[120px] border-b" *ngFor="let item of fakeItems">
           <td class="align-middle">
             <div class="flex">
-              <img class="w-[90px]" [src]="item.image" alt="bedroom image" />
               <div class="ml-3 flex flex-col justify-center">
                 <p class="text-xl font-bold">{{ item.name }}</p>
               </div>
@@ -97,7 +95,7 @@
                 &minus;
               </button>
               <div class="flex h-8 w-8 cursor-text items-center justify-center border-t border-b active:ring-gray-500">
-                {{ item.count }}
+                {{ item.quantity }}
               </div>
               <button (click)="increaseQuantity(item)"
                 class="flex h-8 w-8 cursor-pointer items-center justify-center border duration-100 hover:bg-neutral-100 focus:ring-2 focus:ring-gray-500 active:ring-2 active:ring-gray-500">
@@ -106,7 +104,7 @@
             </div>
           </td>
           <td class="mx-auto text-center">
-            {{ item.price * item.count | currency }}
+            {{ item.price * item.quantity | currency }}
           </td>
           <td class="align-middle">
             <svg (click)="removeItem(item)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"

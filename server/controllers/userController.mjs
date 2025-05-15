@@ -6,30 +6,54 @@ import User from "../models/User.mjs";
  */
 export async function addCart(req, res, next) {
   try {
-    const productId = req.body.productId;
+    const { productId, quantity = 1 } = req.body;
+    const qty = parseInt(quantity, 10);
+
     if (!productId) {
       return res.status(400).json({ error: "Product ID is required." });
     }
-
-    if (!req.user) {
-      // Usuario no autenticado: carrito anónimo
-      if (!req.session.cart) {
-        req.session.cart = [];
-      }
-      req.session.cart.push(productId);
-      return res.status(200).json({ message: "Product added to anonymous cart." });
+    if (isNaN(qty) || qty < 1) {
+      return res.status(400).json({ error: "Quantity must be a positive integer." });
     }
 
-    // Usuario autenticado
+    // -- Carrito anónimo --
+    if (!req.user) {
+      req.session.cart = req.session.cart || [];
+      // buscamos si ya existe el producto
+      const existing = req.session.cart.find(item => item.productId === productId);
+      if (existing) {
+        existing.quantity += qty;
+      } else {
+        req.session.cart.push({ productId, quantity: qty });
+      }
+      return res
+        .status(200)
+        .json({ message: "Product added to anonymous cart.", cart: req.session.cart });
+    }
+
+    // -- Carrito de usuario autenticado --
     const userId = req.user._id;
     const currentUser = await User.findById(userId);
-    currentUser.carts.push(productId);
+
+    // asumimos que currentUser.carts es un array de objetos { productId, quantity }
+    currentUser.carts = currentUser.carts || [];
+    const existing = currentUser.carts.find(item => item.productId.toString() === productId);
+    if (existing) {
+      existing.quantity += qty;
+    } else {
+      currentUser.carts.push({ productId, quantity: qty });
+    }
+
     await currentUser.save();
-    res.status(200).json({ message: "Product added to user cart." });
+    return res
+      .status(200)
+      .json({ message: "Product added to user cart.", carts: currentUser.carts });
+
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    return res.status(400).json({ error: err.message });
   }
 }
+
 
 
 /**
@@ -40,44 +64,69 @@ import Product from "../models/Product.mjs"; // Necesario para buscar productos
 
 export async function getCart(req, res, next) {
   try {
-    let products = [];
+    let cartItems = [];
+
     if (!req.user) {
-      // Carrito anónimo
+      // — Carrito anónimo —
+      // session.cart puede ser ['id1','id2'] o [{ productId, quantity }]
       const sessionCart = req.session.cart || [];
-      const productDocs = await Product.find({ _id: { $in: sessionCart } });
-      products = productDocs;
+
+      // Normaliza todo a { productId, quantity }
+      const items = sessionCart.map(item =>
+        typeof item === 'object'
+          ? item
+          : { productId: item, quantity: 1 }
+      );
+
+      const productIds = items.map(i => i.productId);
+      const products = await Product.find({ _id: { $in: productIds } });
+
+      cartItems = items
+        .map(({ productId, quantity }) => {
+          const product = products.find(p => p._id.toString() === productId);
+          return product ? { product, quantity } : null;
+        })
+        .filter(Boolean);
+
     } else {
+      // — Carrito de usuario autenticado —
       const userId = req.user._id;
-      const currentUser = await User.findById(userId).populate("carts");
-      products = currentUser.carts;
+      const currentUser = await User.findById(userId);
+
+      // currentUser.carts debe ser [{ productId, quantity }]
+      const items = currentUser.carts || [];
+      const productIds = items.map(i => i.productId);
+      const products = await Product.find({ _id: { $in: productIds } });
+
+      cartItems = items
+        .map(({ productId, quantity }) => {
+          const product = products.find(p => p._id.toString() === productId.toString());
+          return product ? { product, quantity } : null;
+        })
+        .filter(Boolean);
     }
 
-    const productCountMap = countProductOccurrences(products);
-    const productsArray = [];
+    // Formatea la respuesta
+    const productsArray = cartItems.map(({ product, quantity }) => ({
+      _id:     product._id,
+      name:    product.name,
+      price:   product.price,
+      desc:    product.desc,
+      stock:   product.stock,
+      image:   product.images[0],
+      quantity,
+    }));
 
-    for (const [productId, count] of productCountMap.entries()) {
-      const product = products.find((p) => p._id.toString() === productId);
-      if (product) {
-        productsArray.push({
-          _id: product._id,
-          name: product.name,
-          price: product.price,
-          desc: product.desc,
-          stock: product.stock,
-          image: product.images[0],
-          count,
-        });
-      }
-    }
-    
     res.status(200).json({
       message: "Cart retrieved successfully.",
       data: productsArray,
     });
-  } catch (e) {
-    res.status(400).json({ message: e.message });
+
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 }
+
 
 
 /**

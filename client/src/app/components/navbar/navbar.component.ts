@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -10,6 +10,9 @@ import { RouterModule } from '@angular/router';
 })
 export class NavbarComponent {
   toggleBurgerMenu = false;
+  @ViewChild('menu', { static: false }) menu!: ElementRef;
+  @ViewChild('menudeploy', { static: false }) menudeploy!: ElementRef;
+  
   selectedCategory: string = 'Pastillas y bandas';
 
   categories = [
@@ -53,5 +56,17 @@ export class NavbarComponent {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     window.location.reload();
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event:MouseEvent){
+    console.log(this.toggleBurgerMenu)
+    if (
+      this.toggleBurgerMenu &&
+      this.menu && this.menudeploy &&
+      !this.menudeploy.nativeElement.contains(event.target) &&
+      !this.menu.nativeElement.contains(event.target)
+    ) {
+      this.toggleBurgerMenu = false;
+    }
   }
 }

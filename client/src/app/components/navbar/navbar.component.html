@@ -3,7 +3,7 @@
 <nav class="relative bg-slate-600">
   <div class="mx-auto hidden h-12 w-full max-w-[1200px] items-center md:flex">
     <!-- @click="desktopMenuOpen = ! desktopMenuOpen" -->
-    <button (click)="toggleMenu()"
+    <button (click)="toggleMenu()" #menu
       class="ml-5 flex h-full w-40 cursor-pointer items-center justify-center bg-slate-400">
       <div class="flex justify-around" href="#">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -49,7 +49,7 @@
 
 <!-- Menu  -->
 <!-- x-show="desktopMenuOpen" @click.outside="desktopMenuOpen = false" -->
-<section class="relative w-full border-b border-l border-r bg-white z-10">
+<section class="relative w-full border-b border-l border-r bg-white z-10" #menudeploy >
   <div class="mx-auto flex flex-col md:flex-row max-w-[1200px] py-6 px-4 md:px-0">
 
     <!-- Menú lateral -->

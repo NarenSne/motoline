@@ -16,18 +16,22 @@ import { MatSelectModule } from '@angular/material/select';
   styles: ``
 })
 export class CatalogComponent {
-  param:any;
+  param: any;
   list: any;
+  categorie: any;
   constructor(private productService: ProductService, private router: ActivatedRoute) {
-    router.queryParams.subscribe((data:any)=>{
+    router.queryParams.subscribe((data: any) => {
       this.param = data.brand
+      this.categorie = data.categorie
+      console.log(data);
+
     })
     this.productService.getAllMarcaVehicular().subscribe({
       next: (data: any) => {
         this.list = data.marcaVehicular
       }
     })
-   }
+  }
 
   products: Product[] = [];
   checksCategory: string[] = [];
@@ -49,11 +53,15 @@ export class CatalogComponent {
         console.log(this.filteredProducts);
 
         this.isLoading = false;
-        if(this.param){
-          this.checksBrand= this.param
+        if (this.param) {
+          this.checksBrand = this.param
           console.log(this.checksBrand)
           this.filter()
           console.log(this.filteredProducts)
+        }
+        if (this.categorie) {
+          this.checksCategory = [this.categorie];
+          this.filter()
         }
       },
       error: (error) => {
@@ -75,10 +83,10 @@ export class CatalogComponent {
   getBrandsFilters(inputValue: any) {
     const inputVal = inputValue.target.value;
     console.log(inputVal)
-    if(inputVal!=''){
-      this.checksBrand=inputVal
-    }else{
-      this.checksBrand=''
+    if (inputVal != '') {
+      this.checksBrand = inputVal
+    } else {
+      this.checksBrand = ''
     }
     this.filter();
   }
@@ -98,13 +106,13 @@ export class CatalogComponent {
   }
 
   getMaxPriceFilter(priceInput: any) {
-    
+
     const maxVal = priceInput.target.value;
     if (maxVal > this.minPrice)
       this.maxPrice = maxVal;
     if (!maxVal)
       this.maxPrice = NaN;
-    
+
     console.log(!maxVal)
     this.filter();
   }
@@ -148,8 +156,8 @@ export class CatalogComponent {
           (!this.checksBrand || this.checksBrand == prod.brand) &&
           (!this.minPrice || prod.price >= this.minPrice) &&
           (!this.maxPrice || prod.price <= this.maxPrice) &&
-          (!this.checksMarca.size  || this.checksMarca.has(prod.Marcavehicular)) &&
-          (!this.colors.size ||  this.colors.has(prod.ReferenciaVehiculo))
+          (!this.checksMarca.size || this.checksMarca.has(prod.Marcavehicular)) &&
+          (!this.colors.size || this.colors.has(prod.ReferenciaVehiculo))
         );
       });
     }

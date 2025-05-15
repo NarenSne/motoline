@@ -71,7 +71,7 @@ export class ProductOverviewComponent {
     }
     return false;
   }
-
+  quantity:number = 1;
   addToCart() {
     if (!this.stock) {
       Swal.fire({
@@ -83,7 +83,7 @@ export class ProductOverviewComponent {
       });
       return;
     }
-    this.userService.addCart(this.id).subscribe({
+    this.userService.addCart(this.id,this.quantity).subscribe({
       next: (data) => { },
       error: (error) => console.error(error)
     });

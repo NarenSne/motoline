@@ -43,7 +43,7 @@ export class ProductCardComponent implements OnInit {
       });
       return;
     }
-    this.userService.addCart(this.product._id).subscribe({
+    this.userService.addCart(this.product._id,1).subscribe({
       next: (data) => { this.countService.setProduct(); },
       error: (error) => console.error(error),
     });

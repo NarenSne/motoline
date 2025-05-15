@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import Splide from '@splidejs/splide';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './home.component.html',
   styles: ``
 })
