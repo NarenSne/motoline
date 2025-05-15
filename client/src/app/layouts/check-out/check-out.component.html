@@ -23,9 +23,6 @@
           (zipChange)="setZip($event)"></app-address>
       </ng-container>
       <ng-container *ngIf="currentStep === 2">
-        <app-delivery (isChecked)="setIsCheck($event)"></app-delivery>
-      </ng-container>
-      <ng-container *ngIf="currentStep === 3">
         <app-review [products]="cart"></app-review>
       </ng-container>
 

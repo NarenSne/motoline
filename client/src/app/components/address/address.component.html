@@ -2,13 +2,13 @@
   <form class="flex flex-col w-full gap-3" action="">
     <div class="flex justify-between w-full gap-2">
       <div class="flex flex-col w-1/2">
-        <label class="flex" for="name">Full Name<span
+        <label class="flex" for="name">Nombre Completo<span
             class="block text-sm font-medium text-slate-700 after:ml-0.5 after:text-red-500 after:content-['*']"></span></label>
         <input class="w-full px-4 py-2 border outline-yellow-400" type="text" placeholder="Enter Full Name" />
       </div>
 
       <div class="flex flex-col w-1/2">
-        <label class="flex" for="name">Email Address<span
+        <label class="flex" for="name">Correo Electronico<span
             class="block text-sm font-medium text-slate-700 after:ml-0.5 after:text-red-500 after:content-['*']"></span></label>
         <input class="w-full px-4 py-2 border outline-yellow-400" type="text" placeholder="user@maybell.com" name="" />
       </div>
@@ -16,14 +16,14 @@
 
     <div class="flex justify-between w-full gap-2">
       <div class="flex flex-col w-1/2">
-        <label class="flex" for="name">Street<span
+        <label class="flex" for="name">Direccion<span
             class="block text-sm font-medium text-slate-700 after:ml-0.5 after:text-red-500 after:content-['*']"></span></label>
         <input class="w-full px-4 py-2 border outline-yellow-400" type="text" placeholder="Big Serbian avenue, 18"
           (change)="setStreet($event)" />
       </div>
 
       <div class="flex flex-col w-1/2">
-        <label class="flex" for="name">City<span
+        <label class="flex" for="name">Ciudad<span
             class="block text-sm font-medium text-slate-700 after:ml-0.5 after:text-red-500 after:content-['*']"></span></label>
         <input class="w-full px-4 py-2 border outline-yellow-400" type="text" placeholder="Alex" name=""
           (change)="setCity($event)" />
@@ -32,7 +32,7 @@
 
     <div class="flex justify-between w-full gap-2">
       <div class="flex flex-col w-1/2">
-        <label class="flex" for="name">ZIP code<span
+        <label class="flex" for="name">Codigo ZIP<span
             class="block text-sm font-medium text-slate-700 after:ml-0.5 after:text-red-500 after:content-['*']"></span></label>
         <input x-mask="999999" class="w-full px-4 py-2 border outline-yellow-400" placeholder="176356"
           (change)="setZip($event)" />

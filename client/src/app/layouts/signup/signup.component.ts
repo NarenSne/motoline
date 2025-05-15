@@ -32,6 +32,7 @@ export class SignupComponent {
       username: ['', Validators.required],
       password: ['', Validators.required],
       passwordConfirm: ['', Validators.required],
+      terminos: [false,Validators.requiredTrue]
     });
   }
   onSubmit(): void {
