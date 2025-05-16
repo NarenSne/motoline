@@ -21,7 +21,7 @@ const ProductSchema = new mongoose.Schema({
   },
   stock: {
     type: Number,
-    required: [true, "Product stock is required"],
+    required: [false, "Product stock is required"],
     min: [0, "Product stock must be 0 or greater"], // Ensure non-negative stock
     validate: {
       validator: Number.isInteger,
@@ -33,12 +33,12 @@ const ProductSchema = new mongoose.Schema({
   },
   brand: {
     type: String,
-    required: [true, "Product brand is required"],
+    required: [false, "Product brand is required"],
     trim: true,
   },
   category: {
     type: String,
-    required: [true, "Product category is required"],
+    required: [false, "Product category is required"],
     trim: true,
   },
   Marcavehicular: {
