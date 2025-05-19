@@ -13,6 +13,8 @@ import userRouter from "./routes/userRouter.mjs";
 import orderRouter from "./routes/orderRouter.mjs";
 import productRouter from "./routes/productRouter.mjs";
 import featuredProductsRouter from "./routes/featuredProductsRouter.mjs";
+import marcasRouter from "./routes/marcasRouter.mjs";
+import categoryRouter from "./routes/categoryRouter.mjs";
 import { protect } from "./controllers/authController.mjs";
 import cors from "cors";
 
@@ -67,6 +69,8 @@ app.use("/api/users", userRouter);
 app.use("/api/profile", userRouter);
 app.use("/api/orders", protect, orderRouter);
 app.use("/api/products", productRouter);
+app.use("/api/marcas", marcasRouter);
+app.use("/api/categorias", categoryRouter);
 app.use("/api/featuredproducts", featuredProductsRouter);
 app.use('/uploads', express.static('uploads'));
 

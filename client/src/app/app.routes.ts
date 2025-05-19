@@ -33,6 +33,7 @@ import { TerminosComponent } from './layouts/terminos/terminos.component';
 import { Component } from '@angular/core';
 import { GarantiaComponent } from './layouts/garantia/garantia.component';
 import { MarcasReferenciasComponent } from './components/marcas-referencias/marcas-referencias.component';
+import { CategoriasMarcasComponent } from './components/categorias-marcas/categorias-marcas.component';
 export const routes: Routes = [
   {
     path: 'admin-dashboard',
@@ -43,6 +44,7 @@ export const routes: Routes = [
       { path: 'orders-overview', component: OrdersOverviewComponent },
       { path: 'products-overview', component: ProductsOverviewComponent },
       { path: 'marcas-referencias', component: MarcasReferenciasComponent },
+      { path: 'categorias-marcas', component: CategoriasMarcasComponent },
       // { path: '', redirectTo: 'accounts', pathMatch: 'full' },
     ],
     canActivate: [IsLoggedService, IsAdminService],

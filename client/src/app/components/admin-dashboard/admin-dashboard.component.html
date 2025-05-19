@@ -1,7 +1,7 @@
 <div class="flex h-screen">
   <!-- Sidebar -->
   <div
-    class="bg-black text-red-500 w-64 flex-none p-4 fixed top-0 left-0 h-full"
+    class="bg-black text-red-500 w-64 flex-none p-4 fixed top-0 left-0 h-full overflow-auto"
   >
     <h2 class="text-xl font-bold mb-4 text-center">Panel de administración</h2>
     <ul class="space-y-2">
@@ -14,9 +14,11 @@
       <li class="bg-slate-400 p-3 text-black text-xl font-bold rounded-lg">
         <a routerLink="/admin-dashboard/orders-overview">Resumen de pedidos</a>
       </li>
-      
       <li class="bg-slate-400 p-3 text-black text-xl font-bold rounded-lg">
-        <a routerLink="/admin-dashboard/marcas-referencias">Marcas y referencias</a>
+        <a routerLink="/admin-dashboard/categorias-marcas">Categorias y marcas</a>
+      </li>
+      <li class="bg-slate-400 p-3 text-black text-xl font-bold rounded-lg">
+        <a routerLink="/admin-dashboard/marcas-referencias">Marcas y referencias vehiculares</a>
       </li>
       <li class="bg-slate-400 p-3 text-black text-xl font-bold rounded-lg">
         <a routerLink="/admin-dashboard/products-overview">Descripción general de productos</a>

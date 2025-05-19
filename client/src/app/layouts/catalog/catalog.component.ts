@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { ProductService } from '../../services/product/product.service';
 import { Product } from '../../interfaces/product';
@@ -6,11 +6,15 @@ import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
 import { ActivatedRoute } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table'
+import { Observable } from 'rxjs';
+import { MarcasycategoriasService } from '../../services/marcasycategorias.service';
 
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [ProductCardComponent, CommonModule, LoadingSpinnerComponent, MatSelectModule],
+  imports: [ProductCardComponent, CommonModule, LoadingSpinnerComponent, MatSelectModule, MatPaginatorModule],
   templateUrl: './catalog.component.html',
   providers: [ProductService],
   styles: ``
@@ -19,7 +23,12 @@ export class CatalogComponent {
   param: any;
   list: any;
   categorie: any;
-  constructor(private productService: ProductService, private router: ActivatedRoute) {
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  obs!: Observable<any>;
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  listMarca: any;
+  listReferencias: any;
+  constructor(private productService: ProductService, private router: ActivatedRoute, private marcaservice:MarcasycategoriasService) {
     router.queryParams.subscribe((data: any) => {
       this.param = data.brand
       this.categorie = data.categorie
@@ -29,6 +38,16 @@ export class CatalogComponent {
     this.productService.getAllMarcaVehicular().subscribe({
       next: (data: any) => {
         this.list = data.marcaVehicular
+      }
+    })
+    this.productService.getAllReferenciaVehicular().subscribe({
+      next: (data: any) => {
+        this.listReferencias = data.referenciaVehicular
+      }
+    })
+    this.marcaservice.getAllMarcas().subscribe({
+      next: (data: any) => {
+        this.listMarca = data.marcas
       }
     })
   }
@@ -51,7 +70,9 @@ export class CatalogComponent {
         this.products = data.products;
         this.filteredProducts = this.products;
         console.log(this.filteredProducts);
-
+        this.dataSource.data = this.filteredProducts;
+        this.dataSource.paginator = this.paginator;
+        this.obs = this.dataSource.connect();
         this.isLoading = false;
         if (this.param) {
           this.checksBrand = this.param
@@ -81,7 +102,8 @@ export class CatalogComponent {
   }
 
   getBrandsFilters(inputValue: any) {
-    const inputVal = inputValue.target.value;
+    console.log(inputValue)
+    const inputVal = inputValue.value;
     console.log(inputVal)
     if (inputVal != '') {
       this.checksBrand = inputVal
@@ -91,7 +113,7 @@ export class CatalogComponent {
     this.filter();
   }
   getMarcaFilters(inputValue: any) {
-    const inputVal = inputValue.target.value;
+    const inputVal = inputValue.value;
     if (this.checksMarca.has(inputVal)) {
       this.checksMarca.delete(inputVal);
     } else {
@@ -117,11 +139,11 @@ export class CatalogComponent {
     this.filter();
   }
 
-  getSizeFilters(sizeVal: string) {
-    if (this.sizes.has(sizeVal)) {
-      this.sizes.delete(sizeVal);
+  getSizeFilters(sizeVal: any) {
+    if (this.sizes.has(sizeVal.value)) {
+      this.sizes.delete(sizeVal.value);
     } else {
-      this.sizes.add(sizeVal);
+      this.sizes.add(sizeVal.value);
     }
     this.filter();
   }
@@ -141,6 +163,7 @@ export class CatalogComponent {
     } else {
       this.filteredProducts = this.filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
     }
+    this.dataSource.data = this.filteredProducts;
     this.sortToggle = false;
   }
 
@@ -148,6 +171,7 @@ export class CatalogComponent {
   filter() {
     if (!this.checksCategory.length && !this.checksBrand.length && !this.maxPrice && !this.minPrice && !this.checksMarca && !this.colors) {
       this.filteredProducts = this.products; // Reset to all products
+      this.dataSource.data = this.filteredProducts
     }
     else {
       this.filteredProducts = this.products.filter(prod => {
@@ -160,6 +184,7 @@ export class CatalogComponent {
           (!this.colors.size || this.colors.has(prod.ReferenciaVehiculo))
         );
       });
+      this.dataSource.data = this.filteredProducts;
     }
   }
 

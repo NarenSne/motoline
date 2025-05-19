@@ -78,61 +78,14 @@
         <p class="mb-3 font-medium">MARCAS</p>
 
         <div class="flex w-full justify-between">
-          <div class="flex justify-center items-center">
-
-            <select formControlName="brand" (change)="getBrandsFilters($event)"
-              class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="brand" required>
-              <option value="">Seleccione una opcion</option>
-              <option value="CASTROL">CASTROL</option>
-              <option value="Cassarella">Cassarella</option>
-              <option value="CHAMPION">CHAMPION</option>
-              <option value="CHOHO">CHOHO</option>
-              <option value="CRC">CRC</option>
-              <option value="DARROW">DARROW</option>
-              <option value="DID">D.I.D</option>
-              <option value="DTS">DTS-I OIL</option>
-              <option value="EBC">EBC</option>
-              <option value="ECSTAR">ECSTAR</option>
-              <option value="ELPO">ELPO</option>
-              <option value="ENDURANCE">ENDURANCE</option>
-              <option value="EVERESTT">EVERESTT</option>
-              <option value="FERODO">FERODO</option>
-              <option value="GENUNE">GENUNE PARTS</option>
-              <option value="GPP">Gpp</option>
-              <option value="GXPARTS">GX PARTS</option>
-              <option value="IMBRA">Imbra</option>
-              <option value="JDL">JDL</option>
-              <option value="KANUNI">Kanuni</option>
-              <option value="KOK RIDERS">KOK RIDERS</option>
-              <option value="KONTROL">KONTROL</option>
-              <option value="KOYO">KOYO</option>
-              <option value="KROSS">KROSS</option>
-              <option value="MAD">MAD</option>
-              <option value="MAPACHE">MAPACHE</option>
-              <option value="MOBIL">MOBIL</option>
-              <option value="MOTUL">MOTUL</option>
-              <option value="NACHI">NACHI</option>
-              <option value="NARVA">NARVA</option>
-              <option value="NTN">NTN</option>
-              <option value="OSRAM">OSRAM</option>
-              <option value="PHILIPS">PHILIPS</option>
-              <option value="REPSOL">REPSOL</option>
-              <option value="Revo">Revo</option>
-              <option value="RIZOMA">RIZOMA</option>
-              <option value="SHELL">SHELL ADVANCE</option>
-              <option value="SPARTAN">SPARTAN</option>
-              <option value="SPEED">SPEED HARD</option>
-              <option value="SUPRAPARTS">SUPRAPARTS</option>
-              <option value="TERPEL">TERPEL</option>
-              <option value="ULTRA">ULTRA</option>
-              <option value="UNO MINDA">UNO MINDA</option>
-              <option value="VARROC">VARROC</option>
-              <option value="Vitrix">Vitrix</option>
-              <option value="YAHOSUKA">YAHOSUKA</option>
-              <option value="YAMALUBE">YAMALUBE</option>
-            </select>
-          </div>
+          
+          <mat-select formControlName="brand" (selectionChange)="getBrandsFilters($event)"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="brand">
+            @for (food of listMarca; track food) {
+            <mat-option [value]="food.name">{{food.name}}</mat-option>
+            }
+          </mat-select>
         </div>
 
       </div>
@@ -160,12 +113,29 @@
 
         <div class="flex w-full justify-between">
           <mat-select formControlName="Marcavehicular" (selectionChange)="getMarcaFilters($event)"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="Vehiclebrand">
-              @for (food of list; track food) {
-              <mat-option [value]="food.name">{{food.name}}</mat-option>
-              }
-            </mat-select>
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="Vehiclebrand">
+            @for (food of list; track food) {
+            <mat-option [value]="food.name">{{food.name}}</mat-option>
+            }
+          </mat-select>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="flex border-b py-5">
+      <div class="w-full">
+        <p class="mb-3 font-medium">REFERENCIA VEHICULO</p>
+
+        <div class="flex w-full justify-between">
+          <mat-select formControlName="Referenciavehicular" (selectionChange)="getSizeFilters($event)"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="Vehiclebrand">
+            @for (food of listReferencias; track food) {
+            <mat-option [value]="food.name">{{food.name}}</mat-option>
+            }
+          </mat-select>
         </div>
 
       </div>
@@ -230,11 +200,15 @@
     </div>
 
     <section class="mx-auto grid max-w-[1200px] grid-cols-2 gap-3 px-5 pb-10 lg:grid-cols-3">
-      @for (product of filteredProducts; track product._id) {
+      @for (product of obs | async; track product._id) {
       <div class="flex flex-col">
         <app-product-card [product]="product"></app-product-card>
       </div>
       }
+
+
     </section>
+    <mat-paginator #paginator [pageSize]="15" [pageSizeOptions]="[6, 15, 30, 60]" aria-label="Select page">
+    </mat-paginator>
   </div>
 </section>

@@ -1,0 +1,93 @@
+<!-- orders-overview.component.html -->
+<div>
+  <h2 class="mb-4 text-xl font-bold">Categorias</h2> <div
+  class="m-4 rounded-full h-12 w-12 hover:bg-blue-700 text-white font-bold flex items-center justify-center"
+  style="background-color: #3b82f6"
+>
+  <button (click)="openDialog()">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24"
+      viewBox="0 -960 960 960"
+      width="24"
+      fill="#FFF"
+    >
+      <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+    </svg>
+  </button>
+</div>
+  <table class="min-w-full overflow-hidden bg-gray-200 rounded-lg">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2">Nombre</th>
+        <th class="px-4 py-2">Acciónes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of pageOrders">
+        <td class="px-4 py-2 text-center">{{ order.name }}</td>
+        <td class="px-4 py-2 text-center">
+          <button
+            class="px-2 py-1 mx-3 text-white bg-blue-500 rounded"
+            (click)="editarCategoria(order)">
+            Editar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <mat-paginator
+    [length]="10"
+    pageSize="10"
+    (page)="onPageChange($event)"
+  >
+  </mat-paginator>
+</div>
+
+
+<!-- orders-overview.component.html -->
+<div>
+  <h2 class="mb-4 text-xl font-bold">Marcas</h2> <div
+  class="m-4 rounded-full h-12 w-12 hover:bg-blue-700 text-white font-bold flex items-center justify-center"
+  style="background-color: #3b82f6"
+>
+  <button (click)="openDialogMarcas()">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24"
+      viewBox="0 -960 960 960"
+      width="24"
+      fill="#FFF"
+    >
+      <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+    </svg>
+  </button>
+</div>
+  <table class="min-w-full overflow-hidden bg-gray-200 rounded-lg">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2">Nombre</th>
+        <th class="px-4 py-2">Acciónes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of pageMarca">
+        <td class="px-4 py-2 text-center">{{ order.name }}</td>
+        <td class="px-4 py-2 text-center">
+          <button
+            class="px-2 py-1 mx-3 text-white bg-blue-500 rounded"
+            (click)="editarMarca(order)">
+            Editar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <mat-paginator
+    [length]="0"
+    pageSize="10"
+    (page)="onPageChange($event)"
+  >
+  </mat-paginator>
+</div>
+
