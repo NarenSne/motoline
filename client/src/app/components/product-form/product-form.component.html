@@ -100,37 +100,21 @@
     <!-- Category -->
     <div class="mb-4">
       <label class="block text-gray-700 font-bold mb-2" for="category">Categoría</label>
-      <select formControlName="category" value="category"
-        class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="category" required>
-        <option value="Pastillas y bandas">Pastillas y bandas</option>
-        <option value="Kit de arrastre">Kit de arrastre</option>
-        <option value="Carenajes farolas y guardabarros">Carenajes farolas y guardabarros</option>
-        <option value="Tornillería especia">Tornillería especial</option>
-        <option value="Aceites y lubricantes">Aceites y lubricantes</option>
-        <option value="Partes eléctricas">Partes eléctricas</option>
-      </select>
+      
+      <mat-select formControlName="category"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="category">
+        @for (food of listCategories; track food) {
+        <mat-option [value]="food.name">{{food.name}}</mat-option>
+        }
+      </mat-select>
     </div>
     <!-- Vehicle brand -->
     <div class="mb-4">
       <label class="block text-gray-700 font-bold mb-2" for="category">Marca Vehicular</label>
-      <!-- <select formControlName="Marcavehicular" value="Marca Vehicular"
-        class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="Vehiclebrand" required>
-        <option value="KTM">KTM</option>
-        <option value="HONDA">HONDA</option>
-        <option value="AUTECO">AUTECO</option>
-        <option value="YAMAHA">YAMAHA</option>
-        <option value="AKT">AKT</option>
-        <option value="KYMCO">KYMCO</option>
-        <option value="TVS">TVS</option>
-        <option value="HERO">HERO</option>
-        <option value="SUSUKI">SUSUKI</option>
-        <option value="BENELLI">BENELLI</option>
-      </select> -->
       <mat-select formControlName="Marcavehicular"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="Vehiclebrand">
+        id="Vehiclebrand" (selectionChange)="filtrarReferencias($event)">
         @for (food of list; track food) {
         <mat-option [value]="food.name">{{food.name}}</mat-option>
         }
@@ -146,51 +130,6 @@
         <mat-option [value]="food.name">{{food.name}}</mat-option>
         }
       </mat-select>
-      <!-- <select formControlName="ReferenciaVehiculo" value="Referencia Vehiculo"
-        class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="Vehiclereference" required multiple>
-        <option value="PULSAR NS 200">PULSAR NS 200</option>
-        <option value="PULSAR NS 160">PULSAR NS 160</option>
-        <option value="PULSAR NS 400">PULSAR NS 400</option>
-        <option value="PULSAR NS 135">PULSAR NS 135</option>
-        <option value="PULSAR NS 160">PULSAR NS 160</option>
-        <option value="PULSAR 180">PULSAR 180</option>
-        <option value="PULSAR 135">PULSAR 135</option>
-        <option value="PULSAR N 250">PULSAR N 250</option>
-        <option value="DOMINAR 250">DOMINAR 250</option>
-        <option value="DOMINAR 400">DOMINAR 400</option>
-        <option value="DUKE 390">DUKE 390</option>
-        <option value="DUKE 250">DUKE 250</option>
-        <option value="DUKE 200">DUKE 200</option>
-        <option value="BOXER">BOXER</option>
-        <option value="PLATINO">PLATINO</option>
-        <option value="DISCOVER">DISCOVER</option>
-        <option value="HUNK 160">HUNK 160</option>
-        <option value="NKD 125">NKD 125</option>
-        <option value="CR4">CR4</option>
-        <option value="CR5">CR5</option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-      </select> -->
     </div>
     <!-- Submit Button -->
     <div class="flex items-center justify-end">

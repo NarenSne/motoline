@@ -23,6 +23,7 @@ export class ProductEditFormComponent {
   isLoading = false;
   list: any;
   listReferencia: any;
+  listReferencias: any;
 
   constructor(private productService: ProductService, @Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog) {
     this.productService.getAllMarcaVehicular().subscribe({
@@ -33,6 +34,7 @@ export class ProductEditFormComponent {
     this.productService.getAllReferenciaVehicular().subscribe({
       next: (data: any) => {
         this.listReferencia = data.referenciaVehicular
+        this.listReferencias = data.referenciaVehicular
       }
     })
   }
@@ -76,18 +78,21 @@ export class ProductEditFormComponent {
 
   removeImage(image: any) {
     this.imagesUrl = this.imagesUrl.filter((img: any) => img != image);
-    this.productForm.value.images = this.imagesUrl;
-    console.log(this.productForm.value.images);
+    this.productForm.get("images")?.setValue(this.imagesUrl);
+    console.log(this.productForm.getRawValue());
   }
 
   onFileChange(event: any) {
     const files = event.target.files;
     this.selectedFiles = Array.from(files);
   }
-
+  filtrarReferencias(event:any){
+    console.log(event)
+    this.listReferencia = this.listReferencias.filter((ele:any)=>event.value == ele.marca)
+  }
   uploadFiles() {
     let product: any = this.productForm.getRawValue();
-    product.images = [];
+
     product.ReferenciaVehiculo = product.ReferenciaVehiculo?.join(",")
     this.productService.updateProduct(this.product._id, product).subscribe({
       next: res => {
@@ -97,35 +102,26 @@ export class ProductEditFormComponent {
 
     this.isLoading = true;
     const formData = new FormData();
-    this.imagesUrl.forEach((image: any, index: any) => {
-      let file = this.dataURLtoFile(image, index);
-      formData.append('images', file);
-    })
     // Append each selected file to the FormData object
-    this.selectedFiles.forEach((file, index) => {
-      formData.append('images', file);
-    });
-    formData.append(`productId`, this.product._id);
+    if (this.selectedFiles.length > 0) {
+      this.selectedFiles.forEach((file, index) => {
+        formData.append('images', file);
+      });
+      formData.append(`productId`, this.product._id);
 
-    // Send the FormData to the server using HttpClient
-    this.productService.uploadProductImage(formData).subscribe({
-      next: res => {
-        this.dialog.closeAll();
-        this.isLoading = false;
-      },
-      error: error => console.log(error)
+      // Send the FormData to the server using HttpClient
+      this.productService.uploadProductImage(formData).subscribe({
+        next: res => {
+          this.dialog.closeAll();
+          this.isLoading = false;
+        },
+        error: error => console.log(error)
 
-    })
-  }
-  dataURLtoFile(dataurl: any, filename: any) {
-    var arr = dataurl.split(','),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[arr.length - 1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
+      })
+    } else {
+      this.dialog.closeAll();
+      this.isLoading = false;
     }
-    return new File([u8arr], filename, { type: mime });
+
   }
 }

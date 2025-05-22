@@ -35,7 +35,7 @@ export class CategoriasMarcasComponent {
   loadCategories(): void {
     this.productService.getAllCategorias().subscribe({
       next: (response: any) => {
-        this.pageOrders = response.category;
+        this.pageOrders = response.categorias;
       },
       error: (error) => {
         console.log('Error:', error);
@@ -75,7 +75,7 @@ export class CategoriasMarcasComponent {
     dialogRef.afterClosed().subscribe((result: any) => {
       console.log('create dialog closed');
 
-      this.loadMarcas();
+      this.loadCategories();
     })
   }
 
@@ -87,7 +87,7 @@ export class CategoriasMarcasComponent {
     dialogRef.afterClosed().subscribe((result: any) => {
       console.log('create dialog closed');
 
-      this.loadMarcas();
+      this.loadCategories();
     })
   }
 

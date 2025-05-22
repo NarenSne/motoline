@@ -33,10 +33,10 @@ export const getAllMarcas = async (req, res) => {
 }
 
 export const createMarca = async (req, res) => {
-    const { name } = req.body;
+    const { category,name } = req.body;
 
     try {
-        const newMarca = new Marca({ name });
+        const newMarca = new Marca({ category,name });
         const result = await newMarca.save();
         res.status(201).json({ message: 'Marca añadida satisfactoriamente', product: result });
     } catch (error) {
@@ -51,12 +51,13 @@ export const updateMarca = async (req, res) => {
     const updates = req.body;
 
     try {
-        const result = await Product.updateOne({ _id: productId }, { $set: updates });
+        const result = await Marca.updateOne({ _id: productId }, { $set: updates });
         if (result.modifiedCount === 0) {
             return res.status(200).json({ message: 'Marca sin cambios' });
         }
         res.json({ message: 'Marca Actualizada', result: result });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'Error actualizando marca' });
     }
 
