@@ -45,8 +45,8 @@ export class CartComponent implements OnInit {
     this.calculateTotalPrice();
   }
   decreaseQuantity(item: any) {
-    if (item.count > 1) {
-      item.count--;
+    if (item.quantity > 1) {
+      item.quantity--;
       const remove = {
         productId: item._id,
         type: 'remove',
@@ -72,9 +72,9 @@ export class CartComponent implements OnInit {
   }
 
   increaseQuantity(item: any) {
-    if (item.count >= item.stock) return;
-    item.count++;
-    this.userService.addCart(item._id,item.count).subscribe({
+    if (item.quantity >= item.stock) return;
+    item.quantity++;
+    this.userService.addCart(item._id,item.quantity).subscribe({
       next: (data) => { },
       error: (error) => console.error(error),
     });

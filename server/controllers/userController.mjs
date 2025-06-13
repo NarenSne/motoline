@@ -1,14 +1,41 @@
 import User from "../models/User.mjs";
+import Product from "../models/Product.mjs";
 
 /**
- * this function is added product to cart for the current user
- *
+ * Normaliza req.session.cart para que siempre sea un array de objetos { productId, quantity }
+ */
+function normalizeSessionCart(session) {
+  session.cart = (session.cart || []).map(item =>
+    typeof item === "string"
+      ? { productId: item, quantity: 1 }
+      : item
+  );
+}
+
+/**
+ * Cuenta las ocurrencias totales de productos en un carrito (array de {productId,quantity})
+ * @returns Map<string, number> donde la clave es productId y el valor la suma de quantities
+ */
+export function countProductOccurrences(cart) {
+  const productCountMap = new Map();
+  cart.forEach(({ productId, quantity }) => {
+    const qty = Number.isInteger(quantity) && quantity > 0 ? quantity : 1;
+    productCountMap.set(
+      productId,
+      (productCountMap.get(productId) || 0) + qty
+    );
+  });
+  return productCountMap;
+}
+
+
+/**
+ * Agrega un producto al carrito (sesión o BD de usuario)
  */
 export async function addCart(req, res, next) {
   try {
     const { productId, quantity = 1 } = req.body;
     const qty = parseInt(quantity, 10);
-
     if (!productId) {
       return res.status(400).json({ error: "Product ID is required." });
     }
@@ -16,38 +43,38 @@ export async function addCart(req, res, next) {
       return res.status(400).json({ error: "Quantity must be a positive integer." });
     }
 
-    // -- Carrito anónimo --
+    // — Carrito anónimo —
     if (!req.user) {
-      req.session.cart = req.session.cart || [];
-      // buscamos si ya existe el producto
+      normalizeSessionCart(req.session);
+
       const existing = req.session.cart.find(item => item.productId === productId);
       if (existing) {
         existing.quantity += qty;
       } else {
         req.session.cart.push({ productId, quantity: qty });
       }
-      return res
-        .status(200)
-        .json({ message: "Product added to anonymous cart.", cart: req.session.cart });
+
+      return res.status(200).json({
+        message: "Product added to anonymous cart.",
+        cart: req.session.cart
+      });
     }
 
-    // -- Carrito de usuario autenticado --
-    const userId = req.user._id;
-    const currentUser = await User.findById(userId);
-
-    // asumimos que currentUser.carts es un array de objetos { productId, quantity }
-    currentUser.carts = currentUser.carts || [];
-    const existing = currentUser.carts.find(item => item.productId.toString() === productId);
+    // — Carrito de usuario autenticado —
+    const user = await User.findById(req.user._id);
+    user.carts = user.carts || [];
+    const existing = user.carts.find(item => item.productId.toString() === productId);
     if (existing) {
       existing.quantity += qty;
     } else {
-      currentUser.carts.push({ productId, quantity: qty });
+      user.carts.push({ productId, quantity: qty });
     }
+    await user.save();
 
-    await currentUser.save();
-    return res
-      .status(200)
-      .json({ message: "Product added to user cart.", carts: currentUser.carts });
+    return res.status(200).json({
+      message: "Product added to user cart.",
+      cart: user.carts
+    });
 
   } catch (err) {
     return res.status(400).json({ error: err.message });
@@ -55,152 +82,140 @@ export async function addCart(req, res, next) {
 }
 
 
-
 /**
- * this function is get cart for the current user
- *
+ * Obtiene los detalles del carrito (sesión o BD de usuario)
  */
-import Product from "../models/Product.mjs"; // Necesario para buscar productos
-
 export async function getCart(req, res, next) {
   try {
-    let cartItems = [];
+    let items;
 
     if (!req.user) {
       // — Carrito anónimo —
-      // session.cart puede ser ['id1','id2'] o [{ productId, quantity }]
-      const sessionCart = req.session.cart || [];
-
-      // Normaliza todo a { productId, quantity }
-      const items = sessionCart.map(item =>
-        typeof item === 'object'
-          ? item
-          : { productId: item, quantity: 1 }
-      );
-
-      const productIds = items.map(i => i.productId);
-      const products = await Product.find({ _id: { $in: productIds } });
-
-      cartItems = items
-        .map(({ productId, quantity }) => {
-          const product = products.find(p => p._id.toString() === productId);
-          return product ? { product, quantity } : null;
-        })
-        .filter(Boolean);
-
+      normalizeSessionCart(req.session);
+      items = req.session.cart;
     } else {
-      // — Carrito de usuario autenticado —
-      const userId = req.user._id;
-      const currentUser = await User.findById(userId);
-
-      // currentUser.carts debe ser [{ productId, quantity }]
-      const items = currentUser.carts || [];
-      const productIds = items.map(i => i.productId);
-      const products = await Product.find({ _id: { $in: productIds } });
-
-      cartItems = items
-        .map(({ productId, quantity }) => {
-          const product = products.find(p => p._id.toString() === productId.toString());
-          return product ? { product, quantity } : null;
-        })
-        .filter(Boolean);
+      // — Carrito autenticado —
+      const user = await User.findById(req.user._id);
+      items = user.carts || [];
     }
 
-    // Formatea la respuesta
-    const productsArray = cartItems.map(({ product, quantity }) => ({
-      _id:     product._id,
-      name:    product.name,
-      price:   product.price,
-      desc:    product.desc,
-      stock:   product.stock,
-      image:   product.images[0],
-      quantity,
-    }));
+    // Obtenemos los productos desde la BD
+    const productIds = items.map(i => i.productId);
+    const products = await Product.find({ _id: { $in: productIds } });
 
-    res.status(200).json({
+    // Montamos la respuesta
+    const data = items
+      .map(({ productId, quantity }) => {
+        const p = products.find(x => x._id.toString() === productId);
+        return p ? {
+          _id:     p._id,
+          name:    p.name,
+          price:   p.price,
+          desc:    p.desc,
+          stock:   p.stock,
+          image:   p.images[0],
+          quantity
+        } : null;
+      })
+      .filter(Boolean);
+
+    return res.status(200).json({
       message: "Cart retrieved successfully.",
-      data: productsArray,
+      data
     });
 
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    return res.status(400).json({ message: err.message });
   }
 }
 
 
-
 /**
- * this function is delete product from cart for the current user
- *
+ * Elimina o decrementa un producto del carrito
  */
 export async function deleteCart(req, res, next) {
   try {
-    const productId = req.body.productId;
+    const { productId, type } = req.body;
     if (!productId) {
       return res.status(400).json({ error: "Product ID is required." });
     }
 
-    // Anónimo
+    // — Anónimo —
     if (!req.user) {
-      let sessionCart = req.session.cart || [];
-      if (!sessionCart.includes(productId)) {
+      normalizeSessionCart(req.session);
+
+      const idx = req.session.cart.findIndex(item => item.productId === productId);
+      if (idx === -1) {
         return res.status(404).json({ error: "Product not found in cart." });
       }
 
-      if (req.body.type === "removeAll") {
-        req.session.cart = sessionCart.filter((id) => id !== productId);
+      if (type === "removeAll" || req.session.cart[idx].quantity <= 1) {
+        req.session.cart.splice(idx, 1);
       } else {
-        const index = sessionCart.indexOf(productId);
-        if (index !== -1) sessionCart.splice(index, 1);
-        req.session.cart = sessionCart;
+        req.session.cart[idx].quantity -= 1;
       }
 
-      return res.status(200).json({ message: "Product removed from anonymous cart." });
+      return res.status(200).json({
+        message: "Product removed from anonymous cart.",
+        cart: req.session.cart
+      });
     }
 
-    // Autenticado
-    const userId = req.user._id;
-    const currentUser = await User.findById(userId);
-    let userCart = currentUser.carts;
+    // — Autenticado —
+    const user = await User.findById(req.user._id);
+    user.carts = user.carts || [];
 
-    if (req.body.type === "removeAll") {
-      currentUser.carts = userCart.filter((id) => id.toString() !== productId);
+    const idx = user.carts.findIndex(item => item.productId.toString() === productId);
+    if (idx === -1) {
+      return res.status(404).json({ error: "Product not found in cart." });
+    }
+
+    if (type === "removeAll" || user.carts[idx].quantity <= 1) {
+      user.carts.splice(idx, 1);
     } else {
-      const index = userCart.findIndex((id) => id.toString() === productId);
-      if (index !== -1) currentUser.carts.splice(index, 1);
+      user.carts[idx].quantity -= 1;
     }
 
-    await currentUser.save();
-    res.status(200).json({ message: "Product removed from user cart." });
+    await user.save();
+
+    return res.status(200).json({
+      message: "Product removed from user cart.",
+      cart: user.carts
+    });
+
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    return res.status(400).json({ message: err.message });
   }
 }
 
+
 /**
- * this function is get size of cart for the current user
- *
+ * Obtiene el tamaño total (suma de quantities) del carrito
  */
 export async function getCartSize(req, res, next) {
   try {
     let cart = [];
+
     if (!req.user) {
-      cart = req.session.cart || [];
+      normalizeSessionCart(req.session);
+      cart = req.session.cart;
     } else {
-      const userId = req.user._id;
-      const currentUser = await User.findById(userId);
-      cart = currentUser.carts;
+      const user = await User.findById(req.user._id);
+      cart = user.carts || [];
     }
 
-    const products = countProductOccurrences(cart);
-    res.status(200).json({
+    const map = countProductOccurrences(cart);
+    const totalItems = [...map.values()].reduce((sum, v) => sum + v, 0);
+
+    return res.status(200).json({
       message: "Cart size retrieved",
-      data: products.size,
+      data: totalItems
     });
   } catch (e) {
-    res.status(400).json({ message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 }
+
 
 
 export async function uploadImage(req, res, next) {
@@ -231,18 +246,5 @@ export async function uploadImage(req, res, next) {
   }
 }
 
-/**
- * this function is calculate Occurrences of Products in cart
- * @result:{ 'productId': 'Occurrence'}
- */
-export function countProductOccurrences(cart) {
-  const productCountMap = new Map();
-  cart.forEach((product) => {
-    const productId = (typeof product === "object" && product._id)
-      ? product._id.toString()
-      : product.toString();
-    productCountMap.set(productId, (productCountMap.get(productId) || 0) + 1);
-  });
-  return productCountMap;
-}
+
 
