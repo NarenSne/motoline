@@ -8,8 +8,8 @@
             <th [ngClass]="{ 'bg-purple-900 text-white': currentStep === 1 }">
               DIRECCION
             </th>
-            <th [ngClass]="{ 'bg-purple-900 text-white': currentStep === 3 }">
-              METODO DE PAGO
+            <th [ngClass]="{ 'bg-purple-900 text-white': currentStep === 2 }">
+              PROCEDER A PAGO
             </th>
           </tr>
         </thead>
@@ -29,7 +29,7 @@
           <a (click)="prevStep()" class="px-4 py-2 text-white bg-purple-900"
             [ngClass]="{ hidden: currentStep === 1 }">Paso anterior</a>
           <a (click)="nextStep()" class="px-4 py-2 text-white bg-slate-400">
-            {{ currentStep === 3 ? "Pagar" : "Siguiente Paso" }}
+            {{ currentStep === 2 ? "Pagar" : "Siguiente Paso" }}
           </a>
         </div>
       </div>

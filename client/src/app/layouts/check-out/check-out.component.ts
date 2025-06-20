@@ -73,12 +73,12 @@ export class CheckOutComponent implements OnInit {
         this.cart = products.data;
         this.order.products = this.cart.reduce(
           (acc: { [key: string]: number }, product: any) => {
-            acc[product._id] = product.count;
+            acc[product._id] = product.quantity;
             return acc;
           },
           {}
         );
-
+        console.log(this.order)
         this.order.totalPrice = this.cart.reduce(
           (acc: number, product: Product) => acc + product.price,
           0
@@ -175,7 +175,9 @@ export class CheckOutComponent implements OnInit {
       key: '83f65a1de38c66faad76373792c4ba64',
       test: true,
     });
-
+    if(this.order.totalPrice<=100000){
+      this.order.totalPrice += 8000
+    }
     const data = {
       name: 'Motoline Parts',
       description: 'Pedido',
