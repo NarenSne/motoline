@@ -9,6 +9,9 @@
               DIRECCION
             </th>
             <th [ngClass]="{ 'bg-purple-900 text-white': currentStep === 2 }">
+              PAGO
+            </th>
+            <th [ngClass]="{ 'bg-purple-900 text-white': currentStep === 3 }">
               PROCEDER A PAGO
             </th>
           </tr>
@@ -20,6 +23,15 @@
           (zipChange)="setZip($event)"></app-address>
       </ng-container>
       <ng-container *ngIf="currentStep === 2">
+        <app-payment
+          (cardHolderChange)="setCardHolder($event)"
+          (cardNumberChange)="setCardNumber($event)"
+          (expirationDateChange)="setExpirationDate($event)"
+          (cvvChange)="setCvv($event)"
+          (isCheckChange)="setIsCheck($event)"
+        ></app-payment>
+      </ng-container>
+      <ng-container *ngIf="currentStep === 3">
         <app-review [products]="cart"></app-review>
       </ng-container>
 
@@ -29,7 +41,7 @@
           <a (click)="prevStep()" class="px-4 py-2 text-white bg-purple-900"
             [ngClass]="{ hidden: currentStep === 1 }">Paso anterior</a>
           <a (click)="nextStep()" class="px-4 py-2 text-white bg-slate-400">
-            {{ currentStep === 2 ? "Pagar" : "Siguiente Paso" }}
+            {{ currentStep === 3 ? "Pagar" : (currentStep===2? "Proceder a pago":"Siguiente Paso") }}
           </a>
         </div>
       </div>

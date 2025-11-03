@@ -8,24 +8,29 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './payment.component.css',
 })
 export class PaymentComponent {
-  @Output() cardNumber = new EventEmitter<string>();
-  @Output() cardHolder = new EventEmitter<string>();
-  @Output() expirationDate = new EventEmitter<string>();
-  @Output() cvv = new EventEmitter<string>();
+  @Output() cardNumberChange = new EventEmitter<string>();
+  @Output() cardHolderChange = new EventEmitter<string>();
+  @Output() expirationDateChange = new EventEmitter<string>();
+  @Output() cvvChange = new EventEmitter<string>();
+  @Output() isCheckChange = new EventEmitter<boolean>();
 
   setCardNumber(e: any) {
-    this.cardNumber.emit(e.target.value);
+    this.cardNumberChange.emit(e.target.value);
   }
 
   setCardHolder(e: any) {
-    this.cardHolder.emit(e.target.value);
+    this.cardHolderChange.emit(e.target.value);
   }
 
   setExpirationDate(e: any) {
-    this.expirationDate.emit(e.target.value);
+    this.expirationDateChange.emit(e.target.value);
   }
 
   setCvv(e: any) {
-    this.cvv.emit(e.target.value);
+    this.cvvChange.emit(e.target.value);
+  }
+
+  setIsCheck(e: any) {
+    this.isCheckChange.emit(e.target.checked);
   }
 }

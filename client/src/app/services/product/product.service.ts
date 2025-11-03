@@ -6,10 +6,14 @@ import { Product } from '../../interfaces/product';
   providedIn: 'root',
 })
 export class ProductService {
-  //private API_URL = 'http://localhost:3000/api/products';
-  private API_URL = 'https://motolineparts.com/api/products';
+  private API_URL = 'http://localhost:3000/api/products';
+  //private API_URL = 'https://motolineparts.com/api/products';
 
   constructor(private http: HttpClient) { }
+
+  getBestSellingProducts() {
+    return this.http.get<Product[]>(`${this.API_URL}/best-selling`);
+  }
 
   getAllProducts(page: number | undefined = undefined, limit: number | undefined = undefined) {
     return this.http.get<Product[]>(

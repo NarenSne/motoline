@@ -194,119 +194,22 @@
 >
   <div class="splide__track">
     <ul class="splide__list mx-auto max-w-[1200px]">
-      <!-- 1 -->
-      <li class="splide__slide">
+      <li class="splide__slide" *ngFor="let product of bestSellingProducts">
         <div class="flex flex-col">
           <img
             class=""
-            src="./assets/images/mobil2050.png"
-            alt="Mobil 20w50"
+            [src]="product.images[0]"
+            [alt]="product.name"
           />
 
           <div>
-            <p class="mt-2">Mobil 20w 50</p>
+            <p class="mt-2">{{ product.name }}</p>
             <p class="font-medium text-blue-800">
-              $45.000
+              {{ product.price | currency:'':'symbol':'1.0-0' }}
               <!-- <span class="text-sm text-gray-500 line-through">$500.00</span> -->
             </p>
             <div>
-              <button class="my-5 h-10 w-full bg-slate-400 text-black">
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-        </div>
-      </li>
-
-      <!-- 2 -->
-      <li class="splide__slide">
-        <div class="flex flex-col">
-          <img
-            class=""
-            src="./assets/images/FarolaNsLed.jpg"
-            alt="Mobil 20w50"
-          />
-
-          <div>
-            <p class="mt-2">Farola Pulsar Ns 200 Led</p>
-            <p class="font-medium text-blue-800">
-              $259.000
-              <!-- <span class="text-sm text-gray-500 line-through">$500.00</span> -->
-            </p>
-            <div>
-              <button class="my-5 h-10 w-full bg-slate-400 text-black">
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-        </div>
-      </li>
-
-      <!-- 3 -->
-      <li class="splide__slide">
-        <div class="flex flex-col">
-          <img
-            class=""
-            src="./assets/images/mobil2050.png"
-            alt="Mobil 20w50"
-          />
-
-          <div>
-            <p class="mt-2">Cilindro NKD 125 Original</p>
-            <p class="font-medium text-blue-800">
-              $259.000
-              <!-- <span class="text-sm text-gray-500 line-through">$500.00</span> -->
-            </p>
-            <div>
-              <button class="my-5 h-10 w-full bg-slate-400 text-black">
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-        </div>
-      </li>
-
-      <!-- 4 -->
-      <li class="splide__slide">
-        <div class="flex flex-col">
-          <img
-            class=""
-            src="./assets/images/mobil2050.png"
-            alt="Mobil 20w50"
-          />
-
-          <div>
-            <p class="mt-2">Pastillas de Pulsar En Kroos</p>
-            <p class="font-medium text-blue-800">
-              $21.000
-              <!-- <span class="text-sm text-gray-500 line-through">$500.00</span> -->
-            </p>
-            <div>
-              <button class="my-5 h-10 w-full bg-slate-400 text-black">
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-        </div>
-      </li>
-
-      <!-- 5 -->
-      <li class="splide__slide">
-        <div class="flex flex-col">
-          <img
-            class=""
-            src="./assets/images/mobil2050.png"
-            alt="Mobil 20w50"
-          />
-
-          <div>
-            <p class="mt-2">Motul 5100 15w-50</p>
-            <p class="font-medium text-blue-800">
-              $40.000
-              <!-- <span class="text-sm text-gray-500 line-through">$500.00</span> -->
-            </p>
-            <div>
-              <button class="my-5 h-10 w-full bg-slate-400 text-black">
+              <button class="my-5 h-10 w-full bg-slate-400 text-black" (click)="addToCart(product['_id']!)">
                 Añadir al carrito
               </button>
             </div>

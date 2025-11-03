@@ -22,6 +22,7 @@ declare var ePayco: any;
     DeliveryComponent,
     ReviewComponent,
     FormsModule,
+    PaymentComponent
   ],
   templateUrl: './check-out.component.html',
   styleUrl: './check-out.component.css',
@@ -93,18 +94,21 @@ export class CheckOutComponent implements OnInit {
   }
 
   nextStep() {
-    if (this.currentStep <= 2) {
+    if (this.currentStep <= 3) {
       if (
         this.currentStep === 1 &&
         (this.street === '' || this.city === '' || this.zip === '')
       ) {
         return;
       }
+      if (this.currentStep === 2 && this.isCheck===false) {
+        return
+      }
 
       this.currentStep++;
     }
 
-    if (this.currentStep === 3) {
+    if (this.currentStep === 4) {
       this.order.address = {
         street: this.street,
         city: this.city,
