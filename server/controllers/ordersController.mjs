@@ -1,6 +1,55 @@
 import Order from "../models/Order.mjs";
 import Product from "../models/Product.mjs";
 
+export const getBestSellingProducts = async (req, res) => {
+  try {
+    const bestSellingProducts = await Order.aggregate([
+      {
+        $unwind: "$products",
+      },
+      {
+        $group: {
+          _id: "$products",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          count: -1,
+        },
+      },
+      {
+        $limit: 10,
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      {
+        $unwind: "$productDetails",
+      },
+      {
+        $project: {
+          _id: "$productDetails._id",
+          name: "$productDetails.name",
+          price: "$productDetails.price",
+          images: "$productDetails.images",
+          count: "$count",
+        },
+      },
+    ]);
+
+    res.json(bestSellingProducts);
+  } catch (error) {
+    console.error("Error while fetching best selling products:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const getOrderById = async (req, res) => {
   try {
     const orderId = req.params.id;

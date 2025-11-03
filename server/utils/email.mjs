@@ -1,14 +1,14 @@
 import { MailtrapClient } from "mailtrap";
 
 const sendEmail = async (options) => {
-  const TOKEN = "e4638073e23e5310f4d1a13bf117b727";
-  const ENDPOINT = "https://send.api.mailtrap.io/";
+  const TOKEN = process.env.MAILTRAP_TOKEN;
+  const ENDPOINT = process.env.MAILTRAP_ENDPOINT;
 
   const client = new MailtrapClient({ endpoint: ENDPOINT, token: TOKEN });
 
   const sender = {
-    email: "mailtrap@demomailtrap.com",
-    name: "SwiftCart",
+    email: process.env.MAILTRAP_SENDER_EMAIL,
+    name: process.env.MAILTRAP_SENDER_NAME,
   };
 
   const recipients = [
