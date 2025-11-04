@@ -197,7 +197,7 @@
       <li class="splide__slide" *ngFor="let product of bestSellingProducts">
         <div class="flex flex-col">
           <img
-            class=""
+            class="h-48" style="object-fit: contain;"
             [src]="product.images[0]"
             [alt]="product.name"
           />
