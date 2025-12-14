@@ -39,7 +39,7 @@ export class LoginComponent {
           localStorage.setItem('token', response.token);
           localStorage.setItem('role', response.role);
           if (localStorage.getItem('role') == 'admin') {
-            window.location.href = '/admin-dashboard/overview';
+            this.router.navigate(['/admin-dashboard/overview']);
           } else this.router.navigate(['/home']);
         },
         error: (error) => {
