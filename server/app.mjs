@@ -15,6 +15,7 @@ import productRouter from "./routes/productRouter.mjs";
 import featuredProductsRouter from "./routes/featuredProductsRouter.mjs";
 import marcasRouter from "./routes/marcasRouter.mjs";
 import categoryRouter from "./routes/categoryRouter.mjs";
+import invoicesRouter from "./routes/invoicesRouter.mjs";
 import { protect } from "./controllers/authController.mjs";
 import cors from "cors";
 
@@ -72,6 +73,7 @@ app.use("/api/products", productRouter);
 app.use("/api/marcas", marcasRouter);
 app.use("/api/categorias", categoryRouter);
 app.use("/api/featuredproducts", featuredProductsRouter);
+app.use("/api/invoices", invoicesRouter);
 app.use('/uploads', express.static('uploads'));
 
 // Servir Angular
