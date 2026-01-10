@@ -84,6 +84,20 @@ app.use(express.json({
   },
 }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Accept requests that send JSON but with Content-Type: text/plain
+app.use(express.text({ type: 'text/*', limit: '10mb' }));
+app.use((req, res, next) => {
+  // If body was parsed as text but contains JSON, parse it into req.body
+  if (req.is('text') && typeof req.body === 'string') {
+    try {
+      req.body = JSON.parse(req.body);
+    } catch (err) {
+      // leave req.body as the raw string if it's not valid JSON
+    }
+  }
+  next();
+});
 app.use("/api/users", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/profile", userRouter);

@@ -39,12 +39,6 @@ export const createNormalInvoice = async (req, res) => {
         throw new Error(`Product not found: ${productId}`);
       }
 
-      if (typeof product.stock === "number" && product.stock < qty) {
-        throw new Error(
-          `Insufficient stock for product ${productId}: available ${product.stock}, required ${qty}`
-        );
-      }
-
       // decrement stock
       await Product.updateOne(
         { _id: productId },
