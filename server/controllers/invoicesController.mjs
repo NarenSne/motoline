@@ -72,8 +72,6 @@ export const createNormalInvoice = async (req, res) => {
 
     res.status(201).json({ message: "Invoice created", id: invoiceDoc._id });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     console.error("Error creating invoice:", error);
     res.status(500).json({ error: error.message || "Error creating invoice" });
   }
