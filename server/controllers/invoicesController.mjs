@@ -3,6 +3,9 @@ import Order from "../models/Order.mjs";
 import Product from "../models/Product.mjs";
 
 export const createNormalInvoice = async (req, res) => {
+  // Debugging: log headers and raw body if body-parsing fails on client side
+  console.log('Invoice request headers:', req.headers);
+  if (req.rawBody !== undefined) console.log('Invoice raw body:', req.rawBody);
   const {
     customerName,
     customerId,
@@ -14,7 +17,7 @@ export const createNormalInvoice = async (req, res) => {
     totalWithDiscount,
     isElectronic = false,
     timestamp,
-  } = req.body;
+  } = req.body || {};
   console.log("Creating normal invoice with data:", req.body);
   if (!items || !Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: "Invoice must include items" });

@@ -72,7 +72,17 @@ process.on("unhandledRejection", (error) => {
   console.log("unhandledRejection", error.message);
 });
 
-app.use(express.json({ limit: '10mb' }));
+// capture raw body for debugging when needed (won't break normal parsing)
+app.use(express.json({
+  limit: '10mb',
+  verify: (req, res, buf) => {
+    try {
+      req.rawBody = buf.toString();
+    } catch (e) {
+      req.rawBody = undefined;
+    }
+  },
+}));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use("/api/users", authRouter);
 app.use("/api/users", userRouter);
