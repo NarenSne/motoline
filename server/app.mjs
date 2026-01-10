@@ -31,10 +31,14 @@ process.on("uncaughtException", (err) => {
 dotenv.config({ path: "./.env" });
 
 const app = express();
+// Allow any origin while supporting credentials by echoing the request origin
 app.use(cors({
-	origin: ["*"], // O el dominio de tu frontend
-  credentials: true, // 👈 necesario para cookies/sesión
+  origin: true, // reflect request origin
+  credentials: true, // necessary for cookies/sessions
 }));
+
+// Enable preflight across the board
+app.options('*', cors({ origin: true, credentials: true }));
 
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;
