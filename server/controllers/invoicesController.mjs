@@ -16,7 +16,7 @@ export const createNormalInvoice = async (req, res) => {
     timestamp,
   } = req.body;
 
-  if (!items || !Array.isArray(items) || items.length === 0) {
+  if (items.length === 0) {
     return res.status(400).json({ error: "Invoice must include items" });
   }
 
