@@ -53,7 +53,7 @@ export const createNormalInvoice = async (req, res) => {
     }
 
     // Create order/invoice document
-    const invoiceDoc = await Order.create([
+    const invoiceDoc = await Order.create(
       {
         customerName,
         customerId,
@@ -72,13 +72,12 @@ export const createNormalInvoice = async (req, res) => {
         isElectronic,
         timestamp: timestamp ? new Date(timestamp) : new Date(),
         date: timestamp ? new Date(timestamp) : Date.now(),
-      },
-    ], { session });
+      });
 
     await session.commitTransaction();
     session.endSession();
 
-    res.status(201).json({ message: "Invoice created", id: invoiceDoc[0]._id });
+    res.status(201).json({ message: "Invoice created", id: invoiceDoc._id });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
