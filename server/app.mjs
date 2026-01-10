@@ -98,8 +98,4 @@ app.all("*", (req, res, next) => {
 process.on("unhandledRejection", (err) => {
   console.log("unhandled rejection ... shutting down");
   console.log(err.name, err.message);
-  // 0 : success , 1 : uncaught exception
-  server.close(() => {
-    process.exit(1);
-  });
 });
