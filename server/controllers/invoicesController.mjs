@@ -20,8 +20,6 @@ export const createNormalInvoice = async (req, res) => {
     return res.status(400).json({ error: "Invoice must include items" });
   }
 
-  const session = await mongoose.startSession();
-  session.startTransaction();
 
   try {
     // For each item, check stock and decrement
@@ -74,8 +72,6 @@ export const createNormalInvoice = async (req, res) => {
         date: timestamp ? new Date(timestamp) : Date.now(),
       });
 
-    await session.commitTransaction();
-    session.endSession();
 
     res.status(201).json({ message: "Invoice created", id: invoiceDoc._id });
   } catch (error) {
