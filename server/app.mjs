@@ -31,14 +31,19 @@ process.on("uncaughtException", (err) => {
 dotenv.config({ path: "./.env" });
 
 const app = express();
-// Allow any origin while supporting credentials by echoing the request origin
-app.use(cors({
+// Allow any origin while supporting credentials by echoing the request origin.
+// Also explicitly allow common headers and methods so preflight succeeds.
+const corsOptions = {
   origin: true, // reflect request origin
   credentials: true, // necessary for cookies/sessions
-}));
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  optionsSuccessStatus: 204,
+};
+app.use(cors(corsOptions));
 
 // Enable preflight across the board
-app.options('*', cors({ origin: true, credentials: true }));
+app.options('*', cors(corsOptions));
 
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -67,8 +72,8 @@ process.on("unhandledRejection", (error) => {
   console.log("unhandledRejection", error.message);
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use("/api/users", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/profile", userRouter);
