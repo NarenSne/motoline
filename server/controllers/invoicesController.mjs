@@ -34,7 +34,7 @@ export const createNormalInvoice = async (req, res) => {
         throw new Error("Invalid item productId or quantity");
       }
 
-      const product = await Product.findById(productId).session(session);
+      const product = await Product.findById(productId);
       if (!product) {
         throw new Error(`Product not found: ${productId}`);
       }
@@ -42,8 +42,7 @@ export const createNormalInvoice = async (req, res) => {
       // decrement stock
       await Product.updateOne(
         { _id: productId },
-        { $inc: { stock: -qty } },
-        { session }
+        { $inc: { stock: -qty } }
       );
     }
 
