@@ -22,7 +22,7 @@
               : order._id
           }}
         </td>
-        <td class="px-4 py-2 text-center">{{ order.address.city }}</td>
+        <td class="px-4 py-2 text-center">{{ order.address.city || '' }}</td>
         <td class="px-4 py-2 text-center">{{ order.status }}</td>
         <td class="px-4 py-2 text-center">{{ order.date }}</td>
         <td class="px-4 py-2 text-center">
@@ -31,8 +31,13 @@
               {{ getProductName(product) }}
             </li>
           </ul>
+          <ul *ngFor="let product of order.items">
+            <li>
+              {{ getProductName(product) }}
+            </li>
+          </ul>
         </td>
-        <td class="px-4 py-2 text-center">{{ order.totalPrice }}</td>
+        <td class="px-4 py-2 text-center">{{ order.totalPrice || order.total}}</td>
         <td class="px-4 py-2 text-center">
           <button
             class="px-2 py-1 mx-3 text-white bg-blue-500 rounded"
