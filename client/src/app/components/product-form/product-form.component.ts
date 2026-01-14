@@ -51,6 +51,7 @@ export class ProductFormComponent {
   }
   productForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    sku: new FormControl(0, [Validators.required]),
     price: new FormControl(0, [Validators.required, Validators.min(0)]),
     desc: new FormControl('', [Validators.required]),
     stock: new FormControl(0, [Validators.required, Validators.pattern("^[0-9]*$")]), // Ensure only numbers

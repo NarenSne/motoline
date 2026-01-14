@@ -40,7 +40,7 @@ export class ProductEditFormComponent {
   }
 
   ngOnInit(): void {
-    let { name, price, images, desc, stock, brand, category, Marcavehicular, ReferenciaVehiculo } = this.data.product;
+    let { name, price, images, desc, stock, brand, category, Marcavehicular, ReferenciaVehiculo, sku } = this.data.product;
     this.product = this.data.product;
     ReferenciaVehiculo = ReferenciaVehiculo.split(",");
     this.imagesUrl = images;
@@ -53,6 +53,7 @@ export class ProductEditFormComponent {
     this.productForm.get("category")?.setValue(category)
     this.productForm.get("Marcavehicular")?.setValue(Marcavehicular)
     this.productForm.get("ReferenciaVehiculo")?.setValue(ReferenciaVehiculo)
+    this.productForm.get("sku")?.setValue(sku)
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -67,6 +68,7 @@ export class ProductEditFormComponent {
   productForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     price: new FormControl(0, [Validators.required, Validators.min(0)]),
+    sku: new FormControl(0, [Validators.required]),
     desc: new FormControl('', [Validators.required]),
     stock: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]), // Ensure only numbers
     images: new FormControl([]),
