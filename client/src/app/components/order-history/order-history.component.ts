@@ -22,23 +22,7 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
   providers: [OrderService],
 })
 export class OrderHistoryComponent {
-  orders: Order[] = [
-    {
-      _id: '',
-      user: '',
-      products: [],
-      totalPrice: 0,
-      status: 'pending',
-      date: new Date(),
-      address: {
-        street: '',
-        city: '',
-        zip: '',
-      },
-      uniqueProductIds: [],
-      uniqueProducts: [],
-    },
-  ];
+  orders: Order[] = [];
   pagination: {
     currentPage: number;
     totalPages: number;
