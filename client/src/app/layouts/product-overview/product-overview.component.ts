@@ -7,12 +7,13 @@ import Swal from 'sweetalert2';
 import { recommendation } from '../../Utils/products'
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
-import Splide from '@splidejs/splide';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-overview',
   standalone: true,
-  imports: [LoadingSpinnerComponent],
+  imports: [LoadingSpinnerComponent, CommonModule, FormsModule],
   providers: [ProductService, UserServiceService],
   templateUrl: './product-overview.component.html',
   styles: ``
@@ -30,6 +31,9 @@ export class ProductOverviewComponent {
   sizes = new Set<string>();
   colors = new Set<string>();
   wishListBtn = false;
+  currentImageIndex = 0;
+  references: string[] = [];
+  quantity: number = 1;
 
   constructor(myRoute: ActivatedRoute, private productService: ProductService, private userService: UserServiceService, private localStorage: LocalStorageService) {
     this.id = myRoute.snapshot.params['id'];
@@ -42,6 +46,10 @@ export class ProductOverviewComponent {
         this.stock = data.stock;
         this.isLoading = false;
 
+        if (this.product?.ReferenciaVehiculo) {
+          this.references = this.product.ReferenciaVehiculo.split(',').map((ref: string) => ref.trim());
+        }
+
         const products: any = this.localStorage.getItem('wishList');
         if (this.product) {
           if (products && products.some((prod: any) => prod._id === this.product?._id)) {
@@ -51,18 +59,6 @@ export class ProductOverviewComponent {
       },
       error: (error) => console.error(error)
     })
-    let splide = new Splide(".splide", {
-      type: "loop",
-      focus: 0,
-      gap: "1rem",
-      perPage: 1,
-    });
-    setTimeout(()=>{splide.mount()},1000)
-    
-  }
-
-  activeImage(image: string) {
-    this.primaryImage = image;
   }
 
   checkAvailability(): boolean {
@@ -71,7 +67,7 @@ export class ProductOverviewComponent {
     }
     return false;
   }
-  quantity:number = 1;
+
   addToCart() {
     if (!this.stock) {
       Swal.fire({
@@ -83,7 +79,7 @@ export class ProductOverviewComponent {
       });
       return;
     }
-    this.userService.addCart(this.id,this.quantity).subscribe({
+    this.userService.addCart(this.id, this.quantity).subscribe({
       next: (data) => { },
       error: (error) => console.error(error)
     });
@@ -96,37 +92,35 @@ export class ProductOverviewComponent {
     })
   }
 
-  getColorFilters(colorVal: string) {
-    if (this.colors.has(colorVal)) {
-      this.colors.delete(colorVal);
-    } else {
-      this.colors.add(colorVal);
-    }
-  }
-
-  getSizeFilters(sizeVal: string) {
-    if (this.sizes.has(sizeVal)) {
-      this.sizes.delete(sizeVal);
-    } else {
-      this.sizes.add(sizeVal);
-    }
-  }
-
   addProductToWishList() {
     let products: any;
     if (this.localStorage.getItem('wishList')) {
       products = this.localStorage.getItem('wishList');
       if (products.some((prod: any) => prod._id === this.product?._id)) {
         products = products.filter((prod: any) => prod._id !== this.product?._id);
+        this.wishListBtn = false;
       } else {
-        products.push(this.product)
+        products.push(this.product);
+        this.wishListBtn = true;
       }
       this.localStorage.setItem('wishList', products);
     } else {
       products = [];
       products.push(this.product);
+      this.wishListBtn = true;
       this.localStorage.setItem('wishList', products);
     }
   }
 
+  prevImage() {
+    if (this.product && this.product.images) {
+      this.currentImageIndex = (this.currentImageIndex > 0) ? this.currentImageIndex - 1 : this.product.images.length - 1;
+    }
+  }
+
+  nextImage() {
+    if (this.product && this.product.images) {
+      this.currentImageIndex = (this.currentImageIndex < this.product.images.length - 1) ? this.currentImageIndex + 1 : 0;
+    }
+  }
 }

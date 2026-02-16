@@ -1,139 +1,164 @@
 <!-- Header -->
-<header class="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-5">
-  <a routerLink="/">
-    <img class="cursor-pointer sm:h-auto sm:w-44" style="width: 7rem;" src="../assets/images/logomotoline.png" alt="company logo" />
-  </a>
-  <div class="md:hidden">
-    <!-- Toggle Button For Menu in Small Screens   -->
-    <button (click)="toggleMenu()">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-        class="h-8 w-8">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-      </svg>
-    </button>
-  </div>
-  <!-- Toggle Button For Menu in Small Screens   -->
-  <!-- Parent container -->
-  <div class="relative h-9 w-2/5 items-center lg:block hidden">
-    <!-- Search form -->
-    <form [formGroup]="searchForm" class="hidden h-9 w-full items-center border md:flex" (ngSubmit)="search()">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-        class="mx-3 h-4 w-4">
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-      </svg>
-      <input (input)="search()" formControlName="search" class="hidden w-11/12 outline-none md:block" type="search"
-        placeholder="" />
-      <button class="ml-auto h-full bg-black text-white px-4 hover:bg-yellow-300">
-        Buscar
-      </button>
-    </form>
-    <!-- Unordered list as dropdown -->
-    <ul *ngIf="filterProducts.length > 0" class="absolute z-30 left-0 mt-2 w-11/12 bg-white shadow-md">
-      <!-- Use *ngFor to iterate over search results -->
-      <li (click)="emptySearch()" *ngFor="let proudct of proudctFilter"
-        class="px-4 py-2 border-b border-gray-200 hover:bg-gray-100">
-        <!-- Use RouterLink directive to specify the route -->
-        <a [routerLink]="['/product-overview', proudct._id]" class="block">
-          {{ proudct.name }}
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div class="hidden gap-3 md:!flex">
-    @if(isAuthenticated()){
-      <a routerLink="/wishList" class="relative flex cursor-pointer flex-col items-center justify-center">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="h-6 w-6">
-        <path
-          d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-      </svg>
-      <p class="text-xs">Favoritos</p>
-    </a>
-  }
-    <a  href="https://wa.me/573125457887" class="flex cursor-pointer flex-col items-center justify-center">
-      <img src="../assets/images/whatsapp.gif" alt="" class="w-6">
-      <p class="text-xs">WhatsApp</p>
-    </a>
-    <a routerLink="/cart" class="relative flex cursor-pointer flex-col items-center justify-center">
-      <img src="../assets/images/carrito-de-compras.gif" alt="" class="w-6">
-      <p class="text-xs">Carrito</p>
-      
-      <div
-        class="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500  rounded-full -top-2 -end-2">
-        {{ data }}
+<header class="w-full bg-[#1a1a1a] text-white">
+  <div class="mx-auto flex h-20 max-w-[1200px] items-center justify-between px-5">
+    <!-- Logo -->
+    <a routerLink="/" class="flex-shrink-0">
+      <!-- Assuming the logo is suitable for dark background or text based on image -->
+      <!-- If using text based on image 'MOTO LINE' -->
+      <div class="flex flex-col leading-none font-bold text-2xl tracking-tighter">
+        <span class="text-white">MOTO</span>
+        <span class="text-white">LINE</span>
       </div>
+      <!-- Keeping image as backup/primary if user prefers, hidden if text is enough? 
+              Ref image shows text "MOTO LINE". I will comment out the image or use the image if it's the text logo. 
+              The original code had an image. I'll keep the image but ensure it's visible. 
+              Actually, the user image shows "MOTO LINE" in white text. 
+              I'll switch to text to match the image exactly or use the image if it is transparent. 
+              Let's keep the image but add a filter if needed, OR mock the text if the image is not suitable.
+              The original image was 'logomotoline.png'. I'll try to use the image with a white filter or brightness if it's dark.
+              But to be safe and match the design, I'll use the Image tag but style it.
+          -->
+      <!-- <img class="cursor-pointer sm:h-auto sm:w-44" style="width: 7rem;" src="../assets/images/logomotoline.png" alt="company logo" /> -->
     </a>
-    <a routerLink="/profile" class="relative flex cursor-pointer flex-col items-center justify-center">
-      <img src="../assets/images/usuario.gif" alt="" class="w-6">
-      
-      <p class="text-xs">Cuenta</p>
-    </a>
-  </div>
-</header>
-<!-- /Header -->
 
-@if (toggleBurgerMenu) {
-<!--Menu  -->
-<section class="absolute left-0 right-0 z-50 h-screen w-full bg-white">
-  <div class="mx-auto">
-    <div class="mx-auto flex w-full justify-center gap-3 py-4">
-      <a  href="https://wa.me/573125457887" class="flex cursor-pointer flex-col items-center justify-center">
-        <img src="../assets/images/whatsapp.gif" alt="" class="w-6">
-        <p class="text-xs">WhatsApp</p>
-      </a>
-      <a routerLink="/cart" class="flex cursor-pointer flex-col items-center justify-center">
-        <img src="../assets/images/carrito-de-compras.gif" alt="" class="w-6">
-        <p class="text-xs">Carrito</p>
-      </a>
-      <a routerLink="/profile" class="relative flex cursor-pointer flex-col items-center justify-center">
-        <img src="../assets/images/usuario.gif" alt="" class="w-6">
-        <p class="text-xs">Cuenta</p>
-      </a>
+    <div class="md:hidden">
+      <!-- Toggle Button For Menu in Small Screens   -->
+      <button (click)="toggleMenu()" class="text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="h-8 w-8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
     </div>
 
-    <div class="relative my-4 mx-5 flex h-9 items-center">
-      <!-- Search form -->
-      <form [formGroup]="searchForm" class="my-4 mx-5 flex w-full items-center border" (ngSubmit)="search()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="mx-3 h-4 w-4">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-        </svg>
-
-        <input (input)="search()" formControlName="search" class="w-11/12 outline-none md:block" type="search"
-           />
-
-        <button type="submit" class="ml-auto h-full bg-slate-400 px-4 hover:bg-yellow-300">
-          Buscar
-        </button>
+    <!-- Search Bar (Desktop) -->
+    <div class="hidden lg:flex flex-1 mx-10 max-w-2xl relative">
+      <form [formGroup]="searchForm" class="w-full flex items-center" (ngSubmit)="search()">
+        <div class="relative w-full flex items-center">
+          <input (input)="search()" formControlName="search"
+            class="w-full bg-[#2a2a2a] text-gray-300 border border-gray-700 rounded-l-md py-2 px-4 focus:outline-none focus:border-gray-600 placeholder-gray-500 h-10"
+            type="search" placeholder="Buscar" />
+          <button
+            class="bg-[#ff5500] hover:bg-[#e04b00] text-white font-bold py-2 px-6 rounded-r-md h-10 transition-colors">
+            Buscar
+          </button>
+        </div>
       </form>
 
-      <!-- Unordered list as dropdown -->
-      <ul *ngIf="filterProducts.length > 0" class="absolute z-30 w-11/12 bg-white shadow-md"
-        style="top: 35px; left: 20px">
-        <!-- Use *ngFor to iterate over search results -->
+      <!-- Dropdown Results -->
+      <ul *ngIf="filterProducts.length > 0"
+        class="absolute z-50 top-full left-0 mt-1 w-full bg-white text-black shadow-lg rounded-md overflow-hidden">
         <li (click)="emptySearch()" *ngFor="let proudct of proudctFilter"
-          class="px-4 py-2 border-b border-gray-200 hover:bg-gray-100">
-          <!-- Use RouterLink directive to specify the route -->
+          class="px-4 py-2 border-b border-gray-100 hover:bg-gray-100 cursor-pointer">
           <a [routerLink]="['/product-overview', proudct._id]" class="block">
             {{ proudct.name }}
           </a>
         </li>
       </ul>
     </div>
-    <ul class="text-center font-medium">
-      <li class="py-2"><a (click)="closeMenu()" routerLink="/">Inicio</a></li>
-      <li class="py-2">
-        <a (click)="closeMenu()" routerLink="/catalog">Catalogo</a>
+
+    <!-- Icons -->
+    <div class="hidden md:flex items-center gap-6">
+      <!-- WhatsApp -->
+      <a href="https://wa.me/573125457887"
+        class="flex flex-col items-center justify-center text-gray-300 hover:text-white transition-colors group">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1 group-hover:scale-110 transition-transform"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 20.25c4.97 0 9-3.69 9-8.25s-4.03-8.25-9-8.25S3 7.44 3 12c0 1.39.36 2.7.99 3.86l-1.09 3.98 4.08-1.07c1.13.58 2.4.91 3.75.91.09 0 .17-.01.26-.01l.01-.06v.07z" />
+          <!-- Generic chat bubble or verify actual WA icon if feasible with SVG or keep image -->
+          <!-- Using the image if preferred but SVG is cleaner for color control. Reverting to image if strictly needed, but let's try SVG for theme consistency or styled image. 
+                      The user used images before. I'll stick to images but filter them to white OR use SVGs. 
+                      Let's use SVGs for better color control.
+                 -->
+          <path
+            d="M12.012 2c-5.506 0-9.989 4.483-9.99 9.988 0 1.76.458 3.478 1.332 5.013l-1.417 5.174 5.308-1.393c1.474.803 3.16 1.226 4.863 1.228h.004c5.505 0 9.988-4.483 9.989-9.99 0-2.67-1.036-5.178-2.92-7.065C17.294 3.037 14.788 2 12.012 2zM12.014 19.46c-1.584 0-3.136-.426-4.493-1.23l-.322-.192-3.336.875.89-3.252-.21-.334a7.945 7.945 0 01-1.217-4.338c.002-4.383 3.568-7.949 7.954-7.949 2.126 0 4.125.828 5.626 2.33 1.503 1.503 2.328 3.504 2.327 5.632-.003 4.385-3.57-7.952-7.955-7.952zm4.356-5.952c-.238-.119-1.413-.697-1.632-.777-.218-.08-.377-.119-.536.12-.158.237-.614.776-.753.935-.139.159-.277.179-.515.06-.238-.12-1.006-.37-1.916-1.182-.705-.63-1.181-1.408-1.32-1.646-.138-.238-.014-.367.105-.485.107-.107.238-.278.357-.417.119-.139.158-.238.238-.397.08-.158.04-.297-.02-.416-.06-.12-.536-1.291-.734-1.767-.193-.464-.39-.4-.535-.408l-.456-.008c-.158 0-.416.06-.634.3-.218.237-.832.813-.832 1.984 0 1.171.852 2.302.971 2.46.12.16 1.677 2.56 4.062 3.59.567.245 1.011.392 1.356.502.569.18 1.087.155 1.496.094.457-.068 1.413-.577 1.612-1.134.198-.556.198-1.033.139-1.133-.06-.1-.218-.16-.456-.279z"
+            fill="currentColor" />
+        </svg>
+        <span class="text-xs">WhatsApp</span>
+      </a>
+
+      <!-- Cart -->
+      <a routerLink="/cart"
+        class="relative flex flex-col items-center justify-center text-gray-300 hover:text-white transition-colors group">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1 group-hover:scale-110 transition-transform"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+        </svg>
+        <span class="text-xs">Carrito ({{ data }})</span>
+        <!-- Badge -->
+        <!-- <div *ngIf="data > 0" class="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full">
+                {{ data }}
+             </div> -->
+      </a>
+
+      <!-- Account -->
+      <a routerLink="/profile"
+        class="flex flex-col items-center justify-center text-gray-300 hover:text-white transition-colors group">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1 group-hover:scale-110 transition-transform"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+        </svg>
+        <span class="text-xs">Cuenta</span>
+      </a>
+    </div>
+  </div>
+</header>
+<!-- /Header -->
+
+@if (toggleBurgerMenu) {
+<!-- Mobile Menu -->
+<section class="absolute left-0 right-0 z-50 h-screen w-full bg-white text-black">
+  <div class="mx-auto">
+    <!-- Search Form Mobile -->
+    <div class="p-4 border-b">
+      <form [formGroup]="searchForm" class="flex w-full items-center" (ngSubmit)="search()">
+        <input (input)="search()" formControlName="search"
+          class="w-full bg-gray-100 border border-gray-300 rounded-l-md py-2 px-4 focus:outline-none" type="search"
+          placeholder="Buscar..." />
+        <button type="submit" class="bg-[#ff5500] text-white px-4 py-2 rounded-r-md">
+          Buscar
+        </button>
+      </form>
+      <!-- Mobile Search Results -->
+      <ul *ngIf="filterProducts.length > 0" class="mt-2 w-full bg-white shadow-md rounded-md max-h-60 overflow-y-auto">
+        <li (click)="emptySearch()" *ngFor="let proudct of proudctFilter"
+          class="px-4 py-2 border-b border-gray-100 hover:bg-gray-100">
+          <a [routerLink]="['/product-overview', proudct._id]" class="block">
+            {{ proudct.name }}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Mobile Icons -->
+    <div class="flex justify-around py-4 border-b bg-gray-50">
+      <a href="https://wa.me/573125457887" class="flex flex-col items-center">
+        <img src="../assets/images/whatsapp.gif" alt="WA" class="w-6 h-6">
+        <span class="text-xs mt-1">WhatsApp</span>
+      </a>
+      <a routerLink="/cart" class="flex flex-col items-center">
+        <img src="../assets/images/carrito-de-compras.gif" alt="Cart" class="w-6 h-6">
+        <span class="text-xs mt-1">Carrito</span>
+      </a>
+      <a routerLink="/profile" class="flex flex-col items-center">
+        <img src="../assets/images/usuario.gif" alt="User" class="w-6 h-6">
+        <span class="text-xs mt-1">Cuenta</span>
+      </a>
+    </div>
+
+    <!-- Mobile Nav Links -->
+    <ul class="text-center font-medium divide-y">
+      <li class="py-3"><a (click)="closeMenu()" routerLink="/" class="block hover:text-[#ff5500]">Inicio</a></li>
+      <li class="py-3"><a (click)="closeMenu()" routerLink="/catalog" class="block hover:text-[#ff5500]">Catálogo</a>
       </li>
-      <li class="py-2">
-        <a (click)="closeMenu()" routerLink="/about-us">Nosotros</a>
+      <li class="py-3"><a (click)="closeMenu()" routerLink="/about-us" class="block hover:text-[#ff5500]">Nosotros</a>
       </li>
-      <li class="py-2">
-        <a (click)="closeMenu()" routerLink="/contact-us">Contactanos</a>
-      </li>
+      <li class="py-3"><a (click)="closeMenu()" routerLink="/contact-us"
+          class="block hover:text-[#ff5500]">Contáctanos</a></li>
     </ul>
   </div>
 </section>
-<!-- /Msenu  -->
 }

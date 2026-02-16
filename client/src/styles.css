@@ -4,11 +4,50 @@
 @tailwind utilities;
 
 * {
-    font-family: "Russo One", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  
-.swal2-confirm{
+  font-family: "Russo One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  --mat-paginator-container-text-color: white;
+  --mat-paginator-container-background-color: rgba(0, 0, 0, 0.87);
+  --mat-paginator-enabled-icon-color: white;
+  --mat-paginator-disabled-icon-color: rgba(255, 255, 255, 0.57);
+}
+
+.swal2-confirm {
   color: #000000;
+}
+
+app-catalog {
+  background: black;
+  display: block;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF6600;
+}
+
+.glow-effect {
+  box-shadow: 0 0 40px rgba(255, 102, 0, 0.15);
+}
+
+app-product-overview {
+  display: block;
+  background: black;
+}
+
+.map-container iframe {
+  filter: grayscale(100%) invert(92%) contrast(83%);
 }

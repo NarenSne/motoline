@@ -2,141 +2,131 @@
 <app-loading-spinner></app-loading-spinner>
 }
 
-<!-- breadcrumbs  -->
-<div>
-  <nav class="mx-auto w-full mt-4 max-w-[1200px] px-5">
-    <ul class="flex items-center">
-      <li class="cursor-pointer">
-        <a href="index.html">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
-            <path
-              d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
-            <path
-              d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
-          </svg>
-        </a>
-      </li>
-      <li>
-        <span class="mx-2 text-gray-500">&gt;</span>
-      </li>
-
-      <li class="text-gray-500">{{product?.name}}</li>
-    </ul>
-  </nav>
+<div class="bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark py-3">
+  <div class="container mx-auto px-4 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+    <a href="/" class="hover:text-primary transition-colors"><span
+        class="material-icons text-sm align-text-bottom">home</span></a>
+    <span class="text-gray-400 dark:text-gray-600">/</span>
+    <a routerLink="/catalog"
+      class="text-gray-400 dark:text-gray-400 hover:text-white transition-colors cursor-pointer">Catálogo</a>
+    <span class="text-gray-400 dark:text-gray-600">/</span>
+    <span class="text-gray-800 dark:text-gray-200 font-medium">{{product?.name}}</span>
+  </div>
 </div>
-<!-- breadcrumbs  -->
 
+<main class="container mx-auto px-4 py-12 flex-1">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 
-<section class="container flex-grow mx-auto max-w-[1200px] border-b py-5 lg:grid lg:grid-cols-2 lg:py-10">
-  <!-- image gallery -->
-
-  <div class="container mx-auto px-4">
-    <section class="splide mx-auto px-5 py-2" aria-label="Splide Basic HTML Example">
-      <div class="splide__track">
-        <ul class="splide__list">
-          <!-- 1 -->
-           @for (item of product?.images; track $index) {
-            <li class="splide__slide max-w-full">
-              <img class="mx-auto" src="{{item}}" alt="" />
-            </li>
-           }
-          
-        </ul>
-      </div>
-    </section>
-  </div>
-
-  <!-- description  -->
-
-  <div class="mx-auto px-5 lg:px-5 w-full">
-    <h2 class="pt-3 text-2xl font-bold lg:pt-0">{{product?.name}}</h2>
-    <div class="mt-1">
-    </div>
-
-    <p class="mt-5 font-bold">
-      Disponibilidad: @if (checkAvailability()) {
-      <span class="text-green-600">Diponible</span>
-      } @else {
-      <span class="text-red-600">Agotado</span>
+    <!-- Image Gallery -->
+    <div
+      class="relative w-full flex items-center justify-center bg-surface-dark dark:bg-[#181818] rounded-lg border border-border-dark p-8 group overflow-hidden">
+      @if (product?.images?.length && product!.images.length > 1) {
+      <button (click)="prevImage()"
+        class="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-dark/80 hover:bg-primary text-gray-400 hover:text-white rounded-full p-2 transition-all z-10 border border-border-dark">
+        <span class="material-icons">chevron_left</span>
+      </button>
+      <button (click)="nextImage()"
+        class="absolute right-4 top-1/2 -translate-y-1/2 bg-surface-dark/80 hover:bg-primary text-gray-400 hover:text-white rounded-full p-2 transition-all z-10 border border-border-dark">
+        <span class="material-icons">chevron_right</span>
+      </button>
       }
-    </p>
-    <p class="font-bold">Marca: <span class="font-normal">{{product?.brand}}</span></p>
-    <p class="font-bold">
-      Categoria: <span class="font-normal">{{product?.category}}</span>
-    </p>
-    <!-- <p class="font-bold">
-      SKU: <span class="font-normal">BE45VGTRK</span>
-    </p> -->
 
-    <p class="mt-4 text-4xl font-bold text-blue-800">
-      ${{product?.price}}
-    </p>
-
-    <p class="pt-5 text-sm leading-5 text-gray-500">{{product?.desc}}</p>
-
-    <div class="mt-6">
-      <p class="pb-2 text-xs text-gray-500">Marca vehicular</p>
-
-      <div class="flex gap-1">
-        {{product?.Marcavehicular}}
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent rounded-lg opacity-50">
       </div>
-    </div>
-    
-    <div class="mt-6">
-      <p class="pb-2 text-xs text-gray-500">Referencias vehiculares</p>
 
-      <div class="flex gap-1">
-        {{product?.ReferenciaVehiculo?.split(",")?.join(", ")}}
-      </div>
-    </div>
-
-    <div class="mt-6">
-      <p class="pb-2 text-xs text-gray-500">Cantidad</p>
-
-      <div class="flex">
-        <button (click)="quantity=quantity-1"
-          class="flex h-8 w-8 cursor-pointer items-center justify-center border duration-100 hover:bg-neutral-100 focus:ring-2 focus:ring-gray-500 active:ring-2 active:ring-gray-500">
-          &minus; 
-        </button>
-        <div class="flex h-8 w-8 cursor-text items-center justify-center border-t border-b active:ring-gray-500">
-          {{quantity}}
-        </div>
-        <button (click)="quantity=quantity+1"
-          class="flex h-8 w-8 cursor-pointer items-center justify-center border duration-100 hover:bg-neutral-100 focus:ring-2 focus:ring-gray-500 active:ring-2 active:ring-gray-500">
-          &#43;
-        </button>
-      </div>
-    </div>
-
-    <div class="mt-7 flex flex-row items-center gap-6 w-full">
-      <button (click)="addToCart()"
-        class="flex h-12 w-1/3 items-center justify-center bg-yellow-400 text-black duration-100 hover:bg-orange-400">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="mr-3 h-4 w-4">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-        </svg>
-
-        Añadir al carrito
-      </button>
-      <button (click)="addProductToWishList(); wishListBtn = !wishListBtn;"
-        class="flex h-12 w-1/3 items-center justify-center bg-yellow-400 duration-100 hover:bg-yellow-400">
-        @if (wishListBtn) {
-        <svg xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="mr-3 h-4 w-4">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-        </svg>
-        } @else {
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="mr-3 h-4 w-4">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-        </svg>
+      <div class="relative z-0 p-4 glow-effect rounded-full bg-white/5">
+        @if (product?.images?.length) {
+        <img [src]="product?.images![currentImageIndex]" [alt]="product?.name"
+          class="max-h-[500px] w-auto object-contain drop-shadow-2xl animate-fade-in transition-opacity duration-300">
         }
+      </div>
+    </div>
 
-        Wishlist
-      </button>
+    <!-- Product Details -->
+    <div class="space-y-6">
+      <h1 class="font-display text-5xl font-bold text-gray-800 dark:text-white uppercase tracking-wide leading-none">
+        {{product?.name}}</h1>
+
+      <div class="space-y-1 text-sm">
+        <p class="text-gray-600 dark:text-gray-400 font-medium">Disponibilidad:
+          @if(checkAvailability()) {
+          <span class="text-green-600 font-bold">Disponible</span>
+          } @else {
+          <span class="text-red-600 font-bold">Agotado</span>
+          }
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 font-medium">Marca: <span
+            class="text-gray-900 dark:text-white">{{product?.brand}}</span></p>
+        <p class="text-gray-600 dark:text-gray-400 font-medium">Categoría: <span
+            class="text-gray-900 dark:text-white">{{product?.category}}</span></p>
+      </div>
+
+      <div class="text-5xl font-bold text-primary font-display">{{ product?.price | currency:'$':'symbol':'3.0-0' }}
+      </div>
+
+      <div
+        class="prose prose-invert prose-sm text-gray-600 dark:text-gray-300 max-w-none border-t border-border-dark pt-6">
+        <p>{{product?.desc}}</p>
+      </div>
+
+      <div class="space-y-4 pt-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Marca vehicular</label>
+          <select
+            class="w-full bg-background-light dark:bg-background-dark border border-gray-300 dark:border-gray-700 rounded py-2.5 px-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-gray-700 dark:text-gray-300">
+            <option [value]="product?.Marcavehicular">{{product?.Marcavehicular || 'Seleccionar marca...'}}</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Referencias
+            vehiculares</label>
+          <select
+            class="w-full bg-background-light dark:bg-background-dark border border-gray-300 dark:border-gray-700 rounded py-2.5 px-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-gray-700 dark:text-gray-300">
+            <option value="">Seleccionar referencia...</option>
+            @for (ref of references; track ref) {
+            <option [value]="ref">{{ref}}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-border-dark space-y-6">
+        <div>
+          <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Cantidad</label>
+          <div class="flex items-center w-max border border-gray-400 dark:border-gray-600 rounded-sm">
+            <button (click)="quantity = (quantity > 1) ? quantity - 1 : 1"
+              class="w-10 h-10 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+              <span class="material-icons text-sm">remove</span>
+            </button>
+            <div
+              class="w-12 h-10 flex items-center justify-center text-gray-800 dark:text-white font-bold text-lg border-l border-r border-gray-400 dark:border-gray-600">
+              {{quantity}}</div>
+            <button (click)="quantity = quantity + 1"
+              class="w-10 h-10 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+              <span class="material-icons text-sm">add</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button (click)="addToCart()"
+            class="flex-1 bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 rounded-sm uppercase text-sm tracking-wider transition-all duration-300 flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:shadow-primary/40">
+            <span class="material-icons">shopping_bag</span>
+            Añadir al carrito
+          </button>
+          <button (click)="addProductToWishList()"
+            class="flex-1 sm:flex-none bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-sm uppercase text-sm tracking-wider transition-all duration-300 flex items-center justify-center gap-2">
+            @if (wishListBtn) {
+            <span class="material-icons text-red-600">favorite</span>
+            } @else {
+            <span class="material-icons">favorite_border</span>
+            }
+            Wishlist
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
-</section>
+</main>

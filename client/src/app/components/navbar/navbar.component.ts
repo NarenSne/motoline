@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './navbar.component.html',
   styles: ``,
 })
@@ -12,7 +13,7 @@ export class NavbarComponent {
   toggleBurgerMenu = false;
   @ViewChild('menu', { static: false }) menu!: ElementRef;
   @ViewChild('menudeploy', { static: false }) menudeploy!: ElementRef;
-  
+
   selectedCategory: string = 'Pastillas y bandas';
 
   categories = [
@@ -58,7 +59,7 @@ export class NavbarComponent {
     window.location.reload();
   }
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event:MouseEvent){
+  onDocumentClick(event: MouseEvent) {
     console.log(this.toggleBurgerMenu)
     if (
       this.toggleBurgerMenu &&

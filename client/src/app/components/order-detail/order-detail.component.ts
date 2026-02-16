@@ -15,7 +15,7 @@ import { ProfileService } from '../../services/profile/profile.service';
   providers: [OrderService],
 })
 export class OrderDetailComponent {
-  selectedOrder: any = {};
+  selectedOrder!: any;
   products: any = [];
   orderId: any;
   userInfo: any = {};
@@ -34,7 +34,7 @@ export class OrderDetailComponent {
 
   ngOnInit(): void {
     this.order.getOrderById(this.orderId).subscribe({
-      next: (order) => {
+      next: (order: any) => {
         this.selectedOrder = order.order;
         this.products = order.products;
         this.isLoading = false;

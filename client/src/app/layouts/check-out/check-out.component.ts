@@ -42,6 +42,8 @@ export class CheckOutComponent implements OnInit {
   street: string = '';
   city: string = '';
   zip: string = '';
+  fullname: string = '';
+  email: string = '';
   cardNumber: string = '';
   cardHolder: string = '';
   expirationDate: string = '';
@@ -94,31 +96,28 @@ export class CheckOutComponent implements OnInit {
   }
 
   nextStep() {
-    if (this.currentStep <= 3) {
+    if (this.currentStep <= 2) {
       if (
         this.currentStep === 1 &&
         (this.street === '' || this.city === '' || this.zip === '')
       ) {
         return;
       }
-      if (this.currentStep === 2 && this.isCheck===false) {
-        return
-      }
 
       this.currentStep++;
     }
 
-    if (this.currentStep === 4) {
+    if (this.currentStep === 3) {
       this.order.address = {
         street: this.street,
         city: this.city,
         zip: this.zip,
       };
-      
+
       this.orderService.createOrder(this.order).subscribe({
-        next: (data:any) => {
+        next: (data: any) => {
           this.pagarConEpayco(data.message);
-          
+
         },
         error: (error) => {
           console.error(error);
@@ -174,12 +173,12 @@ export class CheckOutComponent implements OnInit {
     script.async = true;
     document.body.appendChild(script);
   }
-  pagarConEpayco(orderId:any) {
+  pagarConEpayco(orderId: any) {
     const handler = ePayco.checkout.configure({
       key: '83f65a1de38c66faad76373792c4ba64',
       test: true,
     });
-    if(this.order.totalPrice<=100000){
+    if (this.order.totalPrice <= 100000) {
       this.order.totalPrice += 8000
     }
     const data = {
@@ -198,7 +197,7 @@ export class CheckOutComponent implements OnInit {
       method: 'POST'
     };
 
-          this.countService.setProduct();
+    this.countService.setProduct();
     handler.open(data);
   }
 

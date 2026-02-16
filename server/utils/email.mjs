@@ -1,32 +1,32 @@
-import { MailtrapClient } from "mailtrap";
+import nodemailer from 'nodemailer';
 
 const sendEmail = async (options) => {
-  const TOKEN = process.env.MAILTRAP_TOKEN;
-  const ENDPOINT = process.env.MAILTRAP_ENDPOINT;
-
-  const client = new MailtrapClient({ endpoint: ENDPOINT, token: TOKEN });
-
-  const sender = {
-    email: process.env.MAILTRAP_SENDER_EMAIL,
-    name: process.env.MAILTRAP_SENDER_NAME,
-  };
-
-  const recipients = [
-    {
-      email: options.email,
+  // 1) Create a transporter
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
-  ];
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
 
+  // 2) Define the email options
   const mailOptions = {
-    from: sender,
-    to: recipients,
+    from: `Motoline <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+    to: options.email,
     subject: options.subject,
     text: options.message,
-    category: "Password Reset", // Assuming you want to categorize these emails
+    // html: options.html
   };
 
+  // 3) Actually send the email
   try {
-    await client.send(mailOptions);
+    await transporter.sendMail(mailOptions);
     console.log("Email sent successfully!");
   } catch (error) {
     console.error("Error sending email:", error);

@@ -6,10 +6,10 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class UserServiceService {
-  //private apiUrl = 'http://localhost:3000/api/users';
-  private apiUrl = 'https://motolineparts.com/api/users';
+  private apiUrl = 'http://localhost:3000/api/users';
+  //private apiUrl = 'https://motolineparts.com/api/users';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Define the login method
   login(data: any): Observable<any> {
@@ -53,9 +53,9 @@ export class UserServiceService {
       catchError(this.handleError)
     );
   }
-  addCart(data: any,quantity:number): Observable<any> {
+  addCart(data: any, quantity: number): Observable<any> {
     console.log('id ' + data);
-    const product = { productId: data,quantity:quantity };
+    const product = { productId: data, quantity: quantity };
     return this.http.post(`${this.apiUrl}/cart`, product, {
       withCredentials: true // 👈 necesario para enviar la cookie de sesión
     }).pipe(

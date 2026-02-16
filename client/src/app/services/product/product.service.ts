@@ -6,8 +6,8 @@ import { Product } from '../../interfaces/product';
   providedIn: 'root',
 })
 export class ProductService {
-  //private API_URL = 'http://localhost:3000/api/products';
-  private API_URL = 'https://motolineparts.com/api/products';
+  private API_URL = 'http://localhost:3000/api/products';
+  //private API_URL = 'https://motolineparts.com/api/products';
 
   constructor(private http: HttpClient) { }
 
@@ -57,7 +57,7 @@ export class ProductService {
   }
 
   createMarcaVehicular(product: any) {
-    return this.http.post(this.API_URL+"/marcaVehicular", product);
+    return this.http.post(this.API_URL + "/marcaVehicular", product);
   }
 
   updateMarcaVehicular(id: string, product: any) {
@@ -71,9 +71,9 @@ export class ProductService {
   }
 
   createReferenciaVehicular(product: any) {
-    return this.http.post(this.API_URL+"/referenciaVehicular", product);
+    return this.http.post(this.API_URL + "/referenciaVehicular", product);
   }
-  
+
   updateReferenciaVehicular(id: string, product: any) {
     return this.http.put(`${this.API_URL}/referenciaVehicular/${id}`, product);
   }

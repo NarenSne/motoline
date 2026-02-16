@@ -1,5 +1,6 @@
 import { routes } from './../../app.routes';
 import { Component, OnInit } from '@angular/core';
+import { OrderService } from '../../services/order/order.service';
 import {
   ActivatedRoute,
   NavigationEnd,
@@ -11,6 +12,7 @@ import { ProfileService } from '../../services/profile/profile.service';
 import { AccountComponent } from '../account/account.component';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -21,16 +23,25 @@ import { LoadingSpinnerComponent } from '../../components/loading-spinner/loadin
     AccountComponent,
     SidebarComponent,
     LoadingSpinnerComponent,
+    CurrencyPipe,
+    CommonModule,
+    DatePipe
   ],
-  providers: [ProfileService],
+  providers: [ProfileService, OrderService],
   templateUrl: './profile.component.html',
 })
 export class ProfileComponent implements OnInit {
   userInfo: any = {};
   showAccount: boolean = true;
   isLoading = true;
-  address: string[] = [];
-  constructor(public profileService: ProfileService, private router: Router) {}
+  orders: any[] = [];
+  address: any[] = [];
+
+  constructor(
+    public profileService: ProfileService,
+    private router: Router,
+    private orderService: OrderService
+  ) { }
 
   ngOnInit(): void {
     this.profileService.getProfile().subscribe({
@@ -44,6 +55,16 @@ export class ProfileComponent implements OnInit {
         console.error(error);
       },
     });
+
+    this.orderService.getOrders(1, 5).subscribe({
+      next: (data) => {
+        this.orders = data.orders;
+      },
+      error: (error) => {
+        console.error('Error fetching orders:', error);
+      }
+    });
+
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         if (val.url === '/profile') {

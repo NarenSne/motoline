@@ -28,10 +28,10 @@ export class OrderHistoryComponent {
     totalPages: number;
     totalOrders: number;
   } = {
-    currentPage: 1,
-    totalPages: 1,
-    totalOrders: 0,
-  };
+      currentPage: 1,
+      totalPages: 1,
+      totalOrders: 0,
+    };
   selectedOrder: any = {};
   userInfo: any = {};
   isLoading = true;
@@ -86,8 +86,12 @@ export class OrderHistoryComponent {
     }
   }
 
+  min(a: number, b: number): number {
+    return Math.min(a, b);
+  }
+
   constructor(
     private order: OrderService,
     private profileService: ProfileService
-  ) {}
+  ) { }
 }

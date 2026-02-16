@@ -1,221 +1,129 @@
-<!-- Offer image  -->
+<div class="min-h-screen bg-[#1a1a1a] text-white font-sans">
 
-<div class="relative">
-  <img
-    class="w-full object-cover brightness-50 filter lg:h-[500px]"
-    src="./assets/images/header-bg.jpeg"
-    alt="Living room image"
-  />
+  <!-- Hero Section -->
+  <div class="relative w-full h-[500px] lg:h-[600px] overflow-hidden group">
+    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10"></div>
+    <img
+      class="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+      src="./assets/images/header-bg.jpeg" alt="Hero background" />
 
-  <div
-    class="absolute top-1/2 left-1/2 mx-auto flex w-11/12 max-w-[1200px] -translate-x-1/2 -translate-y-1/2 flex-col text-center text-white lg:ml-5"
-  >
-    <h1 class="text-4xl font-bold sm:text-5xl lg:text-left">
-      Motul 7100 10w-30
-    </h1>
-    <p class="pt-3 text-xs lg:w-3/5 lg:pt-5 lg:text-left lg:text-base">
-      ¡Potencia y protección en cada kilómetro!
-      Con Motul 7100 10W-30 disfruta de un arranque suave, máxima protección del motor y un rendimiento superior en 
-      cada rodada. Ideal para motos exigentes y amantes de la velocidad. 🏍️🔥
-    </p>
-    <button
-      class="mx-auto mt-5 w-1/2 bg-slate-400 px-3 py-1 text-black duration-100 hover:bg-yellow-300 lg:mx-0 lg:h-10 lg:w-2/12 lg:px-10"
-    >
-      Comprar
-    </button>
+    <div class="absolute top-1/2 left-4 lg:left-20 transform -translate-y-1/2 z-20 max-w-xl text-left">
+      <h1 class="text-4xl lg:text-6xl font-extrabold italic tracking-wide mb-4 leading-tight">
+        MOTUL 7100 <br />
+        <span class="text-white">10W-30</span>
+      </h1>
+      <p class="text-gray-200 text-sm lg:text-lg mb-8 leading-relaxed max-w-md">
+        Potencia y protección profesional en cada kilómetro!
+        Disfruta de un arranque suave y máximo rendimiento
+        con Motul.
+      </p>
+      <button
+        class="bg-[#ff5500] hover:bg-[#e04b00] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-orange-500/20">
+        Comprar Ahora
+      </button>
+    </div>
   </div>
-</div>
 
-<!-- /Offer image  -->
-
-<!-- Cons bages -->
-
-<section
-  class="container mx-auto my-8 flex flex-col justify-center gap-3 lg:flex-row"
->
-  <!-- 1 -->
-
-  <div
-    class="mx-5 flex flex-row items-center justify-center border-2 border-yellow-300 py-4 px-5"
-  >
-    <div class="">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="h-6 w-6 text-gray-950 lg:mr-2"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"
-        />
+  <!-- Banner: Domicilio Gratis -->
+  <div class="bg-[#252525] py-5 mt-0 border-t border-gray-800">
+    <div class="max-w-[1200px] mx-auto flex items-center justify-center gap-4 px-4">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-8 h-8 text-gray-400">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
       </svg>
-    </div>
-
-    <div class="ml-6 flex flex-col justify-center">
-      <h3 class="text-left text-xs font-bold lg:text-sm">Domilicio gratis</h3>
-      <p class="text-light text-center text-xs lg:text-left lg:text-sm">
-        En compras mayores a $100.000
+      <p class="text-gray-300 text-sm lg:text-lg font-medium">
+        Domicilio gratis en compras mayores a <span class="text-white font-bold">$100.000</span>
       </p>
     </div>
   </div>
-</section>
 
-<!-- /Cons bages  -->
-
-<h2 class="mx-auto mb-5 max-w-[1200px] px-5 text-center">COMPRAR POR CATEGORÍA</h2>
-
-<!-- Cathegories -->
-<section
-  class="mx-auto grid max-w-[1200px] grid-cols-2 px-5 lg:grid-cols-3 lg:gap-5"
->
-  <!-- 1 -->
-
-  <a  [routerLink]="['/catalog']" [queryParams]="{categorie:'Pastillas y bandas'}" routerLinkActive="router-link-active" >
-    <div class="relative cursor-pointer">
-      <img
-        class="mx-auto h-auto w-auto brightness-50 duration-300 hover:brightness-100"
-        src="./assets/images/frenos.png"
-        alt="bedroom cathegory image"
-      />
-
-      <p
-        class="pointer-events-none absolute top-1/2 left-1/2 w-11/12 -translate-x-1/2 -translate-y-1/2 text-center text-white lg:text-xl"
-      >
-        Pastillas, bandas & discos de frenos
-      </p>
+  <section class="max-w-[1200px] mx-auto py-16 px-4">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl font-bold text-white uppercase tracking-wider mb-2">Comprar Por Categoría</h2>
+      <div class="w-24 h-1 bg-[#ff5500] mx-auto"></div>
     </div>
-  </a>
 
-  <!-- 2 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (cat of categories; track cat.name) {
+      <a [routerLink]="[cat.route]" [queryParams]="cat.queryParams"
+        class="group relative h-48 rounded-xl overflow-hidden bg-[#252525] border border-gray-800 hover:border-[#ff5500]/50 transition-all cursor-pointer block">
 
-  <a  [routerLink]="['/catalog']" [queryParams]="{categorie:'Kit de arrastre'}">
-    <div class="relative cursor-pointer">
-      <img
-        class="mx-auto h-auto w-auto brightness-50 duration-300 hover:brightness-100"
-        src="./assets/images/matrass.png"
-        alt="Matrass cathegory image"
-      />
-
-      <p
-        class="pointer-events-none absolute top-1/2 left-1/2 w-11/12 -translate-x-1/2 -translate-y-1/2 text-center text-white lg:text-xl"
-      >
-        Kit de arrastre
-      </p>
-    </div>
-  </a>
-
-  <!-- 3  -->
-
-  <a [routerLink]="['/catalog']" [queryParams]="{categorie:'Carenajes farolas y guardabarros'}">
-    <div class="relative cursor-pointer">
-      <img
-        class="mx-auto h-auto w-auto brightness-50 duration-300 hover:brightness-100"
-        src="./assets/images/outdoors.png"
-        alt="kitchen cathegory image"
-      />
-
-      <p
-        class="pointer-events-none absolute top-1/2 left-1/2 w-11/12 -translate-x-1/2 -translate-y-1/2 text-center text-white lg:text-xl"
-      >
-        Carenajes farolas & guardabarros
-      </p>
-    </div>
-  </a>
-
-  <!-- 4 -->
-
-  <a [routerLink]="['/catalog']" [queryParams]="{categorie:'Tornillería especial'}" >
-    <div class="relative cursor-pointer">
-      <img
-        class="mx-auto h-auto w-auto brightness-50 duration-300 hover:brightness-100"
-        src="./assets/images/tornillos.png"
-        alt="bedroom cathegory image"
-      />
-
-      <p
-        class="pointer-events-none absolute top-1/2 left-1/2 w-11/12 -translate-x-1/2 -translate-y-1/2 text-center text-white lg:text-xl"
-      >
-        Tornillería especial
-      </p>
-    </div>
-  </a>
-
-  <!-- 5  -->
-
-  <a [routerLink]="['/catalog']" [queryParams]="{categorie:'Aceites y lubricantes'}">
-    <div class="relative cursor-pointer">
-      <img
-        class="mx-auto h-auto w-auto brightness-50 duration-300 hover:brightness-100"
-        src="./assets/images/lubricantes.png"
-        alt="bedroom cathegory image"
-      />
-
-      <p
-        class="pointer-events-none absolute top-1/2 left-1/2 w-11/12 -translate-x-1/2 -translate-y-1/2 text-center text-white lg:text-xl"
-      >
-        Aceites y lubricantes
-      </p>
-    </div>
-  </a>
-
-  <!-- 6 -->
-
-  <a [routerLink]="['/catalog']" [queryParams]="{categorie:'Partes eléctricas'}">
-    <div class="relative cursor-pointer">
-      <img
-        class="mx-auto h-auto w-auto brightness-50 duration-300 hover:brightness-100"
-        src="./assets/images/electricas.png"
-        alt="bedroom cathegory image"
-      />
-
-      <p
-        class="pointer-events-none absolute top-1/2 left-1/2 w-11/12 -translate-x-1/2 -translate-y-1/2 text-center text-white lg:text-xl"
-      >
-        Partes eléctricas
-      </p>
-    </div>
-  </a>
-</section>
-<!-- /Cathegories  -->
-
-<!-- /Slider  -->
-
-<p class="mx-auto mt-10 mb-5 max-w-[1200px] px-5 text-center">LO MAS VENDIDO</p>
-
-<!-- Slider  -->
-
-<section
-  class="splide mx-auto max-w-[1200px] px-5 py-2"
-  aria-label="Splide Basic HTML Example"
->
-  <div class="splide__track">
-    <ul class="splide__list mx-auto max-w-[1200px]">
-      <li class="splide__slide" *ngFor="let product of bestSellingProducts">
-        <div class="flex flex-col">
-          <img
-            class="h-48" style="object-fit: contain;"
-            [src]="product.images[0]"
-            [alt]="product.name"
-          />
-
-          <div>
-            <p class="mt-2">{{ product.name }}</p>
-            <p class="font-medium text-blue-800">
-              {{ product.price | currency:'':'symbol':'1.0-0' }}
-              <!-- <span class="text-sm text-gray-500 line-through">$500.00</span> -->
-            </p>
-            <div>
-              <button class="my-5 h-10 w-full bg-slate-400 text-black" (click)="addToCart(product['_id']!)">
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
+        <!-- Image Background -->
+        <div class="absolute right-0 top-0 w-3/5 h-full opacity-60 group-hover:opacity-80 transition-opacity">
+          <img [src]="cat.image" [alt]="cat.name" class="object-cover w-full h-full" />
         </div>
-      </li>
-    </ul>
-  </div>
-</section>
+
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#252525] via-[#252525]/90 to-transparent"></div>
+
+        <!-- Content -->
+        <div class="absolute inset-0 p-6 flex items-center">
+          <h3
+            class="text-xl font-bold text-white max-w-[60%] leading-tight group-hover:text-[#ff5500] transition-colors">
+            {{ cat.name }}
+          </h3>
+        </div>
+
+        <!-- Hover Glow -->
+        <div
+          class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_0_0_20px_rgba(255,85,0,0.15)]">
+        </div>
+      </a>
+      }
+    </div>
+  </section>
+
+  <!-- Best Sellers -->
+  <section class="max-w-[1200px] mx-auto py-12 px-4 pb-24">
+    <h2
+      class="text-center text-2xl font-bold mb-10 uppercase tracking-widest text-white border-b border-gray-800 pb-4 w-fit mx-auto">
+      Lo Más Vendido
+    </h2>
+
+    <div class="splide" aria-label="Best Selling Products">
+      <div class="splide__track">
+        <ul class="splide__list">
+          <li class="splide__slide" *ngFor="let product of bestSellingProducts">
+            <div
+              class="bg-[#252525] rounded-xl p-4 shadow-lg h-full flex flex-col border border-gray-800 hover:border-[#ff5500] transition-all duration-300 group">
+              <div
+                class="h-56 w-full flex items-center justify-center bg-[#1f1f1f] rounded-lg mb-4 p-4 overflow-hidden relative">
+                <!-- Orange circle decoration/glow behind image could go here -->
+                <div
+                  class="absolute top-2 right-2 bg-[#ff5500] rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" class="w-4 h-4 text-white">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                  </svg>
+                </div>
+                <img
+                  class="max-h-full max-w-full object-contain transform group-hover:scale-110 transition-transform duration-500"
+                  [src]="product.images[0]" [alt]="product.name" />
+              </div>
+
+              <div class="flex-grow flex flex-col justify-between">
+                <div>
+                  <h3
+                    class="text-sm font-medium text-gray-300 line-clamp-2 mb-2 min-h-[40px] group-hover:text-white transition-colors">
+                    {{ product.name }}</h3>
+                  <p class="text-xl font-bold text-white mb-4">
+                    {{ product.price | currency:'':'symbol':'1.0-0' }}
+                  </p>
+                </div>
+
+                <button
+                  class="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white font-semibold py-2.5 rounded-lg transition-all duration-200 transform active:scale-95 shadow-lg shadow-orange-500/20"
+                  (click)="addToCart(product['_id']!)">
+                  Añadir al carrito
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>

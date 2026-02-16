@@ -14,13 +14,13 @@
           <div class="flex">
             <img class="w-[90px]" [src]="product.image" alt="bedroom image" />
             <div class="flex flex-col justify-center ml-3">
-              <p class="text-xl font-bold">{{ product.name }}</p>
+              <p class="text-xl font-bold text-white">{{ product.name }}</p>
             </div>
           </div>
         </td>
-        <td class="mx-auto text-center">{{ product.price }}</td>
-        <td class="text-center align-middle">{{ product.quantity }}</td>
-        <td class="mx-auto text-center">{{ product.price * product.quantity }}</td>
+        <td class="mx-auto text-center text-white">{{ product.price }}</td>
+        <td class="text-center align-middle text-white">{{ product.quantity }}</td>
+        <td class="mx-auto text-center text-white">{{ product.price * product.quantity }}</td>
       </tr>
     </ng-container>
   </tbody>
