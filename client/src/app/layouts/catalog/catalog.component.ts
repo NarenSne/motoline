@@ -28,7 +28,7 @@ export class CatalogComponent {
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   listMarca: any;
   listReferencias: any;
-  constructor(private productService: ProductService, private router: ActivatedRoute, private marcaservice:MarcasycategoriasService) {
+  constructor(private productService: ProductService, private router: ActivatedRoute, private marcaservice: MarcasycategoriasService) {
     router.queryParams.subscribe((data: any) => {
       this.param = data.brand
       this.categorie = data.categorie
@@ -185,6 +185,8 @@ export class CatalogComponent {
         );
       });
       this.dataSource.data = this.filteredProducts;
+      this.dataSource.paginator = this.paginator;
+      this.obs = this.dataSource.connect();
     }
   }
 

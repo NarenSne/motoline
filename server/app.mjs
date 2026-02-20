@@ -37,7 +37,7 @@ const corsOptions = {
   origin: true, // reflect request origin
   credentials: true, // necessary for cookies/sessions
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   optionsSuccessStatus: 204,
 };
 app.use(cors(corsOptions));
@@ -57,9 +57,9 @@ app.use(
 );
 app.disable('x-powered-by');
 mongoose
-  .connect(DATABASE_URL,{
-	useNewUrlParser: true,
- 	useUnifiedTopology: true
+  .connect(DATABASE_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
   })
   .then(() => {
     console.log("Connected to MongoDB");
@@ -110,12 +110,12 @@ app.use("/api/invoices", invoicesRouter);
 app.use('/uploads', express.static('uploads'));
 
 // Servir Angular
-app.use(express.static(path.join(__dirname, './../client/dist/client/browser')));
+/* app.use(express.static(path.join(__dirname, './../client/dist/client/browser')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './../client/dist/client/browser/index.html'));
-});
-app.listen(PORT,() => {
+}); */
+app.listen(PORT, () => {
   console.log(`Listening on http://127.0.0.1:${PORT}`);
 });
 

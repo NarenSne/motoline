@@ -118,7 +118,7 @@ export const sendElectronicInvoice = async (req, res) => {
     paymentMethod,
     timestamp,
   } = req.body;
-  let mailContador = "";
+  let mailContador = "santiagocorrez@gmail.com";
   console.log("Sending electronic invoice email to:", customerEmail);
 
 

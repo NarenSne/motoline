@@ -24,7 +24,7 @@ export class ProductFormComponent {
   listReferencias: any;
   listCategories: any;
 
-  constructor(private productService: ProductService, public dialog: MatDialog, public categoryService:MarcasycategoriasService) {
+  constructor(private productService: ProductService, public dialog: MatDialog, public categoryService: MarcasycategoriasService) {
 
     this.formData = new FormData();
     this.productService.getAllMarcaVehicular().subscribe({
@@ -39,15 +39,15 @@ export class ProductFormComponent {
       }
     })
     this.categoryService.getAllCategorias().subscribe({
-      next:(data:any)=>{
+      next: (data: any) => {
         this.listCategories = data.categorias
       }
     })
   }
 
-  filtrarReferencias(event:any){
+  filtrarReferencias(event: any) {
     console.log(event)
-    this.listReferencia = this.listReferencias.filter((ele:any)=>event.value == ele.marca)
+    this.listReferencia = this.listReferencias.filter((ele: any) => event.value == ele.marca)
   }
   productForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -90,13 +90,16 @@ export class ProductFormComponent {
         productId = data.product._id;
         console.log(productId);
         this.formData.append(`productId`, productId);
-        this.productService.uploadProductImage(this.formData).subscribe({
-          next: res => {
-            this.isLoading = false;
-            this.dialog.closeAll();
-          },
-          error: error => console.log(error)
-        })
+        if (this.selectedFiles.length > 0) {
+          this.productService.uploadProductImage(this.formData).subscribe({
+            next: res => {
+              this.isLoading = false;
+              this.dialog.closeAll();
+            },
+            error: error => console.log(error)
+          })
+        }
+
 
       },
       error: error => console.error(error)

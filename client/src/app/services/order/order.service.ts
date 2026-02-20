@@ -6,10 +6,10 @@ import { Order } from '../../interfaces/order';
   providedIn: 'root',
 })
 export class OrderService {
-  private API_URL = 'http://localhost:3000/api/orders';
-  //private API_URL = 'https://motolineparts.com/api/orders';
+  //private API_URL = 'http://localhost:3000/api/orders';
+  private API_URL = 'https://motolineparts.com/api/orders';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createOrder(order: any) {
     return this.http.post<any>(this.API_URL, order);
