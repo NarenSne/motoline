@@ -84,7 +84,7 @@ export const getInvoiceHistory = async (req, res) => {
   try {
     const { date } = req.query;
     // Default to today or parse provided date
-    const queryDate = date ? new Date(date) : new Date();
+    const queryDate = date ? new Date(date.concat("00:00:00")) : new Date();
 
     const startOfDay = new Date(queryDate);
     startOfDay.setHours(0, 0, 0, 0);
