@@ -110,11 +110,11 @@ app.use("/api/invoices", invoicesRouter);
 app.use('/uploads', express.static('uploads'));
 
 // Servir Angular
-/* app.use(express.static(path.join(__dirname, './../client/dist/client/browser')));
+app.use(express.static(path.join(__dirname, './../client/dist/client/browser')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './../client/dist/client/browser/index.html'));
-}); */
+});
 app.listen(PORT, () => {
   console.log(`Listening on http://127.0.0.1:${PORT}`);
 });
