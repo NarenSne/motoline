@@ -5,8 +5,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MarcasycategoriasService {
-  private API_URL = 'http://localhost:3000/api/';
-  //private API_URL = 'https://motolineparts.com/api/';
+  //private API_URL = 'http://localhost:3000/api/';
+  private API_URL = 'https://motolineparts.com/api/';
 
   constructor(private http: HttpClient) { }
   getAllCategorias(page: number | undefined = undefined, limit: number | undefined = undefined) {
