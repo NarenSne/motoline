@@ -46,6 +46,11 @@ const ProductSchema = new mongoose.Schema({
     required: [false, "Product category is required"],
     trim: true,
   },
+  color: {
+    type: String,
+    required: [false, "Product color is required"],
+    trim: true,
+  },
   Marcavehicular: {
     type: String,
     required: [false, "Vehicle brand is required"],

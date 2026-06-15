@@ -10,4 +10,5 @@ export interface Product {
   brand: string;
   Marcavehicular: string;
   ReferenciaVehiculo: string;
+  color: string;
 }

@@ -1,35 +1,27 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
   MatDialogRef,
-  MatDialogTitle,
 } from '@angular/material/dialog';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { ProfileService } from '../../services/profile/profile.service';
 
 @Component({
   selector: 'app-user-form',
   standalone: true,
   imports: [
-    MatLabel,
-    MatFormField,
+    CommonModule,
     ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
     FormsModule,
-    ReactiveFormsModule,
   ],
   providers: [ProfileService],
   templateUrl: './user-form.component.html',
@@ -45,56 +37,68 @@ export class UserFormComponent {
     private profileService: ProfileService,
     private formBuilder: FormBuilder
   ) {
-    this.userForm = this.formBuilder.group({
-      fullName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      username: ['', Validators.required],
-      phone: ['', Validators.required],
-      country: ['', Validators.required],
-      city: ['', Validators.required],
-      zip: ['', Validators.required],
-      street1: ['', Validators.required],
-      street2: [''],
-      state: ['', Validators.required]
-    });
+    this.userForm = this.formBuilder.group(
+      {
+        fullName: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        username: ['', Validators.required],
+        phone: ['', Validators.required],
+        role: ['', Validators.required],
+        newPassword: [''],
+        confirmNewPassword: [''],
+      },
+      {
+        validators: this.passwordMatchValidator,
+      }
+    );
     this.user = data.user;
     this.userForm.setValue({
-      fullName: this.user.fullName,
-      email: this.user.email,
-      username: this.user.username,
-      phone: this.user.phone,
-      country: this.user.address[0].country,
-      city: this.user.address[0].city,
-      zip: this.user.address[0].zip,
-      street1: this.user.address[0].street1,
-      street2: this.user.address[0].street2,
-      state: this.user.address[0].state,
+      fullName: this.user.fullName || '',
+      email: this.user.email || '',
+      username: this.user.username || '',
+      phone: this.user.phone || '',
+      role: this.user.role || 'user',
+      newPassword: '',
+      confirmNewPassword: '',
     });
+  }
+
+  private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const newPassword = control.get('newPassword')?.value;
+    const confirmNewPassword = control.get('confirmNewPassword')?.value;
+
+    if (!newPassword && !confirmNewPassword) {
+      return null;
+    }
+
+    return newPassword === confirmNewPassword
+      ? null
+      : { passwordMismatch: true };
+  }
+
+  get passwordMismatch(): boolean {
+    return !!(
+      this.userForm.hasError('passwordMismatch') &&
+      (this.userForm.get('confirmNewPassword')?.touched ||
+        this.userForm.get('confirmNewPassword')?.dirty)
+    );
   }
 
   onSubmit() {
     if (this.userForm.valid) {
-      const updatedUserData = {
+      const updatedUserData: any = {
         fullName: this.userForm.value.fullName,
         email: this.userForm.value.email,
         username: this.userForm.value.username,
         phone: this.userForm.value.phone,
-        // address: [
-        //   {
-        //     country: this.userForm.value.country,
-        //     city: this.userForm.value.city,
-        //     zip: this.userForm.value.zip,
-        //     street1: this.userForm.value.street1,
-        //     street2: this.userForm.value.street2,
-        //     state: this.userForm.value.state,
-        //   },
-        // ],
+        role: this.userForm.value.role,
       };
-      const formData = new FormData();
-      // Append the file to the form data if a file was selected
-      if (this.fileToUpload) {
-        formData.append('image', this.fileToUpload);
+
+      if (this.userForm.value.newPassword) {
+        updatedUserData.newPassword = this.userForm.value.newPassword;
+        updatedUserData.confirmNewPassword = this.userForm.value.confirmNewPassword;
       }
+
       this.profileService.adminUpdateProfile(updatedUserData).subscribe({
         next: (response) => {
           this.dialogRef.close('success');
@@ -105,7 +109,5 @@ export class UserFormComponent {
       });
     }
   }
-
-
-
 }
+

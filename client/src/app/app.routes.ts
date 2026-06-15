@@ -34,6 +34,7 @@ import { Component } from '@angular/core';
 import { GarantiaComponent } from './layouts/garantia/garantia.component';
 import { MarcasReferenciasComponent } from './components/marcas-referencias/marcas-referencias.component';
 import { CategoriasMarcasComponent } from './components/categorias-marcas/categorias-marcas.component';
+import { ColorsManagementComponent } from './components/colors-management/colors-management.component';
 export const routes: Routes = [
   {
     path: 'admin-dashboard',
@@ -43,6 +44,7 @@ export const routes: Routes = [
       { path: 'accounts-overview', component: AccountsOverviewComponent },
       { path: 'orders-overview', component: OrdersOverviewComponent },
       { path: 'products-overview', component: ProductsOverviewComponent },
+      { path: 'colors', component: ColorsManagementComponent },
       { path: 'marcas-referencias', component: MarcasReferenciasComponent },
       { path: 'categorias-marcas', component: CategoriasMarcasComponent },
       // { path: '', redirectTo: 'accounts', pathMatch: 'full' },

@@ -5,8 +5,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MarcasycategoriasService {
-  //private API_URL = 'http://localhost:3000/api/';
-  private API_URL = 'https://motolineparts.com/api/';
+  private API_URL = 'http://localhost:3000/api/';
+  //private API_URL = 'https://motolineparts.com/api/';
 
   constructor(private http: HttpClient) { }
   getAllCategorias(page: number | undefined = undefined, limit: number | undefined = undefined) {
@@ -43,5 +43,22 @@ export class MarcasycategoriasService {
 
   deleteMarca(id: string) {
     return this.http.delete(`${this.API_URL}marcas/${id}`);
+  }
+
+  // Colors
+  getAllColors(page: number | undefined = undefined, limit: number | undefined = undefined) {
+    return this.http.get(`${this.API_URL}products/colors?page=${page}&limit=${limit}`);
+  }
+
+  createColor(color: any) {
+    return this.http.post(`${this.API_URL}products/colors`, color);
+  }
+
+  updateColor(id: string, color: any) {
+    return this.http.put(`${this.API_URL}products/colors/${id}`, color);
+  }
+
+  deleteColor(id: string) {
+    return this.http.delete(`${this.API_URL}products/colors/${id}`);
   }
 }

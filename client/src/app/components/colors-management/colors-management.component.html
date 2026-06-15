@@ -1,0 +1,31 @@
+<div class="p-4 bg-white rounded shadow">
+  <h2 class="text-lg font-bold mb-3">Gestión de Colores</h2>
+
+  <div class="mb-3 flex gap-2">
+    <input [(ngModel)]="newColor" placeholder="Nuevo color" class="border px-2 py-1 rounded" />
+    <button (click)="createColor()" class="bg-green-500 text-white px-3 py-1 rounded">Agregar</button>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of colors">
+        <td>
+          <span *ngIf="editingId !== c._id">{{c.name}}</span>
+          <input *ngIf="editingId === c._id" [(ngModel)]="editingName" class="border px-2 py-1 rounded" />
+        </td>
+        <td>
+          <button *ngIf="editingId !== c._id" (click)="startEdit(c)" class="px-2 py-1 bg-blue-500 text-white rounded mr-2">Editar</button>
+          <button *ngIf="editingId === c._id" (click)="saveEdit(c._id)" class="px-2 py-1 bg-green-500 text-white rounded mr-2">Guardar</button>
+          <button *ngIf="editingId === c._id" (click)="cancelEdit()" class="px-2 py-1 bg-gray-300 rounded mr-2">Cancelar</button>
+          <button (click)="deleteColor(c._id)" class="px-2 py-1 bg-red-500 text-white rounded">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

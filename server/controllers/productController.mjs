@@ -4,6 +4,7 @@ import fs from 'fs';
 import Product from "../models/Product.mjs";
 import MarcaVehicular from '../models/MarcaVehicular.mjs';
 import ReferenciaVehicular from '../models/ReferenciaVehicular.mjs';
+import Color from '../models/Color.mjs';
 
 /**
  * Get all products in the database paginated.
@@ -43,10 +44,10 @@ export const getAllProducts = async (req, res) => {
  * Create a new product.
  */
 export const createProduct = async (req, res) => {
-    const { name, sku, desc, price, stock, category, brand, Marcavehicular, ReferenciaVehiculo } = req.body;
+    const { name, sku, desc, price, stock, category, brand, Marcavehicular, ReferenciaVehiculo, color } = req.body;
 
     try {
-        const newProduct = new Product({ name, sku, desc, price, stock, category, brand, Marcavehicular, ReferenciaVehiculo });
+        const newProduct = new Product({ name, sku, desc, price, stock, category, brand, Marcavehicular, ReferenciaVehiculo, color });
         const result = await newProduct.save();
         res.status(201).json({ message: 'Product Added Successfully', product: result });
     } catch (error) {
@@ -351,4 +352,67 @@ export const updatereferenciaVehicular = async (req, res) => {
         res.status(500).json({ message: 'Error updating product' });
     }
 
+}
+
+export const getAllColors = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page);
+        const limit = parseInt(req.query.limit);
+
+        let colors;
+        if (page && limit) {
+            const skip = (page - 1) * limit;
+            colors = await Color.find({}).skip(skip).limit(limit);
+        } else {
+            colors = await Color.find({});
+        }
+
+        const total = await Color.countDocuments();
+
+        res.json({ colors, currentPage: page, totalPages: Math.ceil(total / limit), total });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error retrieving colors' });
+    }
+}
+
+export const createColor = async (req, res) => {
+    const { name } = req.body;
+    try {
+        const newColor = new Color({ name });
+        const result = await newColor.save();
+        res.status(201).json({ message: 'Color creado satisfactoriamente', color: result });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error creando color' });
+    }
+}
+
+export const updateColor = async (req, res) => {
+    const colorId = req.params.id;
+    const updates = req.body;
+    try {
+        const result = await Color.updateOne({ _id: colorId }, { $set: updates });
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ message: 'Color not found' });
+        }
+        res.json({ message: 'Color updated', result });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating color' });
+    }
+}
+
+export const deleteColor = async (req, res) => {
+    const colorId = req.params.id;
+    try {
+        const result = await Color.deleteOne({ _id: colorId });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'Color not found' });
+        }
+        res.json({ message: 'Color deleted' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error deleting color' });
+    }
 }

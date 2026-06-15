@@ -10,7 +10,7 @@
   <form [formGroup]="productForm" class="bg-white p-6 rounded-lg shadow-md">
     <!-- Name -->
     <div class="mb-4">
-      <label class="block text-gray-700 font-bold mb-2" for="name">Name</label>
+      <label class="block text-gray-700 font-bold mb-2" for="name">Nombre</label>
       <input formControlName="name" value="{{product.name}}"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="name" type="text" placeholder="Enter product name" required>
@@ -24,28 +24,28 @@
     </div>
     <!-- Price -->
     <div class="mb-4">
-      <label class="block text-gray-700 font-bold mb-2" for="price">Price</label>
+      <label class="block text-gray-700 font-bold mb-2" for="price">Precio</label>
       <input formControlName="price"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="price" type="number" min="0" placeholder="Enter product price" required>
     </div>
     <!-- Description -->
     <div class="mb-4">
-      <label class="block text-gray-700 font-bold mb-2" for="desc">Description</label>
+      <label class="block text-gray-700 font-bold mb-2" for="desc">Descripción</label>
       <textarea formControlName="desc"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="desc" rows="3" placeholder="Enter product description">desc</textarea>
     </div>
     <!-- Stock -->
     <div class="mb-4">
-      <label class="block text-gray-700 font-bold mb-2" for="stock">Stock</label>
+      <label class="block text-gray-700 font-bold mb-2" for="stock">Existencias</label>
       <input formControlName="stock"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="stock" type="number" min="0" placeholder="Enter product stock" required>
     </div>
 
     <div class="mb-4">
-      <label class="block text-gray-700 font-bold mb-2" for="images">Images</label>
+      <label class="block text-gray-700 font-bold mb-2" for="images">Imágenes</label>
       <div class="flex flex-wrap">
         <div class="mr-2 mb-2" *ngFor="let image of imagesUrl; let i = index">
           <img src="{{image}}" alt="Image" class="w-24 h-24" />
@@ -59,7 +59,7 @@
 
     <!-- Brand -->
     <div class="mb-4">
-      <label class="block text-gray-700 font-bold mb-2" for="brand">Brand</label>
+      <label class="block text-gray-700 font-bold mb-2" for="brand">Marca</label>
       <select formControlName="brand"
         class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="brand" required>
@@ -129,19 +129,25 @@
         <option value="YAMALUBE">YAMALUBE</option>
       </select>
     </div>
+    <!-- Color -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="color">Color</label>
+      <select formControlName="color"
+        class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="color" required>
+        <option *ngFor="let c of colors" [value]="c">{{c}}</option>
+      </select>
+    </div>
     <!-- Category -->
     <div class="mb-4">
       <label class="block text-gray-700 font-bold mb-2" for="category">Category</label>
-      <select formControlName="category" value="category"
-        class="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="category" required>
-        <option value="Pastillas y bandas">Pastillas y bandas</option>
-        <option value="Kit de arrastre">Kit de arrastre</option>
-        <option value="Carenajes farolas y guardabarros">Carenajes farolas y guardabarros</option>
-        <option value="Tornillería especia">Tornillería especial</option>
-        <option value="Aceites y lubricantes">Aceites y lubricantes</option>
-        <option value="Partes eléctricas">Partes eléctricas</option>
-      </select>
+      <mat-select formControlName="category"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="category">
+        @for (food of listCategories; track food) {
+        <mat-option [value]="food.name">{{food.name}}</mat-option>
+        }
+      </mat-select>
     </div>
 
     <div class="mb-4">

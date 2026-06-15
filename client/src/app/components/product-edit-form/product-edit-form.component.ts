@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { SimpleChanges } from '@angular/core';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MarcasycategoriasService } from '../../services/marcasycategorias.service';
 
 @Component({
   selector: 'app-product-edit-form',
@@ -24,8 +25,10 @@ export class ProductEditFormComponent {
   list: any;
   listReferencia: any;
   listReferencias: any;
+  listCategories: any;
+  colors: string[] = ["Rojo", "Azul", "Negro", "Blanco", "Gris", "Amarillo", "Verde"];
 
-  constructor(private productService: ProductService, @Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog) {
+  constructor(private productService: ProductService, @Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public categoryService: MarcasycategoriasService) {
     this.productService.getAllMarcaVehicular().subscribe({
       next: (data: any) => {
         this.list = data.marcaVehicular
@@ -37,12 +40,26 @@ export class ProductEditFormComponent {
         this.listReferencias = data.referenciaVehicular
       }
     })
+    this.categoryService.getAllCategorias().subscribe({
+      next: (data: any) => {
+        this.listCategories = data.categorias
+      }
+    })
+    // load colors from backend service
+    this.categoryService.getAllColors().subscribe({
+      next: (data: any) => {
+        this.colors = data.colors ? data.colors.map((c: any) => c.name) : (data || []);
+      },
+      error: (err) => console.error('Error loading colors', err)
+    })
   }
 
   ngOnInit(): void {
-    let { name, price, images, desc, stock, brand, category, Marcavehicular, ReferenciaVehiculo, sku } = this.data.product;
+    let { name, price, images, desc, stock, brand, category, Marcavehicular, ReferenciaVehiculo, sku, color } = this.data.product;
     this.product = this.data.product;
-    ReferenciaVehiculo = ReferenciaVehiculo.split(",");
+    if (ReferenciaVehiculo){
+      ReferenciaVehiculo = ReferenciaVehiculo.split(",");
+    }
     this.imagesUrl = images;
     this.productForm.get("name")?.setValue(name)
     this.productForm.get("price")?.setValue(price)
@@ -52,6 +69,7 @@ export class ProductEditFormComponent {
     this.productForm.get("brand")?.setValue(brand)
     this.productForm.get("category")?.setValue(category)
     this.productForm.get("Marcavehicular")?.setValue(Marcavehicular)
+    this.productForm.get("color")?.setValue(color)
     this.productForm.get("ReferenciaVehiculo")?.setValue(ReferenciaVehiculo)
     this.productForm.get("sku")?.setValue(sku)
   }
@@ -74,6 +92,7 @@ export class ProductEditFormComponent {
     images: new FormControl([]),
     brand: new FormControl('', [Validators.required]),
     category: new FormControl('', [Validators.required]),
+    color: new FormControl('', [Validators.required]),
     Marcavehicular: new FormControl(''),
     ReferenciaVehiculo: new FormControl([]),
   });
@@ -93,6 +112,9 @@ export class ProductEditFormComponent {
     this.listReferencia = this.listReferencias.filter((ele:any)=>event.value == ele.marca)
   }
   uploadFiles() {
+    if(this.productForm.invalid){
+      return;
+    }
     let product: any = this.productForm.getRawValue();
 
     product.ReferenciaVehiculo = product.ReferenciaVehiculo?.join(",")

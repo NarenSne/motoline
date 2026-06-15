@@ -204,16 +204,43 @@ export const adminUpdateUser = async (req, res) => {
       error: "Unauthorized: User not authorized",
     });
   }
+
   try {
-    const updatedUser = await User.findOneAndUpdate(
-      { username: req.body.username },
-      { $set: req.body },
-      { new: true, runValidators: true }
-    ).select("-_id -password -passwordConfirm -email -username");
+    const { username, role, fullName, phone, password, passwordConfirm, newPassword, confirmNewPassword, address } = req.body;
+
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
+    }
+
+    const user = await User.findOne({ username }).select("+password +passwordConfirm");
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (fullName !== undefined) user.fullName = fullName;
+    if (phone !== undefined) user.phone = phone;
+    if (address !== undefined) user.address = address;
+    if (role !== undefined) user.role = role;
+
+    const passwordToSet = password ?? newPassword;
+    const passwordConfirmToSet = passwordConfirm ?? confirmNewPassword ?? passwordToSet;
+
+    if (passwordToSet) {
+      user.password = passwordToSet;
+      user.passwordConfirm = passwordConfirmToSet;
+    }
+
+    await user.save();
+
+    const sanitizedUser = user.toObject();
+    delete sanitizedUser.password;
+    delete sanitizedUser.passwordConfirm;
+    delete sanitizedUser.__v;
 
     res.status(200).json({
       message: "Profile updated successfully",
-      data: updatedUser,
+      data: sanitizedUser,
     });
   } catch (error) {
     console.error(`Error updating profile: ${error}`);

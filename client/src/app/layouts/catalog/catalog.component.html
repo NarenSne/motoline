@@ -19,42 +19,14 @@
           class="font-display text-xl font-bold uppercase mb-4 text-gray-800 dark:text-white border-l-4 border-primary pl-2">
           Categorías</h3>
         <div class="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+          @for (food of listCategories; track food) {
           <label class="flex items-center gap-3 cursor-pointer group">
             <input
               class="form-checkbox text-primary rounded border-gray-400 dark:border-gray-600 bg-transparent focus:ring-primary focus:ring-offset-0"
-              type="checkbox" value="Pastillas y bandas" (click)="getCategoriesFilters($event)" />
-            <span class="group-hover:text-primary transition-colors">Pastillas y bandas</span>
+              type="checkbox" [value]="food.name" (click)="getCategoriesFilters($event)" />
+            <span class="group-hover:text-primary transition-colors">{{food.name}}</span>
           </label>
-          <label class="flex items-center gap-3 cursor-pointer group">
-            <input
-              class="form-checkbox text-primary rounded border-gray-400 dark:border-gray-600 bg-transparent focus:ring-primary focus:ring-offset-0"
-              type="checkbox" value="Kit de arrastre" (click)="getCategoriesFilters($event)" />
-            <span class="group-hover:text-primary transition-colors">Kit de arrastre</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer group">
-            <input
-              class="form-checkbox text-primary rounded border-gray-400 dark:border-gray-600 bg-transparent focus:ring-primary focus:ring-offset-0"
-              type="checkbox" value="Carenajes farolas y guardabarros" (click)="getCategoriesFilters($event)" />
-            <span class="group-hover:text-primary transition-colors">Carenajes farolas y guardabarros</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer group">
-            <input
-              class="form-checkbox text-primary rounded border-gray-400 dark:border-gray-600 bg-transparent focus:ring-primary focus:ring-offset-0"
-              type="checkbox" value="Tornillería especial" (click)="getCategoriesFilters($event)" />
-            <span class="group-hover:text-primary transition-colors">Tornillería especial</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer group">
-            <input
-              class="form-checkbox text-primary rounded border-gray-400 dark:border-gray-600 bg-transparent focus:ring-primary focus:ring-offset-0"
-              type="checkbox" value="Aceites y lubricantes" (click)="getCategoriesFilters($event)" />
-            <span class="group-hover:text-primary transition-colors">Aceites y lubricantes</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer group">
-            <input
-              class="form-checkbox text-primary rounded border-gray-400 dark:border-gray-600 bg-transparent focus:ring-primary focus:ring-offset-0"
-              type="checkbox" value="Partes eléctricas" (click)="getCategoriesFilters($event)" />
-            <span class="group-hover:text-primary transition-colors">Partes eléctricas</span>
-          </label>
+          }
         </div>
       </div>
 

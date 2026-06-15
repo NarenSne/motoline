@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllProducts, createProduct, getProductById, updateProduct, deleteProduct, decreaseProductStock, getProductCountByBrand, uploadProductImage, getAllMarcaVehicular, createMarcaVehicular, getAllreferenciaVehicular, createreferenciaVehicular, updateMarcaVehicular, updatereferenciaVehicular } from '../controllers/productController.mjs';
+import { getAllProducts, createProduct, getProductById, updateProduct, deleteProduct, decreaseProductStock, getProductCountByBrand, uploadProductImage, getAllMarcaVehicular, createMarcaVehicular, getAllreferenciaVehicular, createreferenciaVehicular, updateMarcaVehicular, updatereferenciaVehicular, getAllColors, createColor, updateColor, deleteColor } from '../controllers/productController.mjs';
 import multer from "multer";
 import { protect } from "../controllers/authController.mjs";
 import { getBestSellingProducts } from "../controllers/ordersController.mjs";
@@ -22,6 +22,10 @@ router.put("/marcaVehicular/:id", protect,updateMarcaVehicular);
 router.get("/referenciaVehicular",getAllreferenciaVehicular);
 router.post("/referenciaVehicular", protect,createreferenciaVehicular);
 router.put("/referenciaVehicular/:id", protect,updatereferenciaVehicular);
+router.get("/colors", getAllColors);
+router.post("/colors", protect, createColor);
+router.put("/colors/:id", protect, updateColor);
+router.delete("/colors/:id", protect, deleteColor);
 router.get("/best-selling", getBestSellingProducts);
 router.get("/:id", getProductById);
 router.put("/:id", protect, updateProduct);

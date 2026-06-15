@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProductFormComponent } from '../product-form/product-form.component';
+import { MarcasycategoriasService } from '../../services/marcasycategorias.service';
 import { MatIconModule } from '@angular/material/icon';
 import { ProductEditFormComponent } from '../product-edit-form/product-edit-form.component';
 import {
@@ -16,6 +17,7 @@ import {
   FormBuilder,
   Validators,
   ReactiveFormsModule,
+  FormsModule,
 } from '@angular/forms';
 
 @Component({
@@ -31,6 +33,7 @@ import {
     MatFormFieldModule,
     MatIconModule,
     ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [ProductService],
   templateUrl: './products-overview.component.html',
@@ -48,15 +51,28 @@ export class ProductsOverviewComponent {
   searchResults: string[] = [];
   proudctFilter: Product[] = [];
   products: Product[] = [];
+  colors: string[] = ["Rojo", "Azul", "Negro", "Blanco", "Gris", "Amarillo", "Verde"];
+  newColor = '';
 
   constructor(
     private pService: ProductService,
     public dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private categoryService: MarcasycategoriasService
   ) {
     this.searchForm = this.fb.group({
-      search: ['', Validators.required],
+      search: [''],
+      color: ['']
     });
+
+    this.categoryService.getAllColors().subscribe({
+      next: (data: any) => {
+        this.colors = data.colors ? data.colors.map((c: any) => c.name) : (data || []);
+      },
+      error: (err) => {
+        console.error('Error loading colors', err);
+      }
+    })
   }
 
   openDialog() {
@@ -87,6 +103,19 @@ export class ProductsOverviewComponent {
   ngOnInit(): void {
     this.loadProducts();
   }
+
+  createColor() {
+    if (!this.newColor || this.newColor.trim() === '') return;
+    const name = this.newColor.trim();
+    this.categoryService.createColor({ name }).subscribe({
+      next: (res: any) => {
+        console.log('Color creado', res);
+        this.newColor = '';
+      },
+      error: (err: any) => console.error('Error creando color', err)
+    })
+  }
+ 
 
   loadProducts(): void {
     this.isLoading = true;
@@ -127,19 +156,31 @@ export class ProductsOverviewComponent {
 
   // part of search
   search() {
-    if (this.searchForm.valid) {
-      this.searchValue = this.searchForm.value.search;
-      this.pService.getAllProducts().subscribe({
-        next: (data: any) => {
-          this.products = data.products;
-          this.proudctFilter = this.filterProducts(this.searchValue);
-          this.displayedProducts = this.proudctFilter;
-        },
-        error: (error) => {
-          console.error('404 Not Found');
-        },
-      });
-    } else this.loadProducts();
+    const { search, color } = this.searchForm.value;
+    // if no filters provided, reload default (paginated) list
+    if ((!search || search.trim() === '') && (!color || color === '')) {
+      this.loadProducts();
+      return;
+    }
+
+    this.pService.getAllProducts().subscribe({
+      next: (data: any) => {
+        this.products = data.products;
+        let filtered = this.products;
+        if (search && search.trim() !== '') {
+          filtered = filtered.filter((result) =>
+            result.name.toLowerCase().includes(search.toLowerCase())
+          );
+        }
+        if (color && color !== '') {
+          filtered = filtered.filter((result) => result.color === color);
+        }
+        this.displayedProducts = filtered;
+      },
+      error: (error) => {
+        console.error('404 Not Found');
+      },
+    });
   }
   emptySearch() {
     this.searchForm.reset();

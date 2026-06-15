@@ -48,11 +48,22 @@
       placeholder=""
     />
 
+    <!-- Color filter -->
+    <select formControlName="color" (change)="search()" class="ml-2 py-2 px-3 border rounded">
+      <option value="">Todos los colores</option>
+      <option *ngFor="let c of colors" [value]="c">{{c}}</option>
+    </select>
+
     <!-- Search button -->
     <button class="h-9 bg-slate-400 px-4 hover:bg-yellow-300 rounded-r-lg">
       Buscar
     </button>
   </form>
+  <!-- Quick add color (admin) -->
+  <div class="mt-2 flex gap-2 items-center">
+    <input [(ngModel)]="newColor" placeholder="Nuevo color" class="py-1 px-2 border rounded" />
+    <button (click)="createColor()" class="py-1 px-3 bg-green-500 text-white rounded">Agregar color</button>
+  </div>
 </div>
 
 <div>

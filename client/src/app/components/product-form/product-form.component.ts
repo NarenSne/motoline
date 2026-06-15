@@ -23,6 +23,7 @@ export class ProductFormComponent {
   listReferencia: any;
   listReferencias: any;
   listCategories: any;
+  colors: string[] = ["Rojo", "Azul", "Negro", "Blanco", "Gris", "Amarillo", "Verde"];
 
   constructor(private productService: ProductService, public dialog: MatDialog, public categoryService: MarcasycategoriasService) {
 
@@ -43,6 +44,16 @@ export class ProductFormComponent {
         this.listCategories = data.categorias
       }
     })
+    // load colors from backend service
+    this.categoryService.getAllColors().subscribe({
+      next: (data: any) => {
+        // endpoint returns { colors: [...] } or raw list
+        this.colors = data.colors ? data.colors.map((c: any) => c.name) : (data || []);
+      },
+      error: (err) => {
+        console.error('Error loading colors', err);
+      }
+    })
   }
 
   filtrarReferencias(event: any) {
@@ -57,6 +68,7 @@ export class ProductFormComponent {
     stock: new FormControl(0, [Validators.required, Validators.pattern("^[0-9]*$")]), // Ensure only numbers
     images: new FormControl([], [Validators.required]),
     brand: new FormControl('', [Validators.required]),
+    color: new FormControl('', [Validators.required]),
     category: new FormControl('', [Validators.required]),
     Marcavehicular: new FormControl(''),
     ReferenciaVehiculo: new FormControl([]),
