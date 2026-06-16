@@ -30,6 +30,8 @@ export class ProductOverviewComponent {
   isLoading = true;
   sizes = new Set<string>();
   colors = new Set<string>();
+  colorOptions: string[] = [];
+  selectedColor: string | null = null;
   wishListBtn = false;
   currentImageIndex = 0;
   references: string[] = [];
@@ -48,6 +50,13 @@ export class ProductOverviewComponent {
 
         if (this.product?.ReferenciaVehiculo) {
           this.references = this.product.ReferenciaVehiculo.split(',').map((ref: string) => ref.trim());
+        }
+
+        if (this.product?.color) {
+          this.colorOptions = this.product.color.split(',').map((color: string) => color.trim()).filter((color: string) => color.length > 0);
+          if (this.colorOptions.length > 0) {
+            this.selectedColor = this.colorOptions[0];
+          }
         }
 
         const products: any = this.localStorage.getItem('wishList');

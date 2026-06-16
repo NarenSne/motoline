@@ -60,8 +60,7 @@
             class="text-gray-900 dark:text-white">{{product?.brand}}</span></p>
         <p class="text-gray-600 dark:text-gray-400 font-medium">Categoría: <span
             class="text-gray-900 dark:text-white">{{product?.category}}</span></p>
-        <p class="text-gray-600 dark:text-gray-400 font-medium">Color: <span
-          class="text-gray-900 dark:text-white">{{product?.color}}</span></p>
+        
       </div>
 
       <div class="text-5xl font-bold text-primary font-display">{{ product?.price | currency:'$':'symbol':'3.0-0' }}
@@ -91,6 +90,16 @@
             }
           </select>
         </div>
+        <div class="mb-4">
+        <label class="text-gray-600 dark:text-gray-400 font-medium">Color:</label>
+          <select
+            [(ngModel)]="selectedColor"
+            name="selectedColor"
+            class="w-full bg-background-light dark:bg-background-dark border border-gray-300 dark:border-gray-700 rounded py-2.5 px-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-gray-700 dark:text-gray-300"
+          >
+            <option *ngFor="let color of colorOptions" [value]="color">{{ color }}</option>
+          </select>
+        </div>
       </div>
 
       <div class="pt-6 border-t border-border-dark space-y-6">
@@ -109,6 +118,9 @@
               <span class="material-icons text-sm">add</span>
             </button>
           </div>
+
+
+          
         </div>
 
         <div class="flex flex-col sm:flex-row gap-4">

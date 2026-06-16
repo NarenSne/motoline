@@ -68,10 +68,10 @@ export class ProductFormComponent {
     stock: new FormControl(0, [Validators.required, Validators.pattern("^[0-9]*$")]), // Ensure only numbers
     images: new FormControl([], [Validators.required]),
     brand: new FormControl('', [Validators.required]),
-    color: new FormControl('', [Validators.required]),
+    color: new FormControl<string[]>([], [Validators.required]),
     category: new FormControl('', [Validators.required]),
     Marcavehicular: new FormControl(''),
-    ReferenciaVehiculo: new FormControl([]),
+    ReferenciaVehiculo: new FormControl<string[]>([]),
   });
 
   onFileChange(event: any) {
@@ -96,7 +96,10 @@ export class ProductFormComponent {
     this.isLoading = true;
     let product: any = { ...this.productForm.value };
     let productId = '';
-    product.ReferenciaVehiculo = product.ReferenciaVehiculo?.join(",")
+    if (Array.isArray(product.color)) {
+      product.color = product.color.join(",");
+    }
+    product.ReferenciaVehiculo = product.ReferenciaVehiculo?.join(",");
     this.productService.createProduct(product).subscribe({
       next: (data: any) => {
         productId = data.product._id;

@@ -66,12 +66,16 @@ export class ProductEditFormComponent {
     this.productForm.get("desc")?.setValue(desc)
     this.productForm.get("stock")?.setValue(stock)
     this.productForm.get("images")?.setValue(images)
-    this.productForm.get("brand")?.setValue(brand)
-    this.productForm.get("category")?.setValue(category)
-    this.productForm.get("Marcavehicular")?.setValue(Marcavehicular)
-    this.productForm.get("color")?.setValue(color)
-    this.productForm.get("ReferenciaVehiculo")?.setValue(ReferenciaVehiculo)
-    this.productForm.get("sku")?.setValue(sku)
+    this.productForm.get("brand")?.setValue(brand);
+    this.productForm.get("category")?.setValue(category);
+    this.productForm.get("Marcavehicular")?.setValue(Marcavehicular);
+    if (color && typeof color === 'string') {
+      this.productForm.get("color")?.setValue(color.split(","));
+    } else {
+      this.productForm.get("color")?.setValue(color || []);
+    }
+    this.productForm.get("ReferenciaVehiculo")?.setValue(ReferenciaVehiculo);
+    this.productForm.get("sku")?.setValue(sku);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -92,9 +96,9 @@ export class ProductEditFormComponent {
     images: new FormControl([]),
     brand: new FormControl('', [Validators.required]),
     category: new FormControl('', [Validators.required]),
-    color: new FormControl('', [Validators.required]),
+    color: new FormControl<string[]>([], [Validators.required]),
     Marcavehicular: new FormControl(''),
-    ReferenciaVehiculo: new FormControl([]),
+    ReferenciaVehiculo: new FormControl<string[]>([]),
   });
 
   removeImage(image: any) {
@@ -116,8 +120,10 @@ export class ProductEditFormComponent {
       return;
     }
     let product: any = this.productForm.getRawValue();
-
-    product.ReferenciaVehiculo = product.ReferenciaVehiculo?.join(",")
+    if (Array.isArray(product.color)) {
+      product.color = product.color.join(",");
+    }
+    product.ReferenciaVehiculo = product.ReferenciaVehiculo?.join(",");
     this.productService.updateProduct(this.product._id, product).subscribe({
       next: res => {
 
