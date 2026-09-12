@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { MarcasycategoriasService } from '../../services/marcasycategorias.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,34 +15,39 @@ export class NavbarComponent {
   @ViewChild('menu', { static: false }) menu!: ElementRef;
   @ViewChild('menudeploy', { static: false }) menudeploy!: ElementRef;
 
-  selectedCategory: string = 'Pastillas y bandas';
+  selectedCategory: string = '';
 
-  categories = [
-    {
-      name: 'Pastillas y bandas',
-      subcategories: ['KROSS', 'RUNNING PARTS', 'AUTECO', 'GPP', 'EBC', 'CASARELLA', 'REVO'],
-    },
-    {
-      name: 'Kit de arrastre',
-      subcategories: ['CHOHO', 'DID', 'ENDURANCE', 'Revo'],
-    },
-    {
-      name: 'Carenajes farolas y guardabarros',
-      subcategories: ['GENÉRICO', 'AUTECO', 'GPP'],
-    },
-    {
-      name: 'Tornilleria especial',
-      subcategories: ['GPP', 'REVO'],
-    },
-    {
-      name: 'Aceites y lubricantes',
-      subcategories: ['MOTUL', 'CASTROL', 'SHELL'],
-    },
-    {
-      name: 'Partes eléctricas',
-      subcategories: ['NGK', 'GPP', 'GENÉRICO'],
-    },
-  ];
+  categories: { name: string; subcategories: string[] }[] = [];
+
+  constructor(private marcasycategoriasService: MarcasycategoriasService) {}
+
+  ngOnInit(): void {
+    this.marcasycategoriasService.getAllCategorias().subscribe({
+      next: (categoriasData: any) => {
+        const categorias = categoriasData.categorias ?? [];
+        this.marcasycategoriasService.getAllMarcas().subscribe({
+          next: (marcasData: any) => {
+            const marcas = marcasData.marcas ?? [];
+            this.categories = categorias.map((categoria: any) => ({
+              name: categoria.name,
+              subcategories: marcas
+                .filter((marca: any) => marca.category === categoria.name)
+                .map((marca: any) => marca.name),
+            }));
+            if (!this.selectedCategory && this.categories.length) {
+              this.selectedCategory = this.categories[0].name;
+            }
+          },
+          error: (error) => {
+            console.error('Error loading marcas:', error);
+          },
+        });
+      },
+      error: (error) => {
+        console.error('Error loading categorias:', error);
+      },
+    });
+  }
 
   get selectedSubcategories() {
     const found = this.categories.find(c => c.name === this.selectedCategory);

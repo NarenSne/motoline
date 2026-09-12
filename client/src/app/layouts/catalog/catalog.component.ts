@@ -22,6 +22,7 @@ import { MarcasycategoriasService } from '../../services/marcasycategorias.servi
 export class CatalogComponent {
   list: any;
   categorie: any;
+  brand: any;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   obs!: Observable<any>;
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
@@ -30,8 +31,10 @@ export class CatalogComponent {
   constructor(private productService: ProductService, private router: ActivatedRoute, public categoryService: MarcasycategoriasService) {
     router.queryParams.subscribe((data: any) => {
       this.categorie = data.categorie
+      this.brand = data.brand
       if (!this.isLoading) {
         this.checksCategory = this.categorie ? [this.categorie] : [];
+        this.checksBrand = this.brand ?? '';
         this.filter();
       }
     })
@@ -55,6 +58,7 @@ export class CatalogComponent {
 
   products: Product[] = [];
   checksCategory: string[] = [];
+  checksBrand: string = '';
   checksMarca = new Set<string>;
   filteredProducts: Product[] = [];
   minPrice = 0;
@@ -75,6 +79,11 @@ export class CatalogComponent {
         this.isLoading = false;
         if (this.categorie) {
           this.checksCategory = [this.categorie];
+        }
+        if (this.brand) {
+          this.checksBrand = this.brand;
+        }
+        if (this.categorie || this.brand) {
           this.filter()
         }
       },
@@ -154,7 +163,7 @@ export class CatalogComponent {
 
 
   filter() {
-    if (!this.checksCategory.length && !this.maxPrice && !this.minPrice && !this.checksMarca && !this.colors) {
+    if (!this.checksCategory.length && !this.checksBrand.length && !this.maxPrice && !this.minPrice && !this.checksMarca && !this.colors) {
       this.filteredProducts = this.products; // Reset to all products
       this.dataSource.data = this.filteredProducts
     }
@@ -162,6 +171,7 @@ export class CatalogComponent {
       this.filteredProducts = this.products.filter(prod => {
         return (
           (!this.checksCategory.length || this.checksCategory.includes(prod.category)) &&
+          (!this.checksBrand || this.checksBrand == prod.brand) &&
           (!this.minPrice || prod.price >= this.minPrice) &&
           (!this.maxPrice || prod.price <= this.maxPrice) &&
           (!this.checksMarca.size || this.checksMarca.has(prod.Marcavehicular)) &&

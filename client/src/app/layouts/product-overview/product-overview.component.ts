@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../../services/product/product.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Product } from '../../interfaces/product';
 import { UserServiceService } from '../../services/user/user-service.service';
 import Swal from 'sweetalert2';
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-product-overview',
   standalone: true,
-  imports: [LoadingSpinnerComponent, CommonModule, FormsModule],
+  imports: [LoadingSpinnerComponent, CommonModule, FormsModule, RouterModule],
   providers: [ProductService, UserServiceService],
   templateUrl: './product-overview.component.html',
   styles: ``
