@@ -37,9 +37,9 @@
     </tbody>
   </table>
   <mat-paginator
-    [length]="10"
+    [length]="numberOfCategorias"
     pageSize="10"
-    (page)="onPageChange($event)"
+    (page)="onCategoryPageChange($event)"
   >
   </mat-paginator>
 </div>
@@ -84,9 +84,9 @@
     </tbody>
   </table>
   <mat-paginator
-    [length]="0"
+    [length]="numberOfMarcas"
     pageSize="10"
-    (page)="onPageChange($event)"
+    (page)="onMarcaPageChange($event)"
   >
   </mat-paginator>
 </div>

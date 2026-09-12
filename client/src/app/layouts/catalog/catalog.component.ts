@@ -20,21 +20,20 @@ import { MarcasycategoriasService } from '../../services/marcasycategorias.servi
   styles: ``
 })
 export class CatalogComponent {
-  param: any;
   list: any;
   categorie: any;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   obs!: Observable<any>;
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  listMarca: any;
   listReferencias: any;
   listCategories: any;
-  constructor(private productService: ProductService, private router: ActivatedRoute, private marcaservice: MarcasycategoriasService, public categoryService: MarcasycategoriasService) {
+  constructor(private productService: ProductService, private router: ActivatedRoute, public categoryService: MarcasycategoriasService) {
     router.queryParams.subscribe((data: any) => {
-      this.param = data.brand
       this.categorie = data.categorie
-      console.log(data);
-
+      if (!this.isLoading) {
+        this.checksCategory = this.categorie ? [this.categorie] : [];
+        this.filter();
+      }
     })
     this.productService.getAllMarcaVehicular().subscribe({
       next: (data: any) => {
@@ -44,11 +43,6 @@ export class CatalogComponent {
     this.productService.getAllReferenciaVehicular().subscribe({
       next: (data: any) => {
         this.listReferencias = data.referenciaVehicular
-      }
-    })
-    this.marcaservice.getAllMarcas().subscribe({
-      next: (data: any) => {
-        this.listMarca = data.marcas
       }
     })
 
@@ -61,12 +55,10 @@ export class CatalogComponent {
 
   products: Product[] = [];
   checksCategory: string[] = [];
-  checksBrand: string = '';
   checksMarca = new Set<string>;
   filteredProducts: Product[] = [];
   minPrice = 0;
   maxPrice = 0;
-  sizes = new Set<string>();
   colors = new Set<string>();
   sortToggle = false;
   isLoading = true;
@@ -81,12 +73,6 @@ export class CatalogComponent {
         this.dataSource.paginator = this.paginator;
         this.obs = this.dataSource.connect();
         this.isLoading = false;
-        if (this.param) {
-          this.checksBrand = this.param
-          console.log(this.checksBrand)
-          this.filter()
-          console.log(this.filteredProducts)
-        }
         if (this.categorie) {
           this.checksCategory = [this.categorie];
           this.filter()
@@ -101,24 +87,16 @@ export class CatalogComponent {
   getCategoriesFilters(inputValue: any) {
     const inputVal = inputValue.target.value;
     if (!inputValue.target.checked) {
-      this.checksCategory.splice(this.checksCategory.indexOf(inputVal, 1));
+      const idx = this.checksCategory.indexOf(inputVal);
+      if (idx > -1) {
+        this.checksCategory.splice(idx, 1);
+      }
     } else {
       this.checksCategory.push(inputVal)
     }
     this.filter();
   }
 
-  getBrandsFilters(inputValue: any) {
-    console.log(inputValue)
-    const inputVal = inputValue.value;
-    console.log(inputVal)
-    if (inputVal != '') {
-      this.checksBrand = inputVal
-    } else {
-      this.checksBrand = ''
-    }
-    this.filter();
-  }
   getMarcaFilters(inputValue: any) {
     const inputVal = inputValue.value;
     if (this.checksMarca.has(inputVal)) {
@@ -147,10 +125,10 @@ export class CatalogComponent {
   }
 
   getSizeFilters(sizeVal: any) {
-    if (this.sizes.has(sizeVal.value)) {
-      this.sizes.delete(sizeVal.value);
+    if (this.colors.has(sizeVal.value)) {
+      this.colors.delete(sizeVal.value);
     } else {
-      this.sizes.add(sizeVal.value);
+      this.colors.add(sizeVal.value);
     }
     this.filter();
   }
@@ -176,7 +154,7 @@ export class CatalogComponent {
 
 
   filter() {
-    if (!this.checksCategory.length && !this.checksBrand.length && !this.maxPrice && !this.minPrice && !this.checksMarca && !this.colors) {
+    if (!this.checksCategory.length && !this.maxPrice && !this.minPrice && !this.checksMarca && !this.colors) {
       this.filteredProducts = this.products; // Reset to all products
       this.dataSource.data = this.filteredProducts
     }
@@ -184,7 +162,6 @@ export class CatalogComponent {
       this.filteredProducts = this.products.filter(prod => {
         return (
           (!this.checksCategory.length || this.checksCategory.includes(prod.category)) &&
-          (!this.checksBrand || this.checksBrand == prod.brand) &&
           (!this.minPrice || prod.price >= this.minPrice) &&
           (!this.maxPrice || prod.price <= this.maxPrice) &&
           (!this.checksMarca.size || this.checksMarca.has(prod.Marcavehicular)) &&

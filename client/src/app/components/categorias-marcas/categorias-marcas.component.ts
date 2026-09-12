@@ -16,10 +16,9 @@ import { CategoryProductFormComponent } from '../category-product-form/category-
 export class CategoriasMarcasComponent {
   pageOrders: any[] = [];
   pageMarca: any[] = []; // Ensure allOrders is initialized as an array
-  currentPage = 0;
   pageSize = 10;
-  numberOfOrders = 0;
-  numberOfPages = 0;
+  numberOfCategorias = 0;
+  numberOfMarcas = 0;
   visible = false;
   create = true;
   constructor(
@@ -36,6 +35,7 @@ export class CategoriasMarcasComponent {
     this.productService.getAllCategorias().subscribe({
       next: (response: any) => {
         this.pageOrders = response.categorias;
+        this.numberOfCategorias = response.totalCategory;
       },
       error: (error) => {
         console.log('Error:', error);
@@ -47,20 +47,31 @@ export class CategoriasMarcasComponent {
     this.productService.getAllMarcas().subscribe({
       next: (response: any) => {
         this.pageMarca = response.marcas;
+        this.numberOfMarcas = response.totalmarcas;
       },
       error: (error) => {
         console.log('Error:', error);
       },
     });
   }
-  onPageChange(event: any): void {
-    this.currentPage = event.pageIndex + 1;
-    this.productService.getAllCategorias(this.currentPage, 10).subscribe({
+
+  onCategoryPageChange(event: any): void {
+    this.productService.getAllCategorias(event.pageIndex + 1, this.pageSize).subscribe({
       next: (response: any) => {
-        this.pageOrders = response.marcaVehicular;
-        this.pageSize = response.marcaVehicular.length;
-        this.numberOfPages = response.pagination.totalPages;
-        this.numberOfOrders = response.pagination.totalOrders;
+        this.pageOrders = response.categorias;
+        this.numberOfCategorias = response.totalCategory;
+      },
+      error: (error) => {
+        console.log('Error:', error);
+      },
+    });
+  }
+
+  onMarcaPageChange(event: any): void {
+    this.productService.getAllMarcas(event.pageIndex + 1, this.pageSize).subscribe({
+      next: (response: any) => {
+        this.pageMarca = response.marcas;
+        this.numberOfMarcas = response.totalmarcas;
       },
       error: (error) => {
         console.log('Error:', error);
