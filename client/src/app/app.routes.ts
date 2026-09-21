@@ -51,7 +51,7 @@ export const routes: Routes = [
     ],
     canActivate: [IsLoggedService, IsAdminService],
   },
-  { path: '', component: HomeComponent, pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent, pathMatch: 'full' },
   { path: 'contact-us', component: ContactUsComponent },
   {
@@ -136,7 +136,7 @@ export const routes: Routes = [
   {
     path: 'check-out',
     component: CheckOutComponent,
-    canActivate: [IsLoggedService, IsUserService, CardIsNotEmptyService],
+    canActivate: [CardIsNotEmptyService],
   },
 
   {

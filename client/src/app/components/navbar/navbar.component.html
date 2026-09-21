@@ -24,21 +24,21 @@
          Right: Iniciar sesión Registrarse
     -->
     <div class="flex-1 flex justify-center gap-8">
-      <a class="text-sm font-medium text-gray-300 hover:text-white hover:underline transition-colors" routerLink="/"
-        routerLinkActive="text-[#ff5500] uppercase tracking-wide hover:opacity-80 transition-opacity">Inicio</a>
-      <a class="text-sm font-medium text-gray-300 hover:text-white hover:underline transition-colors"
+      <a class="text-sm font-medium text-white hover:text-white hover:underline transition-colors" routerLink="/home"
+        routerLinkActive="text-primary tracking-wide hover:opacity-80 transition-opacity">Inicio</a>
+      <a class="text-sm font-medium text-white hover:text-white hover:underline transition-colors"
         routerLink="/catalog"
-        routerLinkActive="text-[#ff5500] uppercase tracking-wide hover:opacity-80 transition-opacity">Catálogo</a>
-      <a class="text-sm font-medium text-gray-300 hover:text-white hover:underline transition-colors"
+        routerLinkActive="text-primary tracking-wide hover:opacity-80 transition-opacity">Catálogo</a>
+      <a class="text-sm font-medium text-white hover:text-white hover:underline transition-colors"
         routerLink="/about-us"
-        routerLinkActive="text-[#ff5500] uppercase tracking-wide hover:opacity-80 transition-opacity">Nosotros</a>
-      <a class="text-sm font-medium text-gray-300 hover:text-white hover:underline transition-colors"
+        routerLinkActive="text-primary tracking-wide hover:opacity-80 transition-opacity">Nosotros</a>
+      <a class="text-sm font-medium text-white hover:text-white hover:underline transition-colors"
         routerLink="/contact-us"
-        routerLinkActive="text-[#ff5500] uppercase tracking-wide hover:opacity-80 transition-opacity">Contáctanos</a>
+        routerLinkActive="text-primary tracking-wide hover:opacity-80 transition-opacity">Contáctanos</a>
     </div>
 
     <!-- Auth Links -->
-    @if (!islogin()) {
+    <!-- @if (!islogin()) {
     <div class="ml-auto flex gap-6 px-0 text-sm font-medium">
       <a class="text-gray-300 hover:text-white transition-colors" routerLink="/login">Iniciar sesión</a>
       <a class="text-gray-300 hover:text-white transition-colors" routerLink="/signup">Registrarse</a>
@@ -48,7 +48,7 @@
       <a class="text-gray-300 hover:text-[#ff5500] transition-colors cursor-pointer" (click)="logout()">Cerrar
         sesión</a>
     </div>
-    }
+    } -->
   </div>
 </nav>
 <!-- /Nav bar -->

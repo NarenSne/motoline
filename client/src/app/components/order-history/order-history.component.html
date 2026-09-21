@@ -1,11 +1,11 @@
 <div class="bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark py-3">
-  <div class="container mx-auto px-4 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+  <div class="container mx-auto px-4 text-sm text-gray-500 dark:text-white flex items-center gap-2">
     <a href="/" class="hover:text-primary transition-colors"><span
         class="material-icons text-sm align-text-bottom">home</span></a>
-    <span class="text-gray-400 dark:text-gray-600">/</span>
+    <span class="text-white dark:text-gray-600">/</span>
     <a routerLink="/profile" class="hover:text-primary transition-colors">Mi Perfil</a>
-    <span class="text-gray-400 dark:text-gray-600">/</span>
-    <span class="text-gray-800 dark:text-gray-200 font-medium">Historial de Pedidos</span>
+    <span class="text-white dark:text-gray-600">/</span>
+    <span class="text-gray-800 dark:text-white font-medium">Historial de Pedidos</span>
   </div>
 </div>
 
@@ -17,26 +17,26 @@
         <div class="bg-surface-dark border border-border-dark p-6 rounded-sm sticky top-6">
           <div class="mb-8">
             <h2 class="text-xl font-bold text-white mb-1">Hola, {{ userInfo.fullName }}</h2>
-            <p class="text-gray-400 text-sm">{{ userInfo.email }}</p>
+            <p class="text-white text-sm">{{ userInfo.email }}</p>
           </div>
           <nav class="space-y-1">
             <a routerLink="/profile"
-              class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-gray-600">
+              class="flex items-center gap-3 px-4 py-3 text-white hover:text-white hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-gray-600">
               <span class="material-icons">badge</span>
               Administrar cuenta
             </a>
             <a routerLink="/edit-profile"
-              class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-gray-600">
+              class="flex items-center gap-3 px-4 py-3 text-white hover:text-white hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-gray-600">
               <span class="material-icons">person</span>
               Información de perfil
             </a>
             <a routerLink="/manage-address"
-              class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-gray-600">
+              class="flex items-center gap-3 px-4 py-3 text-white hover:text-white hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-gray-600">
               <span class="material-icons">location_on</span>
               Administrar direcciones
             </a>
             <a routerLink="/change-password"
-              class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-gray-600">
+              class="flex items-center gap-3 px-4 py-3 text-white hover:text-white hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-gray-600">
               <span class="material-icons">lock</span>
               Cambiar contraseña
             </a>
@@ -47,12 +47,12 @@
                 Mi historial de pedidos
               </a>
               <a routerLink="/wishlist"
-                class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-gray-600">
+                class="flex items-center gap-3 px-4 py-3 text-white hover:text-white hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-gray-600">
                 <span class="material-icons">favorite</span>
                 Mis favoritos
               </a>
               <a href="#"
-                class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-500 hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-red-900">
+                class="flex items-center gap-3 px-4 py-3 text-white hover:text-red-500 hover:bg-accent-gray transition-colors border-l-4 border-transparent hover:border-red-900">
                 <span class="material-icons">logout</span>
                 Cerrar sesión
               </a>
@@ -67,7 +67,7 @@
           <div>
             <h1 class="font-display font-bold text-4xl text-white uppercase tracking-wider mb-2">Mi Historial de Pedidos
             </h1>
-            <p class="text-gray-400">Revisa el estado y detalles de tus compras recientes.</p>
+            <p class="text-white">Revisa el estado y detalles de tus compras recientes.</p>
           </div>
           <div class="flex gap-2">
             <div class="relative">
@@ -86,7 +86,7 @@
           </div>
           } @else {
           <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-gray-400">
+            <table class="w-full text-left text-sm text-white">
               <thead
                 class="bg-background-dark text-white font-display uppercase tracking-wider text-sm border-b border-border-dark">
                 <tr>

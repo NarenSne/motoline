@@ -1,10 +1,10 @@
 @if (isLoading) {<app-loading-spinner></app-loading-spinner>}
 
 <div class="bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark py-3">
-  <div class="container mx-auto px-4 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+  <div class="container mx-auto px-4 text-sm text-gray-500 dark:text-white flex items-center gap-2">
     <a href="/" class="hover:text-primary transition-colors"><span
         class="material-icons text-sm align-text-bottom">home</span></a>
-    <span class="text-gray-400 dark:text-gray-600">/</span>
+    <span class="text-white dark:text-gray-600">/</span>
     <span class="text-gray-800 dark:text-gray-200 font-medium">Catálogo</span>
   </div>
 </div>
@@ -40,7 +40,7 @@
           <input (input)="getMinPriceFilter($event)"
             class="w-full bg-background-light dark:bg-background-dark border border-gray-300 dark:border-gray-600 rounded py-2 px-3 text-sm focus:outline-none focus:border-primary text-gray-700 dark:text-gray-300"
             placeholder="Min" type="number" />
-          <span class="text-gray-400">-</span>
+          <span class="text-white">-</span>
           <input (input)="getMaxPriceFilter($event)"
             class="w-full bg-background-light dark:bg-background-dark border border-gray-300 dark:border-gray-600 rounded py-2 px-3 text-sm focus:outline-none focus:border-primary text-gray-700 dark:text-gray-300"
             placeholder="Max" type="number" />
@@ -77,21 +77,12 @@
       <div
         class="flex flex-wrap items-center justify-between mb-6 gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded border border-border-light dark:border-border-dark">
         <div class="flex items-center gap-2">
-          <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Ordenar por:</label>
+          <label class="text-sm font-medium text-gray-600 dark:text-white">Ordenar por:</label>
           <select (change)="getSort($any($event.target).value)"
             class="bg-transparent border-none text-sm font-bold text-gray-800 dark:text-white focus:ring-0 cursor-pointer outline-none">
             <option value="Asc">Nombre(A-Z)</option>
             <option value="Des">Nombre(Z-A)</option>
           </select>
-        </div>
-        <div class="flex items-center gap-2">
-          <button class="p-2 text-white bg-primary rounded shadow-md hover:bg-primary-dark transition-colors">
-            <span class="material-icons text-lg">grid_view</span>
-          </button>
-          <button
-            class="p-2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors">
-            <span class="material-icons text-lg">view_list</span>
-          </button>
         </div>
       </div>
 

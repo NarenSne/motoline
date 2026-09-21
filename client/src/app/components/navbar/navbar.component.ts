@@ -8,7 +8,9 @@ import { MarcasycategoriasService } from '../../services/marcasycategorias.servi
   standalone: true,
   imports: [RouterModule, CommonModule],
   templateUrl: './navbar.component.html',
-  styles: ``,
+  styles: `.text-primary {
+    color: #ff6600;
+  }`,
 })
 export class NavbarComponent {
   toggleBurgerMenu = false;

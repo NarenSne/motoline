@@ -3,13 +3,13 @@
 }
 
 <div class="bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark py-3">
-  <div class="container mx-auto px-4 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+  <div class="container mx-auto px-4 text-sm text-gray-500 dark:text-white flex items-center gap-2">
     <a href="/" class="hover:text-primary transition-colors"><span
         class="material-icons text-sm align-text-bottom">home</span></a>
-    <span class="text-gray-400 dark:text-gray-600">/</span>
+    <span class="text-white dark:text-gray-600">/</span>
     <a routerLink="/catalog"
-      class="text-gray-400 dark:text-gray-400 hover:text-white transition-colors cursor-pointer">Catálogo</a>
-    <span class="text-gray-400 dark:text-gray-600">/</span>
+      class="text-white dark:text-white hover:text-white transition-colors cursor-pointer">Catálogo</a>
+    <span class="text-white dark:text-gray-600">/</span>
     <span class="text-gray-800 dark:text-gray-200 font-medium">{{product?.name}}</span>
   </div>
 </div>
@@ -22,11 +22,11 @@
       class="relative w-full flex items-center justify-center bg-surface-dark dark:bg-[#181818] rounded-lg border border-border-dark p-8 group overflow-hidden">
       @if (product?.images?.length && product!.images.length > 1) {
       <button (click)="prevImage()"
-        class="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-dark/80 hover:bg-primary text-gray-400 hover:text-white rounded-full p-2 transition-all z-10 border border-border-dark">
+        class="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-dark/80 hover:bg-primary text-white hover:text-white rounded-full p-2 transition-all z-10 border border-border-dark">
         <span class="material-icons">chevron_left</span>
       </button>
       <button (click)="nextImage()"
-        class="absolute right-4 top-1/2 -translate-y-1/2 bg-surface-dark/80 hover:bg-primary text-gray-400 hover:text-white rounded-full p-2 transition-all z-10 border border-border-dark">
+        class="absolute right-4 top-1/2 -translate-y-1/2 bg-surface-dark/80 hover:bg-primary text-white hover:text-white rounded-full p-2 transition-all z-10 border border-border-dark">
         <span class="material-icons">chevron_right</span>
       </button>
       }
@@ -45,21 +45,21 @@
 
     <!-- Product Details -->
     <div class="space-y-6">
-      <h1 class="font-display text-5xl font-bold text-gray-800 dark:text-white uppercase tracking-wide leading-none">
+      <h1 class="font-display text-5xl font-bold text-white uppercase tracking-wide leading-none">
         {{product?.name}}</h1>
 
       <div class="space-y-1 text-sm">
-        <p class="text-gray-600 dark:text-gray-400 font-medium">Disponibilidad:
+        <p class="text-white font-medium">Disponibilidad:
           @if(checkAvailability()) {
           <span class="text-green-600 font-bold">Disponible</span>
           } @else {
           <span class="text-red-600 font-bold">Agotado</span>
           }
         </p>
-        <p class="text-gray-600 dark:text-gray-400 font-medium">Marca: <span
-            class="text-gray-900 dark:text-white">{{product?.brand}}</span></p>
-        <p class="text-gray-600 dark:text-gray-400 font-medium">Categoría: <span
-            class="text-gray-900 dark:text-white">{{product?.category}}</span></p>
+        <p class="text-white font-medium">Marca: <span
+            class="text-white">{{product?.brand}}</span></p>
+        <p class="text-white font-medium">Categoría: <span
+            class="text-white">{{product?.category}}</span></p>
         
       </div>
 
@@ -67,20 +67,20 @@
       </div>
 
       <div
-        class="prose prose-invert prose-sm text-gray-600 dark:text-gray-300 max-w-none border-t border-border-dark pt-6">
+        class="prose prose-invert prose-sm text-gray-300 max-w-none border-t border-border-dark pt-6">
         <p>{{product?.desc}}</p>
       </div>
 
       <div class="space-y-4 pt-4">
         <div>
-          <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Marca vehicular</label>
+          <label class="block text-xs font-bold text-white uppercase mb-2">Marca vehicular</label>
           <select
             class="w-full bg-background-light dark:bg-background-dark border border-gray-300 dark:border-gray-700 rounded py-2.5 px-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-gray-700 dark:text-gray-300">
             <option [value]="product?.Marcavehicular">{{product?.Marcavehicular || 'Seleccionar marca...'}}</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Referencias
+          <label class="block text-xs font-bold text-white uppercase mb-2">Referencias
             vehiculares</label>
           <select
             class="w-full bg-background-light dark:bg-background-dark border border-gray-300 dark:border-gray-700 rounded py-2.5 px-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-gray-700 dark:text-gray-300">
@@ -91,7 +91,7 @@
           </select>
         </div>
         <div class="mb-4">
-        <label class="text-gray-600 dark:text-gray-400 font-medium">Color:</label>
+        <label class="text-white font-medium">Color:</label>
           <select
             [(ngModel)]="selectedColor"
             name="selectedColor"
@@ -104,17 +104,17 @@
 
       <div class="pt-6 border-t border-border-dark space-y-6">
         <div>
-          <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Cantidad</label>
+          <label class="block text-xs font-bold text-gray-500 dark:text-white uppercase mb-2">Cantidad</label>
           <div class="flex items-center w-max border border-gray-400 dark:border-gray-600 rounded-sm">
             <button (click)="quantity = (quantity > 1) ? quantity - 1 : 1"
-              class="w-10 h-10 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+              class="w-10 h-10 flex items-center justify-center text-gray-500 dark:text-white hover:text-black dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
               <span class="material-icons text-sm">remove</span>
             </button>
             <div
               class="w-12 h-10 flex items-center justify-center text-gray-800 dark:text-white font-bold text-lg border-l border-r border-gray-400 dark:border-gray-600">
               {{quantity}}</div>
             <button (click)="quantity = quantity + 1"
-              class="w-10 h-10 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+              class="w-10 h-10 flex items-center justify-center text-gray-500 dark:text-white hover:text-black dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
               <span class="material-icons text-sm">add</span>
             </button>
           </div>

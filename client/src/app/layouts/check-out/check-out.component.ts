@@ -37,6 +37,8 @@ export class CheckOutComponent implements OnInit {
     address: { street: string; city: string; zip: string };
     date: Date;
     status: 'pending' | 'accepted' | 'rejected';
+    customerName: string;
+    customerEmail: string;
   };
 
   street: string = '';
@@ -63,6 +65,8 @@ export class CheckOutComponent implements OnInit {
       address: { street: '', city: '', zip: '' },
       date: new Date(),
       status: 'pending',
+      customerName: '',
+      customerEmail: '',
     };
   }
 
@@ -99,7 +103,7 @@ export class CheckOutComponent implements OnInit {
     if (this.currentStep <= 2) {
       if (
         this.currentStep === 1 &&
-        (this.street === '' || this.city === '' || this.zip === '')
+        (this.fullname === '' || this.email === '' || this.street === '' || this.city === '' || this.zip === '')
       ) {
         return;
       }
@@ -113,6 +117,8 @@ export class CheckOutComponent implements OnInit {
         city: this.city,
         zip: this.zip,
       };
+      this.order.customerName = this.fullname;
+      this.order.customerEmail = this.email;
 
       this.orderService.createOrder(this.order).subscribe({
         next: (data: any) => {
