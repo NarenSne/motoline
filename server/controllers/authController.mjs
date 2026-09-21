@@ -94,6 +94,33 @@ export const protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+export const optionalAuth = catchAsync(async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const currentUser = await User.findById(decoded.id);
+    if (currentUser) {
+      req.user = currentUser;
+    }
+  } catch (error) {
+    // Invalid/expired token: continue as a guest instead of rejecting.
+  }
+
+  next();
+});
+
 export const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

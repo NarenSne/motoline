@@ -16,7 +16,6 @@ import featuredProductsRouter from "./routes/featuredProductsRouter.mjs";
 import marcasRouter from "./routes/marcasRouter.mjs";
 import categoryRouter from "./routes/categoryRouter.mjs";
 import invoicesRouter from "./routes/invoicesRouter.mjs";
-import { protect } from "./controllers/authController.mjs";
 import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -101,7 +100,7 @@ app.use((req, res, next) => {
 app.use("/api/users", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/profile", userRouter);
-app.use("/api/orders", protect, orderRouter);
+app.use("/api/orders", orderRouter);
 app.use("/api/products", productRouter);
 app.use("/api/marcas", marcasRouter);
 app.use("/api/categorias", categoryRouter);

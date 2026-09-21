@@ -72,7 +72,7 @@ export const getOrderById = async (req, res) => {
 
     if (
       req.user.role !== "admin" &&
-      order.user._id.toString() !== req.user._id.toString()
+      (!order.user || order.user._id.toString() !== req.user._id.toString())
     ) {
       res.status(403).json({ error: "Forbidden" });
       return;
@@ -193,7 +193,7 @@ export const getAllOrders = async (req, res) => {
 };
 
 export const addOrder = async (req, res) => {
-  const { products, totalPrice, address } = req.body;
+  const { products, totalPrice, address, customerName, customerEmail } = req.body;
 
   if (!products || Object.keys(products).length === 0) {
     res.status(400).json({
@@ -222,13 +222,19 @@ export const addOrder = async (req, res) => {
       products: processedProducts,
       totalPrice,
       address,
-      user: req.user._id,
+      user: req.user ? req.user._id : undefined,
+      customerName,
+      customerEmail,
       date: Date.now(),
     });
 
-    req.user.carts = [];
-    req.user.orders.push(createdOrder._id);
-    await req.user.save();
+    if (req.user) {
+      req.user.carts = [];
+      req.user.orders.push(createdOrder._id);
+      await req.user.save();
+    } else if (req.session) {
+      req.session.cart = [];
+    }
 
     res.json({ message: createdOrder.id });
   } catch (error) {
@@ -271,16 +277,16 @@ export const deleteOrder = async (req, res) => {
     const orderId = req.params.id;
     const order = await Order.findById(orderId);
 
-    if (
-      req.user.role !== "admin" &&
-      order.user._id.toString() !== req.user._id.toString()
-    ) {
-      res.status(403).json({ error: "Forbidden" });
+    if (!order) {
+      res.status(404).json({ error: "Order not found" });
       return;
     }
 
-    if (!order) {
-      res.status(404).json({ error: "Order not found" });
+    if (
+      req.user.role !== "admin" &&
+      (!order.user || order.user._id.toString() !== req.user._id.toString())
+    ) {
+      res.status(403).json({ error: "Forbidden" });
       return;
     }
 
