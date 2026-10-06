@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
   FormsModule,
@@ -12,6 +12,7 @@ import { ProductService } from '../../services/product/product.service';
 import { CountService } from '../../services/count/count.service';
 import { Product } from '../../interfaces/product';
 import { UserServiceService } from '../../services/user/user-service.service';
+import { matchesSearch, searchTokens } from '../../Utils/product-search';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -31,7 +32,8 @@ export class HeaderComponent implements OnInit {
     private fb: FormBuilder,
     private productService: ProductService,
     private countService: CountService,
-    private userService: UserServiceService
+    private userService: UserServiceService,
+    private router: Router
   ) {
     this.searchForm = this.fb.group({
       search: ['', Validators.required],
@@ -66,15 +68,23 @@ export class HeaderComponent implements OnInit {
       this.proudctFilter = this.filterProducts(this.searchValue);
     } else this.proudctFilter = [];
   }
+
+  submitSearch() {
+    const term = (this.searchForm.value.search ?? '').trim();
+    if (!term) return;
+
+    this.proudctFilter = [];
+    this.toggleBurgerMenu = false;
+    this.router.navigate(['/catalog'], { queryParams: { search: term } });
+  }
   emptySearch() {
     this.searchForm.reset();
     this.proudctFilter = [];
   }
   // Function to perform the search (replace with actual search logic)
   filterProducts(term: string): Product[] {
-    return this.products.filter((result) =>
-      result.name.toLowerCase().includes(term.toLowerCase())
-    );
+    const tokens = searchTokens(term);
+    return this.products.filter((product) => matchesSearch(product, tokens)).slice(0, 8);
   }
   isAuthenticated() {
     return this.userService.isLoggedIn();

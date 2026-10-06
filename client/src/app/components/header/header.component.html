@@ -32,7 +32,7 @@
 
     <!-- Search Bar (Desktop) -->
     <div class="hidden lg:flex flex-1 mx-10 max-w-2xl relative">
-      <form [formGroup]="searchForm" class="w-full flex items-center" (ngSubmit)="search()">
+      <form [formGroup]="searchForm" class="w-full flex items-center" (ngSubmit)="submitSearch()">
         <div class="relative w-full flex items-center">
           <input (input)="search()" formControlName="search"
             class="w-full bg-[#2a2a2a] text-gray-300 border border-gray-700 rounded-l-md py-2 px-4 focus:outline-none focus:border-gray-600 placeholder-gray-500 h-10"
@@ -45,13 +45,17 @@
       </form>
 
       <!-- Dropdown Results -->
-      <ul *ngIf="filterProducts.length > 0"
+      <ul *ngIf="proudctFilter.length > 0"
         class="absolute z-50 top-full left-0 mt-1 w-full bg-white text-black shadow-lg rounded-md overflow-hidden">
         <li (click)="emptySearch()" *ngFor="let proudct of proudctFilter"
           class="px-4 py-2 border-b border-gray-100 hover:bg-gray-100 cursor-pointer">
           <a [routerLink]="['/product-overview', proudct._id]" class="block">
             {{ proudct.name }}
           </a>
+        </li>
+        <li (click)="submitSearch()"
+          class="px-4 py-2 font-bold text-[#ff5500] hover:bg-gray-100 cursor-pointer">
+          Ver todos los resultados para "{{ searchValue }}"
         </li>
       </ul>
     </div>
@@ -62,17 +66,9 @@
       <a href="https://wa.me/573125457887"
         class="flex flex-col items-center justify-center text-gray-300 hover:text-white transition-colors group" target="_blank" rel="noopener noreferrer">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1 group-hover:scale-110 transition-transform"
-          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M12 20.25c4.97 0 9-3.69 9-8.25s-4.03-8.25-9-8.25S3 7.44 3 12c0 1.39.36 2.7.99 3.86l-1.09 3.98 4.08-1.07c1.13.58 2.4.91 3.75.91.09 0 .17-.01.26-.01l.01-.06v.07z" />
-          <!-- Generic chat bubble or verify actual WA icon if feasible with SVG or keep image -->
-          <!-- Using the image if preferred but SVG is cleaner for color control. Reverting to image if strictly needed, but let's try SVG for theme consistency or styled image. 
-                      The user used images before. I'll stick to images but filter them to white OR use SVGs. 
-                      Let's use SVGs for better color control.
-                 -->
+          viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path
-            d="M12.012 2c-5.506 0-9.989 4.483-9.99 9.988 0 1.76.458 3.478 1.332 5.013l-1.417 5.174 5.308-1.393c1.474.803 3.16 1.226 4.863 1.228h.004c5.505 0 9.988-4.483 9.989-9.99 0-2.67-1.036-5.178-2.92-7.065C17.294 3.037 14.788 2 12.012 2zM12.014 19.46c-1.584 0-3.136-.426-4.493-1.23l-.322-.192-3.336.875.89-3.252-.21-.334a7.945 7.945 0 01-1.217-4.338c.002-4.383 3.568-7.949 7.954-7.949 2.126 0 4.125.828 5.626 2.33 1.503 1.503 2.328 3.504 2.327 5.632-.003 4.385-3.57-7.952-7.955-7.952zm4.356-5.952c-.238-.119-1.413-.697-1.632-.777-.218-.08-.377-.119-.536.12-.158.237-.614.776-.753.935-.139.159-.277.179-.515.06-.238-.12-1.006-.37-1.916-1.182-.705-.63-1.181-1.408-1.32-1.646-.138-.238-.014-.367.105-.485.107-.107.238-.278.357-.417.119-.139.158-.238.238-.397.08-.158.04-.297-.02-.416-.06-.12-.536-1.291-.734-1.767-.193-.464-.39-.4-.535-.408l-.456-.008c-.158 0-.416.06-.634.3-.218.237-.832.813-.832 1.984 0 1.171.852 2.302.971 2.46.12.16 1.677 2.56 4.062 3.59.567.245 1.011.392 1.356.502.569.18 1.087.155 1.496.094.457-.068 1.413-.577 1.612-1.134.198-.556.198-1.033.139-1.133-.06-.1-.218-.16-.456-.279z"
-            fill="currentColor" />
+            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
         </svg>
         <span class="text-xs">WhatsApp</span>
       </a>
@@ -113,7 +109,7 @@
   <div class="mx-auto">
     <!-- Search Form Mobile -->
     <div class="p-4 border-b">
-      <form [formGroup]="searchForm" class="flex w-full items-center" (ngSubmit)="search()">
+      <form [formGroup]="searchForm" class="flex w-full items-center" (ngSubmit)="submitSearch()">
         <input (input)="search()" formControlName="search"
           class="w-full bg-gray-100 border border-gray-300 rounded-l-md py-2 px-4 focus:outline-none" type="search"
           placeholder="Buscar..." />
@@ -122,12 +118,16 @@
         </button>
       </form>
       <!-- Mobile Search Results -->
-      <ul *ngIf="filterProducts.length > 0" class="mt-2 w-full bg-white shadow-md rounded-md max-h-60 overflow-y-auto">
+      <ul *ngIf="proudctFilter.length > 0" class="mt-2 w-full bg-white shadow-md rounded-md max-h-60 overflow-y-auto">
         <li (click)="emptySearch()" *ngFor="let proudct of proudctFilter"
           class="px-4 py-2 border-b border-gray-100 hover:bg-gray-100">
           <a [routerLink]="['/product-overview', proudct._id]" class="block">
             {{ proudct.name }}
           </a>
+        </li>
+        <li (click)="submitSearch()"
+          class="px-4 py-2 font-bold text-[#ff5500] hover:bg-gray-100 cursor-pointer">
+          Ver todos los resultados para "{{ searchValue }}"
         </li>
       </ul>
     </div>

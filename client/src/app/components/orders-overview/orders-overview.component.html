@@ -10,6 +10,7 @@
         <th class="px-4 py-2">Fecha</th>
         <th class="px-4 py-2">Productos</th>
         <th class="px-4 py-2">Precio total</th>
+        <th class="px-4 py-2">Guía</th>
         <th class="px-4 py-2">Acciónes</th>
       </tr>
     </thead>
@@ -23,8 +24,12 @@
           }}
         </td>
         <td class="px-4 py-2 text-center">{{ order.address.city || '' }}</td>
-        <td class="px-4 py-2 text-center">{{ order.status }}</td>
-        <td class="px-4 py-2 text-center">{{ order.date }}</td>
+        <td class="px-4 py-2 text-center">
+          <span class="inline-block rounded px-2 py-0.5 text-sm font-bold" [ngClass]="statusClass(order.status)">
+            {{ statusLabel(order.status) }}
+          </span>
+        </td>
+        <td class="px-4 py-2 text-center">{{ order.date | date : 'dd/MM/yyyy HH:mm' }}</td>
         <td class="px-4 py-2 text-center">
           <ul *ngFor="let product of order.uniqueProducts">
             <li>
@@ -37,36 +42,35 @@
             </li>
           </ul>
         </td>
-        <td class="px-4 py-2 text-center">{{ order.totalPrice || order.total}}</td>
-        <td class="px-4 py-2 text-center">
-          <button
-            class="px-2 py-1 mx-3 text-white bg-blue-500 rounded"
-            (click)="acceptOrder(order)"
-            [disabled]="
-              order.status === 'rejected' || order.status === 'accepted'
-            "
-            [ngClass]="
-              order.status === 'rejected' || order.status === 'accepted'
-                ? 'opacity-50'
-                : ''
-            "
-          >
-            Aceptar
-          </button>
-          <button
-            class="px-2 py-1 mx-3 text-white bg-red-500 rounded"
-            (click)="rejectOrder(order)"
-            [disabled]="
-              order.status === 'rejected' || order.status === 'accepted'
-            "
-            [ngClass]="
-              order.status === 'rejected' || order.status === 'accepted'
-                ? 'opacity-50'
-                : ''
-            "
-          >
-            Rechazar
-          </button>
+        <td class="px-4 py-2 text-center tabular-nums">{{ orderTotal(order) | currency : 'USD' : 'symbol' : '1.0-0' }}</td>
+        <td class="px-4 py-2 text-center">{{ order.trackingNumber || '—' }}</td>
+        <td class="px-4 py-2">
+          <div class="flex items-center justify-center gap-2">
+            <button
+              class="flex items-center rounded p-1 text-gray-700 hover:bg-gray-300"
+              (click)="openOrderInfo(order)"
+              title="Ver información del pedido"
+              aria-label="Ver información del pedido"
+            >
+              <span class="material-icons">visibility</span>
+            </button>
+            @if (order.status === 'pending') {
+            <button class="whitespace-nowrap px-2 py-1 text-white bg-blue-500 rounded" (click)="acceptOrder(order)">
+              Aceptar
+            </button>
+            <button class="whitespace-nowrap px-2 py-1 text-white bg-red-500 rounded" (click)="rejectOrder(order)">
+              Rechazar
+            </button>
+            } @else if (order.status === 'accepted') {
+            <button
+              class="flex items-center gap-1 whitespace-nowrap px-2 py-1 text-white bg-blue-500 rounded"
+              (click)="editTracking(order)"
+            >
+              <span class="material-icons text-base">local_shipping</span>
+              {{ order.trackingNumber ? 'Editar guía' : 'Agregar guía' }}
+            </button>
+            }
+          </div>
         </td>
       </tr>
     </tbody>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { cartHeaders } from '../../Utils/cart-id';
 @Injectable({
   providedIn: 'root',
 })
@@ -48,7 +49,7 @@ export class UserServiceService {
   }
   getCartSize(): Observable<any> {
     return this.http.get(`${this.apiUrl}/cart/size`, {
-      withCredentials: true // 👈 necesario para enviar la cookie de sesión
+      headers: cartHeaders()
     }).pipe(
       catchError(this.handleError)
     );
@@ -57,7 +58,7 @@ export class UserServiceService {
     console.log('id ' + data);
     const product = { productId: data, quantity: quantity };
     return this.http.post(`${this.apiUrl}/cart`, product, {
-      withCredentials: true // 👈 necesario para enviar la cookie de sesión
+      headers: cartHeaders()
     }).pipe(
       // Handle any errors
       catchError(this.handleError)
@@ -65,7 +66,7 @@ export class UserServiceService {
   }
   getCart(): Observable<any> {
     return this.http.get(`${this.apiUrl}/cart`, {
-      withCredentials: true // 👈 necesario para enviar la cookie de sesión
+      headers: cartHeaders()
     }).pipe(
       // Handle any errors
       catchError(this.handleError)
@@ -75,7 +76,7 @@ export class UserServiceService {
     console.log('id ' + data);
     const product = { productId: data.productId, type: data.type };
     return this.http.post(`${this.apiUrl}/cart/delete`, product, {
-      withCredentials: true // 👈 necesario para enviar la cookie de sesión
+      headers: cartHeaders()
     }).pipe(
       // Handle any errors
       catchError(this.handleError)

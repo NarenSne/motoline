@@ -30,42 +30,85 @@
         <!-- Step 1: Address Form -->
         <form *ngIf="currentStep === 1" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="md:col-span-2">
-              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="fullname">Nombre
-                Completo<span class="text-primary">*</span></label>
-              <input [(ngModel)]="fullname" name="fullname"
+            <div>
+              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="firstName">Nombres<span class="text-primary">*</span></label>
+              <input [(ngModel)]="firstName" name="firstName"
                 class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4"
-                id="fullname" placeholder="Ej. Juan Pérez" type="text" />
+                id="firstName" placeholder="Ej. Juan Carlos" type="text" autocomplete="given-name" />
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="lastName">Apellidos<span class="text-primary">*</span></label>
+              <input [(ngModel)]="lastName" name="lastName"
+                class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4"
+                id="lastName" placeholder="Ej. Pérez Gómez" type="text" autocomplete="family-name" />
             </div>
             <div class="md:col-span-2">
-              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="email">Correo
-                Electrónico<span class="text-primary">*</span></label>
+              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="email">Correo Electrónico<span class="text-primary">*</span></label>
               <input [(ngModel)]="email" name="email"
                 class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4"
-                id="email" placeholder="tu@email.com" type="email" />
+                id="email" placeholder="tu@email.com" type="email" autocomplete="email" />
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="phone">Teléfono<span class="text-primary">*</span></label>
+              <input [(ngModel)]="phone" name="phone"
+                class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4"
+                id="phone" placeholder="3001234567" type="tel" inputmode="numeric" autocomplete="tel" />
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="documentNumber">Cédula o NIT<span class="text-primary">*</span></label>
+              <div class="flex gap-2">
+                <select [(ngModel)]="documentType" name="documentType" aria-label="Tipo de documento"
+                  class="bg-[#121212] border border-gray-700 rounded-sm text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-3">
+                  <option value="CC">CC</option>
+                  <option value="NIT">NIT</option>
+                </select>
+                <input [(ngModel)]="documentNumber" name="documentNumber"
+                  class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4"
+                  id="documentNumber" [placeholder]="documentType === 'NIT' ? '900123456-7' : '1020304050'" type="text" />
+              </div>
             </div>
             <div class="md:col-span-2">
-              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide"
-                for="address">Dirección<span class="text-primary">*</span></label>
-              <input [(ngModel)]="street" name="street"
+              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="address">Dirección<span class="text-primary">*</span></label>
+              <input [(ngModel)]="street" name="address"
                 class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4"
-                id="address" placeholder="Calle, número, apto..." type="text" />
+                id="address" placeholder="Calle, número..." type="text" autocomplete="street-address" />
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="addressComplement">Complemento de dirección</label>
+              <input [(ngModel)]="addressComplement" name="addressComplement"
+                class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4"
+                id="addressComplement" placeholder="Apto, torre, barrio, referencias (opcional)" type="text" />
             </div>
             <div>
-              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="city">Ciudad<span
-                  class="text-primary">*</span></label>
-              <input [(ngModel)]="city" name="city"
-                class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4"
-                id="city" placeholder="Ciudad" type="text" />
+              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="department">Departamento<span class="text-primary">*</span></label>
+              <select [(ngModel)]="department" (ngModelChange)="onDepartmentChange()" name="department" id="department"
+                class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4 disabled:opacity-50">
+                <option value="" disabled>Selecciona un departamento</option>
+                @for (dep of departments; track dep) {
+                <option [value]="dep">{{ dep }}</option>
+                }
+              </select>
             </div>
             <div>
-              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="zip">Código ZIP<span
-                  class="text-primary">*</span></label>
+              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="city">Ciudad<span class="text-primary">*</span></label>
+              <select [(ngModel)]="city" (ngModelChange)="onCityChange($event)" name="city" id="city" [disabled]="!department"
+                class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4 disabled:opacity-50">
+                <option value="" disabled>{{ department ? 'Selecciona una ciudad' : 'Primero elige un departamento' }}</option>
+                @for (c of cities; track c) {
+                <option [value]="c">{{ c }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-white mb-2 uppercase tracking-wide" for="zip">Código ZIP<span class="text-primary">*</span></label>
               <input [(ngModel)]="zip" name="zip"
                 class="block w-full bg-[#121212] border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors py-3 px-4"
                 id="zip" placeholder="00000" type="text" />
             </div>
           </div>
+          @if (formError) {
+          <p class="text-red-400 text-sm font-medium" role="alert">{{ formError }}</p>
+          }
           <div class="flex items-center justify-between pt-6 mt-4 border-t border-gray-800">
             <a routerLink="/cart"
               class="text-primary hover:text-white transition-colors flex items-center gap-1 font-medium text-sm">
@@ -131,19 +174,24 @@
             </div>
             <div class="flex justify-between items-center text-gray-300">
               <span class="font-medium">Envío</span>
-              <span class="font-bold text-green-400">
-                @if(order.totalPrice > 100000){
-                Envío gratis
+              <span class="font-bold text-white text-right">
+                @if (shippingLoading) {
+                <span class="text-gray-400 font-medium">Calculando...</span>
+                } @else if (shippingCost !== null) {
+                {{ shippingCost | currency }}
+                } @else if (shippingError) {
+                <span class="text-red-400 font-medium text-sm">{{ shippingError }}</span>
                 } @else {
-                {{ 8000 | currency }}
+                <span class="text-gray-400 font-medium text-sm">Elige tu ciudad</span>
                 }
               </span>
             </div>
+            <p class="text-xs text-gray-500">Envío por Inter Rapidísimo, calculado según destino y peso. Valor estimado.</p>
           </div>
           <div class="border-t border-gray-700 pt-4 mt-4 flex justify-between items-end">
             <span class="text-lg font-bold text-white uppercase font-display tracking-wide">Total</span>
             <span class="text-3xl font-bold text-primary font-display tracking-wide">
-              {{ (order.totalPrice > 100000 ? order.totalPrice : order.totalPrice + 8000) | currency }}
+              {{ total | currency }}
             </span>
           </div>
         </div>

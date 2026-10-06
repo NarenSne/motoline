@@ -11,7 +11,7 @@
 
 <main class="container mx-auto px-4 py-8 flex-1">
   <div class="flex flex-col lg:flex-row gap-8">
-    <aside class="w-full lg:w-1/4 flex-shrink-0 space-y-6">
+    <aside #sidebar class="w-full lg:w-1/4 flex-shrink-0 space-y-6">
       <!-- Categories -->
       <div
         class="bg-surface-light dark:bg-surface-dark p-5 rounded border border-border-light dark:border-border-dark shadow-sm">
@@ -23,7 +23,7 @@
           <label class="flex items-center gap-3 cursor-pointer group">
             <input
               class="form-checkbox text-primary rounded border-gray-400 dark:border-gray-600 bg-transparent focus:ring-primary focus:ring-offset-0"
-              type="checkbox" [value]="food.name" (click)="getCategoriesFilters($event)" />
+              type="checkbox" [value]="food.name" [checked]="checksCategory.includes(food.name)" (click)="getCategoriesFilters($event)" />
             <span class="group-hover:text-primary transition-colors">{{food.name}}</span>
           </label>
           }
@@ -85,6 +85,27 @@
           </select>
         </div>
       </div>
+
+      @if (search) {
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-3 rounded border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark p-4">
+        <p class="text-gray-800 dark:text-gray-200">
+          Resultados para <span class="font-bold text-primary">"{{ search }}"</span>
+          <span class="text-gray-500 dark:text-gray-400">· {{ filteredProducts.length }} {{ filteredProducts.length === 1 ? 'producto' : 'productos' }}</span>
+        </p>
+        <button type="button" (click)="clearSearch()"
+          class="flex items-center gap-1 text-sm font-bold text-primary hover:underline">
+          <span class="material-icons text-base">close</span> Quitar búsqueda
+        </button>
+      </div>
+      }
+
+      @if (!isLoading && filteredProducts.length === 0) {
+      <div class="rounded border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark p-10 text-center text-gray-600 dark:text-gray-300">
+        <span class="material-icons text-5xl text-gray-400">search_off</span>
+        <p class="mt-2 text-lg font-bold">No encontramos productos con esos filtros</p>
+        <p class="text-sm">Prueba con otra palabra o quita algún filtro.</p>
+      </div>
+      }
 
       <!-- Product Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -86,7 +86,7 @@
                     'border-orange-500 text-orange-500': selectedOrder.status === 'pending',
                     'border-red-500 text-red-500': selectedOrder.status === 'rejected' || selectedOrder.status === 'cancelled'
                 }">
-              {{ selectedOrder.status }}
+              {{ statusLabel(selectedOrder.status) }}
             </span>
           </div>
         </div>
@@ -146,13 +146,12 @@
               </div>
               <div class="flex justify-between text-white">
                 <span>Envío</span>
-                <span class="text-white font-bold">Gratis</span>
+                <span class="text-white font-bold">{{ selectedOrder.shippingCost || 0 | currency }}</span>
               </div>
             </div>
             <div class="flex justify-between items-center border-t border-border-dark pt-4 mt-auto">
               <span class="text-lg text-white font-bold uppercase tracking-wider">Total</span>
-              <span class="text-3xl font-display font-bold text-primary tracking-wide">{{ selectedOrder.totalPrice |
-                currency }}</span>
+              <span class="text-3xl font-display font-bold text-primary tracking-wide">{{ (selectedOrder.totalPrice || 0) + (selectedOrder.shippingCost || 0) | currency }}</span>
             </div>
             <button *ngIf="selectedOrder.status === 'pending'" (click)="cancelOrder(selectedOrder._id)"
               class="w-full px-4 py-3 mt-6 text-white bg-red-600 hover:bg-red-700 font-bold uppercase tracking-wider rounded-sm transition-colors">
@@ -176,8 +175,18 @@
                         'border-orange-500 text-orange-500': selectedOrder.status === 'pending',
                         'border-red-500 text-red-500': selectedOrder.status === 'rejected' || selectedOrder.status === 'cancelled'
                     }">
-                    {{ selectedOrder.status }}
+                    {{ statusLabel(selectedOrder.status) }}
                   </span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-gray-500 w-24 font-bold">Guía:</span>
+                  @if (selectedOrder.trackingNumber) {
+                  <span class="text-white font-bold tracking-wide">{{ selectedOrder.trackingNumber }}</span>
+                  } @else {
+                  <span class="text-gray-400">
+                    {{ selectedOrder.status === 'accepted' ? 'Aún no asignada' : 'Se asigna cuando el pedido es aceptado' }}
+                  </span>
+                  }
                 </div>
                 <div class="flex gap-2">
                   <span class="text-gray-500 w-24 font-bold">Fecha:</span>
@@ -191,6 +200,10 @@
                 Información de Envío</h3>
               <div class="space-y-2 text-sm">
                 <div class="flex gap-2">
+                  <span class="text-gray-500 w-28 shrink-0 font-bold">Departamento:</span>
+                  <span class="text-white">{{ selectedOrder.address?.department }}</span>
+                </div>
+                <div class="flex gap-2">
                   <span class="text-gray-500 w-24 font-bold">Ciudad:</span>
                   <span class="text-white">{{ selectedOrder.address?.city }}</span>
                 </div>
@@ -198,6 +211,12 @@
                   <span class="text-gray-500 w-24 font-bold">Dirección:</span>
                   <span class="text-white">{{ selectedOrder.address?.street }}</span>
                 </div>
+                @if (selectedOrder.address?.complement) {
+                <div class="flex gap-2">
+                  <span class="text-gray-500 w-24 font-bold">Complemento:</span>
+                  <span class="text-white">{{ selectedOrder.address.complement }}</span>
+                </div>
+                }
                 <!-- <div class="flex gap-2">
                   <span class="text-gray-500 w-24 font-bold">Código Postal:</span>
                   <span class="text-white">{{ selectedOrder.address?.zip }}</span>

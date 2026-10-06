@@ -32,6 +32,7 @@ import { OverviewComponent } from './components/overview/overview.component';
 import { TerminosComponent } from './layouts/terminos/terminos.component';
 import { Component } from '@angular/core';
 import { GarantiaComponent } from './layouts/garantia/garantia.component';
+import { TrackingComponent } from './layouts/tracking/tracking.component';
 import { MarcasReferenciasComponent } from './components/marcas-referencias/marcas-referencias.component';
 import { CategoriasMarcasComponent } from './components/categorias-marcas/categorias-marcas.component';
 import { ColorsManagementComponent } from './components/colors-management/colors-management.component';
@@ -59,6 +60,8 @@ export const routes: Routes = [
     component: AboutUsComponent,
   },
   { path: `terminos`, component: TerminosComponent},
+  { path: `seguimiento`, component: TrackingComponent },
+  { path: `seguimiento/:id`, component: TrackingComponent },
   {
     path: 'catalog',
     component: CatalogComponent

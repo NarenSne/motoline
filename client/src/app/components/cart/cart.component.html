@@ -117,17 +117,11 @@
             </div>
             <div class="flex justify-between items-center text-gray-300">
               <span>Envío</span>
-              <span class="font-medium">
-                @if (envio === 0) {
-                <span class="text-green-500">Gratis</span>
-                } @else {
-                {{ envio | currency }}
-                }
-              </span>
+              <span class="font-medium text-sm text-gray-400">Se calcula en el checkout</span>
             </div>
             <div class="border-t border-border-dark my-4 pt-4 flex justify-between items-center text-white text-lg">
               <span class="font-bold uppercase">Total</span>
-              <span class="font-display font-bold text-2xl tracking-wide">{{ totalPrice + envio | currency }}</span>
+              <span class="font-display font-bold text-2xl tracking-wide">{{ totalPrice | currency }}</span>
             </div>
           </div>
           <a [routerLink]="['/check-out']" class="block w-full">

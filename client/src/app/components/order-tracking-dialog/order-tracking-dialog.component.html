@@ -1,0 +1,32 @@
+<form class="w-full max-w-md p-6" (ngSubmit)="save()">
+  <h2 class="text-xl font-bold text-gray-900">
+    {{ isAccept ? 'Aceptar pedido' : 'Número de guía' }}
+  </h2>
+  <p class="mb-5 mt-1 text-sm text-gray-500">Pedido #{{ data.orderId | slice : 0 : 8 }}</p>
+
+  <label for="trackingNumber" class="mb-1 block text-sm font-semibold text-gray-700">
+    Número de guía (Inter Rapidísimo)
+  </label>
+  <input id="trackingNumber" name="trackingNumber" type="text" maxlength="40" autocomplete="off"
+    [(ngModel)]="trackingNumber" [disabled]="saving" placeholder="Ej. 240012345678"
+    class="w-full rounded border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+  <p class="mt-2 text-xs text-gray-500">
+    El cliente verá este número en el detalle de su pedido para hacer el seguimiento.
+    @if (isAccept) { Puedes dejarlo vacío y agregarlo más tarde. }
+  </p>
+
+  @if (error) {
+  <p class="mt-3 text-sm font-medium text-red-600" role="alert">{{ error }}</p>
+  }
+
+  <div class="mt-6 flex justify-end gap-3">
+    <button type="button" (click)="cancel()" [disabled]="saving"
+      class="rounded border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-100 disabled:opacity-50">
+      Cancelar
+    </button>
+    <button type="submit" [disabled]="saving"
+      class="rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 disabled:opacity-50">
+      {{ saving ? 'Guardando...' : isAccept ? 'Aceptar pedido' : 'Guardar guía' }}
+    </button>
+  </div>
+</form>

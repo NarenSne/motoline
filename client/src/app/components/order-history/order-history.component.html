@@ -116,7 +116,7 @@
                             'border-orange-500 text-orange-500': order.status === 'pending',
                             'border-red-500 text-red-500': order.status === 'rejected'
                         }">
-                      {{ order.status }}
+                      {{ statusLabel(order.status) }}
                     </span>
                   </td>
                   <td class="px-6 py-5 text-right">

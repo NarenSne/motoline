@@ -5,6 +5,7 @@ import { OrderService } from '../../services/order/order.service';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ProfileService } from '../../services/profile/profile.service';
+import { orderStatusLabel } from '../../Utils/order-status';
 
 @Component({
   selector: 'app-order-detail',
@@ -20,6 +21,7 @@ export class OrderDetailComponent {
   orderId: any;
   userInfo: any = {};
   isLoading = true;
+  statusLabel = orderStatusLabel;
 
 
   constructor(

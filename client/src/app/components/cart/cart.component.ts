@@ -23,7 +23,6 @@ interface Item {
 })
 export class CartComponent implements OnInit {
   totalPrice: number = 0;
-  envio=8000;
   fakeItems: any[] = [];
   isLoading = true;
 
@@ -52,30 +51,23 @@ export class CartComponent implements OnInit {
         type: 'remove',
       };
       this.userService.deleteCart(remove).subscribe({
-        next: (data) => { },
+        next: (data) => { this.countService.setProduct(); },
         error: (error) => console.error(error),
       });
     }
-    console.log(this.fakeItems);
     this.calculateTotalPrice();
   }
   calculateTotalPrice() {
     this.totalPrice = this.fakeItems.reduce((sum, item) => {
       return sum + item.quantity * item.price;
     }, 0);
-    if(this.totalPrice>100000){
-      this.envio = 0;
-    }
-    else{
-      this.envio = 8000;
-    }
   }
 
   increaseQuantity(item: any) {
     if (item.quantity >= item.stock) return;
     item.quantity++;
-    this.userService.addCart(item._id,item.quantity).subscribe({
-      next: (data) => { },
+    this.userService.addCart(item._id, 1).subscribe({
+      next: (data) => { this.countService.setProduct(); },
       error: (error) => console.error(error),
     });
     this.calculateTotalPrice();

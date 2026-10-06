@@ -1,15 +1,16 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { ProductService } from '../../services/product/product.service';
 import { Product } from '../../interfaces/product';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table'
 import { Observable } from 'rxjs';
 import { MarcasycategoriasService } from '../../services/marcasycategorias.service';
+import { matchesSearch, normalizeText, searchTokens } from '../../Utils/product-search';
 
 @Component({
   selector: 'app-catalog',
@@ -23,17 +24,30 @@ export class CatalogComponent {
   list: any;
   categorie: any;
   brand: any;
+  search = '';
+  private tokens: string[] = [];
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild('sidebar', { static: true }) sidebar!: ElementRef<HTMLElement>;
   obs!: Observable<any>;
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   listReferencias: any;
   listCategories: any;
-  constructor(private productService: ProductService, private router: ActivatedRoute, public categoryService: MarcasycategoriasService) {
+  constructor(private productService: ProductService, private router: ActivatedRoute, private nav: Router, public categoryService: MarcasycategoriasService) {
     router.queryParams.subscribe((data: any) => {
+      const categoryChanged = data.categorie !== this.categorie;
+      const newSearch = (data.search ?? '').trim();
+      const searchChanged = !!newSearch && newSearch !== this.search;
       this.categorie = data.categorie
       this.brand = data.brand
+      this.search = (data.search ?? '').trim();
+      this.tokens = searchTokens(this.search);
       if (!this.isLoading) {
-        this.checksCategory = this.categorie ? [this.categorie] : [];
+        if (searchChanged) {
+          this.resetSidebarFilters();
+        }
+        if (categoryChanged || searchChanged) {
+          this.checksCategory = this.categorie ? [this.categorie] : [];
+        }
         this.checksBrand = this.brand ?? '';
         this.filter();
       }
@@ -83,7 +97,7 @@ export class CatalogComponent {
         if (this.brand) {
           this.checksBrand = this.brand;
         }
-        if (this.categorie || this.brand) {
+        if (this.categorie || this.brand || this.search) {
           this.filter()
         }
       },
@@ -162,15 +176,35 @@ export class CatalogComponent {
   }
 
 
+  private resetSidebarFilters() {
+    this.checksCategory = [];
+    this.checksMarca.clear();
+    this.colors.clear();
+    this.minPrice = 0;
+    this.maxPrice = 0;
+    this.sidebar?.nativeElement
+      .querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[type="number"], select')
+      .forEach((control) => {
+        if (control instanceof HTMLSelectElement) control.selectedIndex = 0;
+        else control.value = '';
+      });
+  }
+
+  clearSearch() {
+    this.nav.navigate([], { queryParams: { search: null }, queryParamsHandling: 'merge' });
+  }
+
   filter() {
-    if (!this.checksCategory.length && !this.checksBrand.length && !this.maxPrice && !this.minPrice && !this.checksMarca && !this.colors) {
+    if (!this.checksCategory.length && !this.search && !this.checksBrand.length && !this.maxPrice && !this.minPrice && !this.checksMarca && !this.colors) {
       this.filteredProducts = this.products; // Reset to all products
       this.dataSource.data = this.filteredProducts
     }
     else {
+      const categoryKeys = new Set(this.checksCategory.map(normalizeText));
       this.filteredProducts = this.products.filter(prod => {
         return (
-          (!this.checksCategory.length || this.checksCategory.includes(prod.category)) &&
+          (!categoryKeys.size || categoryKeys.has(normalizeText(prod.category))) &&
+          matchesSearch(prod, this.tokens) &&
           (!this.checksBrand || this.checksBrand == prod.brand) &&
           (!this.minPrice || prod.price >= this.minPrice) &&
           (!this.maxPrice || prod.price <= this.maxPrice) &&
@@ -180,6 +214,7 @@ export class CatalogComponent {
       });
       this.dataSource.data = this.filteredProducts;
       this.dataSource.paginator = this.paginator;
+      this.paginator?.firstPage();
       this.obs = this.dataSource.connect();
     }
   }

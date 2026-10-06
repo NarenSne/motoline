@@ -7,6 +7,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { UserServiceService } from '../../services/user/user-service.service';
 import { ProfileService } from '../../services/profile/profile.service';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { orderStatusLabel } from '../../Utils/order-status';
 
 @Component({
   selector: 'app-order-history',
@@ -35,6 +36,7 @@ export class OrderHistoryComponent {
   selectedOrder: any = {};
   userInfo: any = {};
   isLoading = true;
+  statusLabel = orderStatusLabel;
 
   ngOnInit(): void {
     this.order.getOrders(this.pagination.currentPage, 5).subscribe({

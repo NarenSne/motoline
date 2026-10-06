@@ -5,13 +5,13 @@ import { DeliveryComponent } from '../../components/delivery/delivery.component'
 import { PaymentComponent } from '../../components/payment/payment.component';
 import { ReviewComponent } from '../../components/review/review.component';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../interfaces/product';
 import { UserServiceService } from '../../services/user/user-service.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CountService } from '../../services/count/count.service';
-declare var ePayco: any;
+import { COLOMBIA_LOCATIONS, DEPARTMENTS } from '../../Utils/colombia-locations';
+declare var WidgetCheckout: any;
 
 @Component({
   selector: 'app-check-out',
@@ -34,18 +34,35 @@ export class CheckOutComponent implements OnInit {
   order: {
     products: { [key: string]: number };
     totalPrice: number;
-    address: { street: string; city: string; zip: string };
+    address: { street: string; complement: string; department: string; city: string; zip: string };
     date: Date;
     status: 'pending' | 'accepted' | 'rejected';
+    customerFirstName: string;
+    customerLastName: string;
     customerName: string;
     customerEmail: string;
+    customerPhone: string;
+    customerDocumentType: 'CC' | 'NIT';
+    customerCedula: string;
   };
 
   street: string = '';
+  addressComplement: string = '';
+  department: string = '';
   city: string = '';
   zip: string = '';
-  fullname: string = '';
+  departments = DEPARTMENTS;
+  shippingCost: number | null = null;
+  shippingLoading = false;
+  shippingError = '';
+  private shippingRequest = 0;
+  firstName: string = '';
+  lastName: string = '';
   email: string = '';
+  phone: string = '';
+  documentType: 'CC' | 'NIT' = 'CC';
+  documentNumber: string = '';
+  formError: string = '';
   cardNumber: string = '';
   cardHolder: string = '';
   expirationDate: string = '';
@@ -62,17 +79,22 @@ export class CheckOutComponent implements OnInit {
     this.order = {
       products: {},
       totalPrice: 0,
-      address: { street: '', city: '', zip: '' },
+      address: { street: '', complement: '', department: '', city: '', zip: '' },
       date: new Date(),
       status: 'pending',
+      customerFirstName: '',
+      customerLastName: '',
       customerName: '',
       customerEmail: '',
+      customerPhone: '',
+      customerDocumentType: 'CC',
+      customerCedula: '',
     };
   }
 
   ngOnInit() {
 
-    this.loadEpaycoScript();
+    this.loadWompiScript();
     this.userService.getCart().subscribe({
       next: (products) => {
         console.log(products);
@@ -87,7 +109,7 @@ export class CheckOutComponent implements OnInit {
         );
         console.log(this.order)
         this.order.totalPrice = this.cart.reduce(
-          (acc: number, product: Product) => acc + product.price,
+          (acc: number, product: any) => acc + product.price * product.quantity,
           0
         );
 
@@ -101,11 +123,11 @@ export class CheckOutComponent implements OnInit {
 
   nextStep() {
     if (this.currentStep <= 2) {
-      if (
-        this.currentStep === 1 &&
-        (this.fullname === '' || this.email === '' || this.street === '' || this.city === '' || this.zip === '')
-      ) {
-        return;
+      if (this.currentStep === 1) {
+        this.formError = this.validateCustomerForm();
+        if (this.formError) {
+          return;
+        }
       }
 
       this.currentStep++;
@@ -113,16 +135,23 @@ export class CheckOutComponent implements OnInit {
 
     if (this.currentStep === 3) {
       this.order.address = {
-        street: this.street,
+        street: this.street.trim(),
+        complement: this.addressComplement.trim(),
+        department: this.department,
         city: this.city,
-        zip: this.zip,
+        zip: this.zip.trim(),
       };
-      this.order.customerName = this.fullname;
-      this.order.customerEmail = this.email;
+      this.order.customerFirstName = this.firstName.trim();
+      this.order.customerLastName = this.lastName.trim();
+      this.order.customerName = this.fullName;
+      this.order.customerEmail = this.email.trim();
+      this.order.customerPhone = this.phone.trim();
+      this.order.customerDocumentType = this.documentType;
+      this.order.customerCedula = this.documentNumber.trim();
 
       this.orderService.createOrder(this.order).subscribe({
         next: (data: any) => {
-          this.pagarConEpayco(data.message);
+          this.pagarConWompi(data.message);
 
         },
         error: (error) => {
@@ -133,6 +162,72 @@ export class CheckOutComponent implements OnInit {
         },
       });
     }
+  }
+
+  get cities(): string[] {
+    return COLOMBIA_LOCATIONS[this.department] ?? [];
+  }
+
+  get total(): number {
+    return this.order.totalPrice + (this.shippingCost ?? 0);
+  }
+
+  onDepartmentChange() {
+    this.city = '';
+    this.resetShipping();
+  }
+
+  onCityChange(city: string) {
+    this.resetShipping();
+    if (!city || !this.department) return;
+
+    const request = ++this.shippingRequest;
+    this.shippingLoading = true;
+    this.orderService.getShippingQuote(this.department, city).subscribe({
+      next: (quote) => {
+        if (request !== this.shippingRequest) return;
+        this.shippingCost = quote.cost;
+        this.shippingLoading = false;
+      },
+      error: (error) => {
+        console.error(error);
+        if (request !== this.shippingRequest) return;
+        this.shippingError = 'No pudimos calcular el envío. Intenta de nuevo.';
+        this.shippingLoading = false;
+      },
+    });
+  }
+
+  private resetShipping() {
+    this.shippingRequest++;
+    this.shippingCost = null;
+    this.shippingLoading = false;
+    this.shippingError = '';
+  }
+
+  get fullName(): string {
+    return `${this.firstName.trim()} ${this.lastName.trim()}`.trim();
+  }
+
+  validateCustomerForm(): string {
+    if (!this.firstName.trim()) return 'Ingresa tus nombres.';
+    if (!this.lastName.trim()) return 'Ingresa tus apellidos.';
+    if (!this.email.trim()) return 'Ingresa tu correo electrónico.';
+    if (!/^\d{7,15}$/.test(this.phone.trim())) {
+      return 'Ingresa un número de teléfono válido (solo dígitos).';
+    }
+    if (!/^\d{5,15}(-\d)?$/.test(this.documentNumber.trim())) {
+      return this.documentType === 'NIT'
+        ? 'Ingresa un NIT válido (ej. 900123456-7).'
+        : 'Ingresa una cédula válida (solo dígitos).';
+    }
+    if (!this.street.trim()) return 'Ingresa tu dirección.';
+    if (!this.department) return 'Selecciona tu departamento.';
+    if (!this.cities.includes(this.city)) return 'Selecciona una ciudad del departamento.';
+    if (this.shippingLoading) return 'Estamos calculando el costo de envío, espera un momento.';
+    if (this.shippingCost === null) return this.shippingError || 'No se pudo calcular el costo de envío.';
+    if (!this.zip.trim()) return 'Ingresa tu código ZIP.';
+    return '';
   }
 
   prevStep() {
@@ -173,38 +268,62 @@ export class CheckOutComponent implements OnInit {
     this.isCheck = isCheck;
   }
 
-  loadEpaycoScript() {
+  loadWompiScript() {
     const script = document.createElement('script');
-    script.src = 'https://checkout.epayco.co/checkout.js';
+    script.src = 'https://checkout.wompi.co/widget.js';
     script.async = true;
     document.body.appendChild(script);
   }
-  pagarConEpayco(orderId: any) {
-    const handler = ePayco.checkout.configure({
-      key: '83f65a1de38c66faad76373792c4ba64',
-      test: true,
-    });
-    if (this.order.totalPrice <= 100000) {
-      this.order.totalPrice += 8000
-    }
-    const data = {
-      name: 'Motoline Parts',
-      description: 'Pedido',
-      invoice: orderId,
-      currency: 'cop',
-      amount: this.order.totalPrice,
-      tax_base: '0',
-      tax: '0',
-      country: 'co',
-      lang: 'es',
-      external: 'false',
-      response: 'http://localhost:4200/order-history',
-      confirmation: 'https://www.motolineparts.com/api/orders/updateOrderStatus',
-      method: 'POST'
-    };
+  pagarConWompi(orderId: string) {
+    this.orderService.getWompiCheckout(orderId).subscribe({
+      next: (checkout: any) => {
+        if (typeof WidgetCheckout === 'undefined') {
+          Swal.fire('Error', 'No se pudo cargar la pasarela de pago. Intenta de nuevo.', 'error');
+          return;
+        }
+        const redirectPath = localStorage.getItem('token')
+          ? '/order-history'
+          : `/seguimiento/${checkout.reference}`;
+        try {
+          sessionStorage.setItem(
+            'lastOrder',
+            JSON.stringify({ id: checkout.reference, email: this.email.trim() })
+          );
+        } catch {
+          // sin sessionStorage: el cliente escribirá su correo en la página de seguimiento
+        }
+        // Wompi responde 403 si redirectUrl apunta a localhost, así que en desarrollo se omite.
+        const isLocalHost = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
+        const widget = new WidgetCheckout({
+          currency: checkout.currency,
+          amountInCents: checkout.amountInCents,
+          reference: checkout.reference,
+          publicKey: checkout.publicKey,
+          signature: checkout.signature,
+          ...(isLocalHost ? {} : { redirectUrl: window.location.origin + redirectPath }),
+          customerData: {
+            email: this.email.trim(),
+            fullName: this.fullName,
+            phoneNumber: this.phone.trim(),
+            phoneNumberPrefix: '+57',
+            legalId: this.documentNumber.trim().split('-')[0],
+            legalIdType: this.documentType,
+          },
+        });
 
-    this.countService.setProduct();
-    handler.open(data);
+        this.countService.setProduct();
+        widget.open((result: any) => {
+          console.log('Wompi transaction:', result?.transaction);
+          if (isLocalHost && result?.transaction) {
+            this.router.navigateByUrl(redirectPath);
+          }
+        });
+      },
+      error: (error) => {
+        console.error(error);
+        Swal.fire('Error', 'No se pudo iniciar el pago. Intenta de nuevo.', 'error');
+      },
+    });
   }
 
 }
