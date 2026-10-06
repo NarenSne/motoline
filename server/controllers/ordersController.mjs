@@ -1,5 +1,9 @@
+import mongoose from "mongoose";
 import Order from "../models/Order.mjs";
 import Product from "../models/Product.mjs";
+import { getCartId, clearCart } from "../utils/guestCart.mjs";
+import { calculateShipping, isValidLocation } from "../services/shipping.mjs";
+import { notifyOrder } from "../services/orderEmails.mjs";
 
 export const getBestSellingProducts = async (req, res) => {
   try {
@@ -193,7 +197,17 @@ export const getAllOrders = async (req, res) => {
 };
 
 export const addOrder = async (req, res) => {
-  const { products, totalPrice, address, customerName, customerEmail } = req.body;
+  const {
+    products,
+    address,
+    customerName,
+    customerFirstName,
+    customerLastName,
+    customerEmail,
+    customerPhone,
+    customerDocumentType,
+    customerCedula,
+  } = req.body;
 
   if (!products || Object.keys(products).length === 0) {
     res.status(400).json({
@@ -208,6 +222,27 @@ export const addOrder = async (req, res) => {
     }
   );
 
+  const productDocs = await Product.find({ _id: { $in: Object.keys(products) } });
+  if (productDocs.length !== Object.keys(products).length) {
+    res.status(400).json({ error: "One or more products do not exist" });
+    return;
+  }
+  const totalPrice = productDocs.reduce(
+    (acc, product) => acc + product.price * products[product._id.toString()],
+    0
+  );
+
+  if (!isValidLocation(address?.department, address?.city)) {
+    res.status(400).json({ error: "Invalid shipping destination" });
+    return;
+  }
+  const shipping = calculateShipping({
+    department: address.department,
+    city: address.city,
+    units: processedProducts.length,
+    declaredValue: totalPrice,
+  });
+
   const bulkOps = processedProducts.map((productId) => ({
     updateOne: {
       filter: { _id: productId, stock: { $gt: 0 } },
@@ -221,19 +256,28 @@ export const addOrder = async (req, res) => {
     const createdOrder = await Order.create({
       products: processedProducts,
       totalPrice,
+      shippingCost: shipping.cost,
       address,
       user: req.user ? req.user._id : undefined,
       customerName,
+      customerFirstName,
+      customerLastName,
       customerEmail,
+      customerPhone,
+      customerDocumentType,
+      customerCedula,
       date: Date.now(),
     });
+
+    const cartId = getCartId(req);
+    if (cartId) {
+      await clearCart(cartId);
+    }
 
     if (req.user) {
       req.user.carts = [];
       req.user.orders.push(createdOrder._id);
       await req.user.save();
-    } else if (req.session) {
-      req.session.cart = [];
     }
 
     res.json({ message: createdOrder.id });
@@ -242,6 +286,8 @@ export const addOrder = async (req, res) => {
     res.status(500).json({ error: "Error while creating the order" });
   }
 };
+
+const TRACKING_PATTERN = /^[A-Za-z0-9-]{4,40}$/;
 
 const updateOrderStatus = async (req, res, newStatus) => {
   try {
@@ -252,10 +298,27 @@ const updateOrderStatus = async (req, res, newStatus) => {
       throw new Error("Order not found");
     }
 
+    if (newStatus === "accepted" && typeof req.body?.trackingNumber === "string") {
+      const trackingNumber = req.body.trackingNumber.trim();
+      if (trackingNumber) {
+        if (!TRACKING_PATTERN.test(trackingNumber)) {
+          return res.status(400).json({
+            error: "Tracking number must be 4-40 letters, digits or hyphens",
+          });
+        }
+        order.trackingNumber = trackingNumber;
+      }
+    }
+
+    const wasAccepted = order.status === "accepted";
     order.status = newStatus;
 
     const updatedOrder = await order.save();
     res.json(updatedOrder);
+
+    if (newStatus === "accepted" && !wasAccepted) {
+      notifyOrder(order.trackingNumber ? "shipped" : "confirmed", order);
+    }
   } catch (error) {
     console.error(`Error while updating order to ${newStatus}:`, error);
     res
@@ -266,6 +329,93 @@ const updateOrderStatus = async (req, res, newStatus) => {
 
 export const updateOrderToAccepted = async (req, res) => {
   await updateOrderStatus(req, res, "accepted");
+};
+
+export const updateOrderTracking = async (req, res) => {
+  try {
+    const trackingNumber =
+      typeof req.body?.trackingNumber === "string" ? req.body.trackingNumber.trim() : "";
+    if (!TRACKING_PATTERN.test(trackingNumber)) {
+      return res.status(400).json({
+        error: "Tracking number must be 4-40 letters, digits or hyphens",
+      });
+    }
+
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+    if (order.status !== "accepted") {
+      return res.status(400).json({ error: "Only accepted orders can have a tracking number" });
+    }
+
+    order.trackingNumber = trackingNumber;
+    await order.save();
+    res.json(order);
+
+    notifyOrder("shipped", order);
+  } catch (error) {
+    console.error("Error while updating tracking number:", error);
+    res.status(500).json({ error: "Error while updating tracking number" });
+  }
+};
+
+const ORDER_NUMBER_PATTERN = /^[0-9a-f]{8,24}$/;
+
+export const trackOrder = async (req, res) => {
+  const orderNumber = String(req.body?.orderNumber ?? "").trim().replace(/^#/, "").toLowerCase();
+  const email = String(req.body?.email ?? "").trim().toLowerCase();
+
+  if (!ORDER_NUMBER_PATTERN.test(orderNumber) || !email || email.length > 254) {
+    return res.status(400).json({ error: "Invalid order number or email" });
+  }
+
+  try {
+    const { ObjectId } = mongoose.Types;
+    const idFilter =
+      orderNumber.length === 24
+        ? new ObjectId(orderNumber)
+        : {
+            $gte: new ObjectId(orderNumber.padEnd(24, "0")),
+            $lte: new ObjectId(orderNumber.padEnd(24, "f")),
+          };
+
+    const candidates = await Order.find({ _id: idFilter })
+      .populate("user", { email: 1 })
+      .sort({ date: -1 })
+      .limit(20);
+
+    const order = candidates.find(
+      (o) =>
+        (o.customerEmail || "").toLowerCase() === email ||
+        (o.user?.email || "").toLowerCase() === email
+    );
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    const quantities = order.products.reduce((acc, productId) => {
+      acc[productId] = (acc[productId] || 0) + 1;
+      return acc;
+    }, {});
+    const productDocs = await Product.find({ _id: { $in: Object.keys(quantities) } }, { name: 1 });
+
+    res.json({
+      orderNumber: order.id,
+      status: order.status,
+      date: order.date,
+      trackingNumber: order.trackingNumber || null,
+      destination: { city: order.address?.city, department: order.address?.department },
+      items: Object.entries(quantities).map(([productId, quantity]) => ({
+        name: productDocs.find((p) => p._id.toString() === productId)?.name ?? "Producto",
+        quantity,
+      })),
+      total: (order.totalPrice || 0) + (order.shippingCost || 0),
+    });
+  } catch (error) {
+    console.error("Error while tracking order:", error);
+    res.status(500).json({ error: "Error while tracking the order" });
+  }
 };
 
 export const updateOrderToRejected = async (req, res) => {

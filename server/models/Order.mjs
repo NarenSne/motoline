@@ -9,6 +9,8 @@ const orderSchema = new mongoose.Schema({
   address: {
     type: {
       street: { type: String },
+      complement: { type: String },
+      department: { type: String },
       city: { type: String },
       zip: { type: String },
     },
@@ -18,6 +20,8 @@ const orderSchema = new mongoose.Schema({
   // Legacy products array used by some endpoints
   products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   totalPrice: { type: Number },
+  shippingCost: { type: Number, default: 0 },
+  trackingNumber: { type: String, trim: true },
   status: {
     type: String,
     enum: ["pending", "accepted", "rejected"],
@@ -26,8 +30,12 @@ const orderSchema = new mongoose.Schema({
 
   // Invoice-specific fields (for /api/invoices/normal)
   customerName: { type: String },
+  customerFirstName: { type: String },
+  customerLastName: { type: String },
   customerId: { type: String },
   customerEmail: { type: String },
+  customerPhone: { type: String },
+  customerDocumentType: { type: String, enum: ["CC", "NIT"] },
   customerCedula: { type: String },
   items: [
     {

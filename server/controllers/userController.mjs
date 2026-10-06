@@ -1,16 +1,11 @@
 import User from "../models/User.mjs";
 import Product from "../models/Product.mjs";
-
-/**
- * Normaliza req.session.cart para que siempre sea un array de objetos { productId, quantity }
- */
-function normalizeSessionCart(session) {
-  session.cart = (session.cart || []).map(item =>
-    typeof item === "string"
-      ? { productId: item, quantity: 1 }
-      : item
-  );
-}
+import {
+  getCartId,
+  getCartItems,
+  addCartItem,
+  removeCartItem,
+} from "../utils/guestCart.mjs";
 
 /**
  * Cuenta las ocurrencias totales de productos en un carrito (array de {productId,quantity})
@@ -45,18 +40,16 @@ export async function addCart(req, res, next) {
 
     // — Carrito anónimo —
     if (!req.user) {
-      normalizeSessionCart(req.session);
-
-      const existing = req.session.cart.find(item => item.productId === productId);
-      if (existing) {
-        existing.quantity += qty;
-      } else {
-        req.session.cart.push({ productId, quantity: qty });
+      const cartId = getCartId(req);
+      if (!cartId) {
+        return res.status(400).json({ error: "Cart ID is required." });
       }
+
+      await addCartItem(cartId, String(productId), qty);
 
       return res.status(200).json({
         message: "Product added to anonymous cart.",
-        cart: req.session.cart
+        cart: await getCartItems(cartId)
       });
     }
 
@@ -91,8 +84,8 @@ export async function getCart(req, res, next) {
 
     if (!req.user) {
       // — Carrito anónimo —
-      normalizeSessionCart(req.session);
-      items = req.session.cart;
+      const cartId = getCartId(req);
+      items = cartId ? await getCartItems(cartId) : [];
     } else {
       // — Carrito autenticado —
       const user = await User.findById(req.user._id);
@@ -142,22 +135,19 @@ export async function deleteCart(req, res, next) {
 
     // — Anónimo —
     if (!req.user) {
-      normalizeSessionCart(req.session);
-
-      const idx = req.session.cart.findIndex(item => item.productId === productId);
-      if (idx === -1) {
-        return res.status(404).json({ error: "Product not found in cart." });
+      const cartId = getCartId(req);
+      if (!cartId) {
+        return res.status(400).json({ error: "Cart ID is required." });
       }
 
-      if (type === "removeAll" || req.session.cart[idx].quantity <= 1) {
-        req.session.cart.splice(idx, 1);
-      } else {
-        req.session.cart[idx].quantity -= 1;
+      const removed = await removeCartItem(cartId, String(productId), type === "removeAll");
+      if (!removed) {
+        return res.status(404).json({ error: "Product not found in cart." });
       }
 
       return res.status(200).json({
         message: "Product removed from anonymous cart.",
-        cart: req.session.cart
+        cart: await getCartItems(cartId)
       });
     }
 
@@ -197,8 +187,8 @@ export async function getCartSize(req, res, next) {
     let cart = [];
 
     if (!req.user) {
-      normalizeSessionCart(req.session);
-      cart = req.session.cart;
+      const cartId = getCartId(req);
+      cart = cartId ? await getCartItems(cartId) : [];
     } else {
       const user = await User.findById(req.user._id);
       cart = user.carts || [];

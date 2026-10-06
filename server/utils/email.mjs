@@ -19,9 +19,10 @@ const sendEmail = async (options) => {
   const mailOptions = {
     from: `Motoline <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
     to: options.email,
+    ...(options.replyTo ? { replyTo: options.replyTo } : {}),
     subject: options.subject,
     text: options.message,
-    // html: options.html
+    ...(options.html ? { html: options.html } : {}),
   };
 
   // 3) Actually send the email

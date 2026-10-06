@@ -16,6 +16,9 @@ import featuredProductsRouter from "./routes/featuredProductsRouter.mjs";
 import marcasRouter from "./routes/marcasRouter.mjs";
 import categoryRouter from "./routes/categoryRouter.mjs";
 import invoicesRouter from "./routes/invoicesRouter.mjs";
+import paymentsRouter from "./routes/paymentsRouter.mjs";
+import shippingRouter from "./routes/shippingRouter.mjs";
+import contactRouter from "./routes/contactRouter.mjs";
 import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -35,7 +38,7 @@ const app = express();
 const corsOptions = {
   origin: true, // reflect request origin
   credentials: true, // necessary for cookies/sessions
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-Cart-Id'],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   optionsSuccessStatus: 204,
 };
@@ -101,6 +104,9 @@ app.use("/api/users", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/profile", userRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/payments", paymentsRouter);
+app.use("/api/shipping", shippingRouter);
+app.use("/api/contact", contactRouter);
 app.use("/api/products", productRouter);
 app.use("/api/marcas", marcasRouter);
 app.use("/api/categorias", categoryRouter);
